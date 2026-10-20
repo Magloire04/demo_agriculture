@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node server/index.js",
-    "simulation": "ASR_SIMULATION=1 node server/index.js",
+    "simulation": "node server/index.js --simulation",
     "test": "node --test"
   },
   "license": "MIT"

@@ -253,7 +253,7 @@ async function demarrer() {
     url: env.ASR_URL || undefined,
     identifiant: env.ASR_ID,
     motDePasse: env.ASR_MDP,
-    simulation: env.ASR_SIMULATION === '1',
+    simulation: env.ASR_SIMULATION === '1' || process.argv.includes('--simulation'),
   });
   const [base, lexique, { communes }] = await Promise.all([
     lireJson('data/prix.json'),
