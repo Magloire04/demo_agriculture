@@ -1,0 +1,557 @@
+{
+ "communes": [
+  {
+   "nom": "Banikoara",
+   "departement": "Alibori",
+   "termes": [
+    "Banikoara"
+   ]
+  },
+  {
+   "nom": "Gogounou",
+   "departement": "Alibori",
+   "termes": [
+    "Gogounou"
+   ]
+  },
+  {
+   "nom": "Kandi",
+   "departement": "Alibori",
+   "termes": [
+    "Kandi"
+   ]
+  },
+  {
+   "nom": "Karimama",
+   "departement": "Alibori",
+   "termes": [
+    "Karimama"
+   ]
+  },
+  {
+   "nom": "Malanville",
+   "departement": "Alibori",
+   "termes": [
+    "Malanville"
+   ]
+  },
+  {
+   "nom": "Segbana",
+   "departement": "Alibori",
+   "termes": [
+    "Segbana"
+   ]
+  },
+  {
+   "nom": "Boukoumbé",
+   "departement": "Atacora",
+   "termes": [
+    "Boukoumbé"
+   ]
+  },
+  {
+   "nom": "Cobly",
+   "departement": "Atacora",
+   "termes": [
+    "Cobly"
+   ]
+  },
+  {
+   "nom": "Kérou",
+   "departement": "Atacora",
+   "termes": [
+    "Kérou"
+   ]
+  },
+  {
+   "nom": "Kouandé",
+   "departement": "Atacora",
+   "termes": [
+    "Kouandé"
+   ]
+  },
+  {
+   "nom": "Matéri",
+   "departement": "Atacora",
+   "termes": [
+    "Matéri"
+   ]
+  },
+  {
+   "nom": "Natitingou",
+   "departement": "Atacora",
+   "termes": [
+    "Natitingou"
+   ]
+  },
+  {
+   "nom": "Péhunco",
+   "departement": "Atacora",
+   "termes": [
+    "Péhunco"
+   ]
+  },
+  {
+   "nom": "Tanguiéta",
+   "departement": "Atacora",
+   "termes": [
+    "Tanguiéta"
+   ]
+  },
+  {
+   "nom": "Toucountouna",
+   "departement": "Atacora",
+   "termes": [
+    "Toucountouna"
+   ]
+  },
+  {
+   "nom": "Abomey-Calavi",
+   "departement": "Atlantique",
+   "termes": [
+    "Abomey-Calavi",
+    "Calavi"
+   ]
+  },
+  {
+   "nom": "Allada",
+   "departement": "Atlantique",
+   "termes": [
+    "Allada",
+    "Alada"
+   ]
+  },
+  {
+   "nom": "Kpomassè",
+   "departement": "Atlantique",
+   "termes": [
+    "Kpomassè"
+   ]
+  },
+  {
+   "nom": "Ouidah",
+   "departement": "Atlantique",
+   "termes": [
+    "Ouidah",
+    "Glexwe"
+   ]
+  },
+  {
+   "nom": "Sô-Ava",
+   "departement": "Atlantique",
+   "termes": [
+    "Sô-Ava"
+   ]
+  },
+  {
+   "nom": "Toffo",
+   "departement": "Atlantique",
+   "termes": [
+    "Toffo"
+   ]
+  },
+  {
+   "nom": "Tori-Bossito",
+   "departement": "Atlantique",
+   "termes": [
+    "Tori-Bossito"
+   ]
+  },
+  {
+   "nom": "Zè",
+   "departement": "Atlantique",
+   "termes": [
+    "Zè"
+   ]
+  },
+  {
+   "nom": "Bembèrèkè",
+   "departement": "Borgou",
+   "termes": [
+    "Bembèrèkè"
+   ]
+  },
+  {
+   "nom": "Kalalé",
+   "departement": "Borgou",
+   "termes": [
+    "Kalalé"
+   ]
+  },
+  {
+   "nom": "N'Dali",
+   "departement": "Borgou",
+   "termes": [
+    "N'Dali"
+   ]
+  },
+  {
+   "nom": "Nikki",
+   "departement": "Borgou",
+   "termes": [
+    "Nikki"
+   ]
+  },
+  {
+   "nom": "Parakou",
+   "departement": "Borgou",
+   "termes": [
+    "Parakou",
+    "Paraku"
+   ]
+  },
+  {
+   "nom": "Pèrèrè",
+   "departement": "Borgou",
+   "termes": [
+    "Pèrèrè"
+   ]
+  },
+  {
+   "nom": "Sinendé",
+   "departement": "Borgou",
+   "termes": [
+    "Sinendé"
+   ]
+  },
+  {
+   "nom": "Tchaourou",
+   "departement": "Borgou",
+   "termes": [
+    "Tchaourou"
+   ]
+  },
+  {
+   "nom": "Bantè",
+   "departement": "Collines",
+   "termes": [
+    "Bantè"
+   ]
+  },
+  {
+   "nom": "Dassa-Zoumè",
+   "departement": "Collines",
+   "termes": [
+    "Dassa-Zoumè",
+    "Dassa"
+   ]
+  },
+  {
+   "nom": "Glazoué",
+   "departement": "Collines",
+   "termes": [
+    "Glazoué",
+    "Glazuwe"
+   ]
+  },
+  {
+   "nom": "Ouèssè",
+   "departement": "Collines",
+   "termes": [
+    "Ouèssè"
+   ]
+  },
+  {
+   "nom": "Savalou",
+   "departement": "Collines",
+   "termes": [
+    "Savalou",
+    "Savalu"
+   ]
+  },
+  {
+   "nom": "Savè",
+   "departement": "Collines",
+   "termes": [
+    "Savè"
+   ]
+  },
+  {
+   "nom": "Aplahoué",
+   "departement": "Couffo",
+   "termes": [
+    "Aplahoué"
+   ]
+  },
+  {
+   "nom": "Djakotomey",
+   "departement": "Couffo",
+   "termes": [
+    "Djakotomey"
+   ]
+  },
+  {
+   "nom": "Dogbo",
+   "departement": "Couffo",
+   "termes": [
+    "Dogbo"
+   ]
+  },
+  {
+   "nom": "Klouékanmè",
+   "departement": "Couffo",
+   "termes": [
+    "Klouékanmè"
+   ]
+  },
+  {
+   "nom": "Lalo",
+   "departement": "Couffo",
+   "termes": [
+    "Lalo"
+   ]
+  },
+  {
+   "nom": "Toviklin",
+   "departement": "Couffo",
+   "termes": [
+    "Toviklin"
+   ]
+  },
+  {
+   "nom": "Bassila",
+   "departement": "Donga",
+   "termes": [
+    "Bassila"
+   ]
+  },
+  {
+   "nom": "Copargo",
+   "departement": "Donga",
+   "termes": [
+    "Copargo"
+   ]
+  },
+  {
+   "nom": "Djougou",
+   "departement": "Donga",
+   "termes": [
+    "Djougou",
+    "Jugu"
+   ]
+  },
+  {
+   "nom": "Ouaké",
+   "departement": "Donga",
+   "termes": [
+    "Ouaké"
+   ]
+  },
+  {
+   "nom": "Cotonou",
+   "departement": "Littoral",
+   "termes": [
+    "Cotonou",
+    "Kutonu"
+   ]
+  },
+  {
+   "nom": "Athiémé",
+   "departement": "Mono",
+   "termes": [
+    "Athiémé"
+   ]
+  },
+  {
+   "nom": "Bopa",
+   "departement": "Mono",
+   "termes": [
+    "Bopa"
+   ]
+  },
+  {
+   "nom": "Comè",
+   "departement": "Mono",
+   "termes": [
+    "Comè"
+   ]
+  },
+  {
+   "nom": "Grand-Popo",
+   "departement": "Mono",
+   "termes": [
+    "Grand-Popo"
+   ]
+  },
+  {
+   "nom": "Houéyogbé",
+   "departement": "Mono",
+   "termes": [
+    "Houéyogbé"
+   ]
+  },
+  {
+   "nom": "Lokossa",
+   "departement": "Mono",
+   "termes": [
+    "Lokossa",
+    "Lokosa"
+   ]
+  },
+  {
+   "nom": "Adjarra",
+   "departement": "Ouémé",
+   "termes": [
+    "Adjarra"
+   ]
+  },
+  {
+   "nom": "Adjohoun",
+   "departement": "Ouémé",
+   "termes": [
+    "Adjohoun"
+   ]
+  },
+  {
+   "nom": "Aguégués",
+   "departement": "Ouémé",
+   "termes": [
+    "Aguégués"
+   ]
+  },
+  {
+   "nom": "Akpro-Missérété",
+   "departement": "Ouémé",
+   "termes": [
+    "Akpro-Missérété"
+   ]
+  },
+  {
+   "nom": "Avrankou",
+   "departement": "Ouémé",
+   "termes": [
+    "Avrankou"
+   ]
+  },
+  {
+   "nom": "Bonou",
+   "departement": "Ouémé",
+   "termes": [
+    "Bonou"
+   ]
+  },
+  {
+   "nom": "Dangbo",
+   "departement": "Ouémé",
+   "termes": [
+    "Dangbo"
+   ]
+  },
+  {
+   "nom": "Porto-Novo",
+   "departement": "Ouémé",
+   "termes": [
+    "Porto-Novo",
+    "Xogbonu",
+    "Hogbonu"
+   ]
+  },
+  {
+   "nom": "Sèmè-Kpodji",
+   "departement": "Ouémé",
+   "termes": [
+    "Sèmè-Kpodji"
+   ]
+  },
+  {
+   "nom": "Adja-Ouèrè",
+   "departement": "Plateau",
+   "termes": [
+    "Adja-Ouèrè"
+   ]
+  },
+  {
+   "nom": "Ifangni",
+   "departement": "Plateau",
+   "termes": [
+    "Ifangni"
+   ]
+  },
+  {
+   "nom": "Kétou",
+   "departement": "Plateau",
+   "termes": [
+    "Kétou"
+   ]
+  },
+  {
+   "nom": "Pobè",
+   "departement": "Plateau",
+   "termes": [
+    "Pobè"
+   ]
+  },
+  {
+   "nom": "Sakété",
+   "departement": "Plateau",
+   "termes": [
+    "Sakété"
+   ]
+  },
+  {
+   "nom": "Abomey",
+   "departement": "Zou",
+   "termes": [
+    "Abomey",
+    "Agbomɛ"
+   ]
+  },
+  {
+   "nom": "Agbangnizoun",
+   "departement": "Zou",
+   "termes": [
+    "Agbangnizoun"
+   ]
+  },
+  {
+   "nom": "Bohicon",
+   "departement": "Zou",
+   "termes": [
+    "Bohicon",
+    "Bohikon"
+   ]
+  },
+  {
+   "nom": "Covè",
+   "departement": "Zou",
+   "termes": [
+    "Covè"
+   ]
+  },
+  {
+   "nom": "Djidja",
+   "departement": "Zou",
+   "termes": [
+    "Djidja"
+   ]
+  },
+  {
+   "nom": "Ouinhi",
+   "departement": "Zou",
+   "termes": [
+    "Ouinhi"
+   ]
+  },
+  {
+   "nom": "Za-Kpota",
+   "departement": "Zou",
+   "termes": [
+    "Za-Kpota"
+   ]
+  },
+  {
+   "nom": "Zagnanado",
+   "departement": "Zou",
+   "termes": [
+    "Zagnanado"
+   ]
+  },
+  {
+   "nom": "Zogbodomey",
+   "departement": "Zou",
+   "termes": [
+    "Zogbodomey"
+   ]
+  }
+ ]
+}
