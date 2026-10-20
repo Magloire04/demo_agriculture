@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AgriFon — prix du marché et signalements en fongbé</title>
+  <meta name="description" content="Démo : demandez le prix d'un produit agricole ou signalez une maladie des cultures en parlant fongbé.">
+  <meta name="theme-color" content="#006828">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icone.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/app.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <a class="evitement" href="#contenu">Aller au contenu</a>
+
+  <header class="entete">
+    <div class="entete-interieur">
+      <a class="logo" href="#/" aria-label="Accueil — Ministère de l'Agriculture, de l'Élevage et de la Pêche, République du Bénin">
+        <img class="logo-armoiries" src="img/armoiries.png" alt="" width="320" height="283">
+        <span class="logo-texte" aria-hidden="true">
+          <span class="logo-institution">Ministère de l'Agriculture,<br>de l'Élevage et de la Pêche</span>
+          <span class="bande"></span>
+          <span class="logo-pays">République du Bénin</span>
+        </span>
+      </a>
+      <span class="etiquette-demo">Démo</span>
+    </div>
+  </header>
+
+  <nav class="navigation" aria-label="Rubriques">
+    <ul>
+      <li><a href="#/" data-lien="accueil">Accueil</a></li>
+      <li><a href="#/prix" data-lien="prix">Prix du marché</a></li>
+      <li><a href="#/signalement" data-lien="signalement">Signaler</a></li>
+    </ul>
+  </nav>
+
+  <p class="bandeau" data-bandeau hidden></p>
+
+  <main id="contenu" tabindex="-1">
+
+    <section data-vue="accueil" aria-labelledby="titre-accueil">
+      <p class="surtitre">AgriFon · Agriculture</p>
+      <h1 class="accroche" id="titre-accueil">Parlez en fongbé, l'application vous répond</h1>
+      <p class="sous-accroche">Posez votre question à voix haute. La réponse s'affiche à l'écran.</p>
+
+      <div class="choix">
+        <a class="carte-choix" href="#/prix">
+          <span class="carte-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/></svg>
+          </span>
+          <span class="carte-corps">
+            <span class="carte-titre">Prix du marché</span>
+            <span class="carte-texte">Le prix d'un produit dans un marché.</span>
+            <span class="carte-exemple">« Combien coûte le maïs au marché de Glazoué ? »</span>
+          </span>
+          <span class="carte-fleche" aria-hidden="true">›</span>
+        </a>
+
+        <a class="carte-choix" href="#/signalement">
+          <span class="carte-icone carte-icone-alerte" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg>
+          </span>
+          <span class="carte-corps">
+            <span class="carte-titre">Signaler une maladie</span>
+            <span class="carte-texte">Ce que vous voyez sur vos cultures.</span>
+            <span class="carte-exemple">« Les feuilles de mon maïs jaunissent. »</span>
+          </span>
+          <span class="carte-fleche" aria-hidden="true">›</span>
+        </a>
+      </div>
+
+      <p class="note">Les exemples sont écrits en français : dites-les en fongbé.</p>
+    </section>
+
+    <section data-vue="prix" aria-labelledby="titre-prix" hidden>
+      <h1 class="titre-vue" id="titre-prix">Prix du marché</h1>
+      <p class="consigne">Appuyez sur le micro, puis dites en fongbé <strong>le produit</strong> et <strong>le marché</strong>.</p>
+      <p class="exemple">Exemple : « Combien coûte le maïs au marché de Glazoué ? »</p>
+
+      <div class="micro" data-micro="prix" data-etat="pret">
+        <button class="bouton-micro" type="button" aria-label="Appuyer pour parler">
+          <svg class="icone-micro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3" fill="currentColor"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/><path d="M8 21h8"/></svg>
+          <svg class="icone-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
+        </button>
+        <p class="micro-etat" role="status" aria-live="polite">Appuyez pour parler</p>
+        <p class="micro-minuteur" aria-hidden="true"></p>
+        <label class="lien-fichier">ou envoyer un fichier audio<input type="file" accept="audio/*"></label>
+      </div>
+
+      <div class="resultat" data-resultat="prix" tabindex="-1" hidden></div>
+    </section>
+
+    <section data-vue="signalement" aria-labelledby="titre-signalement" hidden>
+      <h1 class="titre-vue" id="titre-signalement">Signaler une maladie des cultures</h1>
+      <p class="consigne">Dites en fongbé <strong>la culture</strong> touchée et <strong>ce que vous voyez</strong>. Le signalement part au conseiller agricole.</p>
+      <p class="exemple">Exemple : « Les feuilles de mon maïs jaunissent. »</p>
+
+      <fieldset class="lieu" data-lieu>
+        <legend>Où se trouve le champ ?</legend>
+        <div class="lieu-gps">
+          <span class="lieu-etat" data-gps-etat>Position non partagée</span>
+          <button class="bouton-secondaire" type="button" data-gps>Partager ma position</button>
+        </div>
+        <label class="lieu-commune">Commune (facultatif)
+          <select data-commune>
+            <option value="">— Choisir une commune —</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <div class="micro" data-micro="signalement" data-etat="pret">
+        <button class="bouton-micro" type="button" aria-label="Appuyer pour parler">
+          <svg class="icone-micro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3" fill="currentColor"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/><path d="M8 21h8"/></svg>
+          <svg class="icone-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
+        </button>
+        <p class="micro-etat" role="status" aria-live="polite">Appuyez pour parler</p>
+        <p class="micro-minuteur" aria-hidden="true"></p>
+        <label class="lien-fichier">ou envoyer un fichier audio<input type="file" accept="audio/*"></label>
+      </div>
+
+      <div class="resultat" data-resultat="signalement" tabindex="-1" hidden></div>
+    </section>
+
+  </main>
+
+  <footer class="pied">
+    <p><strong>AgriFon</strong> · démonstration de commande vocale en fongbé</p>
+    <p>Reconnaissance vocale : API JaimeMaLangue</p>
+    <span class="bande" aria-hidden="true"></span>
+  </footer>
+</body>
+</html>
