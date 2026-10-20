@@ -242,7 +242,7 @@ async function lireJson(relatif) {
   return JSON.parse(await readFile(path.join(RACINE, relatif), 'utf8'));
 }
 
-async function demarrer() {
+export async function demarrer() {
   try {
     process.loadEnvFile(path.join(RACINE, '.env'));
   } catch (e) {
@@ -263,15 +263,18 @@ async function demarrer() {
   const registre = await creerRegistre(path.resolve(RACINE, env.DOSSIER_DONNEES || 'stockage'));
   const gerer = creerApplication({ asr, base, lexique, communes, registre, codeConseiller: env.CODE_CONSEILLER || '' });
 
-  const port = Number(env.PORT) || 3000;
+  // Un hébergeur peut fournir un socket (chemin) au lieu d'un numéro de port.
+  const port = /^\d+$/.test(env.PORT ?? '') ? Number(env.PORT) : env.PORT || 3000;
   const hote = env.HOST || '0.0.0.0';
   // L'API peut mettre jusqu'à 90 s à répondre : on laisse le temps aux requêtes.
   const serveur = createServer({ requestTimeout: 180_000 }, gerer);
-  serveur.listen(port, hote, () => {
-    console.log(`AgriFon : http://localhost:${port}  (conseiller : http://localhost:${port}/conseiller)`);
+  const pret = () => {
+    console.log(`AgriFon : à l'écoute sur ${typeof port === 'number' ? `http://localhost:${port}` : port}`);
     if (asr.simulation) console.log('Mode SIMULATION : aucune requête envoyée à l’API, réponses factices.');
     else if (!asr.configure) console.warn('ASR_ID / ASR_MDP absents : la reconnaissance vocale renverra une erreur (voir .env.example).');
-  });
+  };
+  if (typeof port === 'number') serveur.listen(port, hote, pret);
+  else serveur.listen(port, pret);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
