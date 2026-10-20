@@ -53,6 +53,7 @@ export async function appelerApi(chemin, { delaiMs = 15000, ...options } = {}) {
     const erreur = new Error(donnees.erreur || `Erreur du serveur (${reponse.status}).`);
     erreur.statut = reponse.status;
     erreur.code = donnees.code;
+    erreur.fon = donnees.erreur_fon ?? null;
     throw erreur;
   }
   return donnees;
