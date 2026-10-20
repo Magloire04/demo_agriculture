@@ -67,12 +67,26 @@ L'interface fonctionne avec des réponses factices et un bandeau « Mode simulat
 
 ### Sur un téléphone
 
-Les navigateurs n'autorisent le micro que sur une adresse en https (ou sur `localhost`). Pour la démo, il faut donc servir l'application en https, avec un certificat valide. Deux possibilités :
+Les navigateurs n'autorisent le micro que sur une adresse en https (ou sur `localhost`). Pour la démo, il faut donc servir l'application en https, avec un certificat valide. Trois possibilités :
 
 - un tunnel, par exemple `cloudflared tunnel --url http://localhost:3000`, qui donne une adresse https publique ;
-- un reverse proxy (Caddy, nginx) avec certificat, sur un serveur.
+- un reverse proxy (Caddy, nginx) avec certificat, sur un serveur ;
+- un hébergement cPanel qui propose « Setup Node.js App » (voir la section suivante).
 
 Ouverte en https, l'application peut être ajoutée à l'écran d'accueil du téléphone.
+
+### Mettre en ligne sur un hébergement cPanel
+
+Le script `scripts/deployer.sh` installe et met à jour l'application sur un hébergement cPanel avec « Setup Node.js App » (CloudLinux). Le domaine doit déjà exister dans cPanel, avec son certificat https. Se connecter au serveur en SSH, puis :
+
+```bash
+git clone https://github.com/Magloire04/demo_agriculture.git ~/agrifon-app
+cd ~/agrifon-app && bash scripts/deployer.sh mon-domaine.example
+```
+
+Au premier passage, le script demande les identifiants de l'API et crée `.env`, lisible par le seul compte. Il déclare ensuite l'application Node.js avec la version la plus récente proposée (20.12 au minimum) et le fichier de démarrage `app.cjs`, la redémarre et vérifie que `/api/etat` répond.
+
+Pour mettre à jour le site, relancer la seconde commande : le code est récupéré depuis GitHub, `.env` et `stockage/` sont conservés.
 
 ## Déroulé de la démo
 
@@ -148,6 +162,9 @@ Les armoiries (`public/img/armoiries.png`) sont extraites du PDF de la charte, s
 ## Arborescence
 
 ```
+app.cjs             point d'entrée pour les hébergeurs qui chargent l'application avec require()
+scripts/
+  deployer.sh       installation et mise à jour sur un hébergement cPanel
 server/
   index.js          serveur HTTP : fichiers de la PWA et routes /api
   asr.js            client de l'API de reconnaissance vocale (et mode simulation)
