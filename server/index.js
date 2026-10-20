@@ -84,6 +84,9 @@ function memeCode(fourni, attendu) {
 }
 
 export function creerApplication({ asr, base, lexique, communes, registre, codeConseiller = '', dossierPublic = path.join(RACINE, 'public') }) {
+  // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
+  const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
+
   function verifierConseiller(req, url) {
     if (!codeConseiller) return;
     const fourni = req.headers['x-code-conseiller'] ?? url.searchParams.get('code');
@@ -112,7 +115,7 @@ export function creerApplication({ asr, base, lexique, communes, registre, codeC
 
     if (m === 'POST' && p === '/api/prix') {
       const { audio, type } = await lireAudio(req);
-      const reponseApi = await asr.marche(audio, type);
+      const reponseApi = await asr.marche(audio, type, { noms: nomsMarches });
       return envoyerJson(res, 200, { ...repondrePrix(base, reponseApi), simulation: asr.simulation });
     }
 

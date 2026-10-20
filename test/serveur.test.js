@@ -40,8 +40,8 @@ function fausseAsr(reponses = {}) {
     appels,
     configure: true,
     simulation: false,
-    marche: async (audio, type) => {
-      appels.push({ point: 'marche', type, taille: audio.length });
+    marche: async (audio, type, options) => {
+      appels.push({ point: 'marche', type, taille: audio.length, noms: options.noms.length });
       return reponses.marche ?? { transcription: 'gbàdé glazuwe', produits: [{ terme: 'gbàdé', terme_canonique: 'gbàdé' }], id: 'r1' };
     },
     transcrire: async (audio, type, options) => {
@@ -59,7 +59,7 @@ test('POST /api/prix relaie l’audio et répond le prix', async (t) => {
   assert.equal(rep.status, 200);
   const r = await rep.json();
   assert.equal(r.message, 'Au marché de Glazoué, le maïs coûte 250 F CFA le kilo.');
-  assert.deepEqual(asr.appels, [{ point: 'marche', type: 'audio/webm', taille: 3 }]);
+  assert.deepEqual(asr.appels, [{ point: 'marche', type: 'audio/webm', taille: 3, noms: 18 }]);
 });
 
 test('POST /api/prix refuse ce qui n’est pas de l’audio, et un corps vide', async (t) => {

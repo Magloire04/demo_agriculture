@@ -111,7 +111,8 @@ export function creerClientAsr({
     transcrire: (audio, typeMime, { noms = [] } = {}) =>
       appeler('/transcribe', audio, typeMime, { app_version: VERSION_APPLI, noms: noms.slice(0, 50).join(',') }),
     // Mode marché : produits reconnus dans le lexique, avec catégorie et montant.
-    marche: (audio, typeMime) => appeler('/marche', audio, typeMime),
+    marche: (audio, typeMime, { noms = [] } = {}) =>
+      appeler('/marche', audio, typeMime, { noms: noms.slice(0, 50).join(',') }),
   };
 }
 
