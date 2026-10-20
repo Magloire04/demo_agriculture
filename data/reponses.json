@@ -1,0 +1,65 @@
+{
+  "_note": "Phrases de réponse affichées à l'utilisateur, en français et en fongbé. Les {…} sont remplacés par l'application. Une phrase fongbé à null n'est pas affichée (seul le français l'est).",
+  "unites": {
+    "kg": { "fr": "le kilo", "fon": null },
+    "litre": { "fr": "le litre", "fon": null }
+  },
+  "phrases": {
+    "prix_ici": {
+      "fr": "{au_marche}, {produit} coûte {prix} F CFA {unite}.",
+      "fon": null
+    },
+    "prix_fourchette": {
+      "fr": "{produit} coûte de {min} à {max} F CFA {unite} selon les marchés. Le moins cher : {marche}.",
+      "fon": null
+    },
+    "prix_partout": {
+      "fr": "{produit} coûte {prix} F CFA {unite} dans tous les marchés.",
+      "fon": null
+    },
+    "prix_absent": {
+      "fr": "Pas de prix relevé {au_marche}.",
+      "fon": null
+    },
+    "prix_marche_seul": {
+      "fr": "Je n'ai pas compris le produit. Voici les prix relevés {au_marche}.",
+      "fon": null
+    },
+    "prix_non_compris": {
+      "fr": "Je n'ai pas reconnu de produit. Dites le nom du produit, puis le marché.",
+      "fon": null
+    },
+    "prix_sans_prix": {
+      "fr": "Le prix de « {terme} » n'est pas encore dans la base.",
+      "fon": null
+    },
+    "signalement_transmis": {
+      "fr": "Signalement transmis",
+      "fon": null
+    },
+    "signalement_recu_commune": {
+      "fr": "Votre signalement a été reçu. Il est transmis au conseiller agricole de la commune de {commune}.",
+      "fon": null
+    },
+    "signalement_recu_gps": {
+      "fr": "Votre signalement a été reçu. Il est transmis au conseiller agricole le plus proche de votre champ.",
+      "fon": null
+    },
+    "signalement_attente": {
+      "fr": "En attente du conseiller agricole.",
+      "fon": null
+    },
+    "signalement_pris": {
+      "fr": "Le conseiller agricole s'occupe de votre signalement.",
+      "fon": null
+    },
+    "erreur_reessayer": {
+      "fr": "Le service ne répond pas. Réessayez dans une minute.",
+      "fon": null
+    },
+    "erreur_trop_court": {
+      "fr": "L'enregistrement est trop court. Appuyez, parlez, puis appuyez de nouveau.",
+      "fon": null
+    }
+  }
+}

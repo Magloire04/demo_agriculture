@@ -7,6 +7,7 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { creerClientAsr, ErreurAsr } from '../server/asr.js';
 import { creerApplication } from '../server/index.js';
+import { creerTextes } from '../server/reponses.js';
 import { creerRegistre } from '../server/signalement.js';
 
 const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
@@ -20,6 +21,7 @@ async function demarrer(t, { asr, codeConseiller = '' }) {
     lexique: lire('lexique.json'),
     communes: lire('communes.json').communes,
     registre,
+    textes: creerTextes(lire('reponses.json')),
     codeConseiller,
   });
   const serveur = createServer(gerer);
@@ -111,7 +113,7 @@ test('une erreur de l’API devient un message lisible', async (t) => {
   const url = await demarrer(t, { asr: fausseAsr({ erreur }) });
   const rep = await envoyer(`${url}/api/signalements`);
   assert.equal(rep.status, 503);
-  assert.deepEqual(await rep.json(), { erreur: erreur.message, code: 'asr_indisponible' });
+  assert.deepEqual(await rep.json(), { erreur: erreur.message, erreur_fon: null, code: 'asr_indisponible' });
 });
 
 test('fichiers statiques, sans sortir du dossier public', async (t) => {

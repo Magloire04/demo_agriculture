@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { repondrePrix } from '../server/prix.js';
+import { repondrePrix as repondre } from '../server/prix.js';
+import { creerTextes } from '../server/reponses.js';
 
-const base = JSON.parse(readFileSync(new URL('../data/prix.json', import.meta.url), 'utf8'));
+const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
+const base = lire('prix.json');
+const textes = creerTextes(lire('reponses.json'));
+const repondrePrix = (b, reponseApi) => repondre(b, textes, reponseApi);
 const produit = (terme) => ({ terme, terme_canonique: terme, categorie: 'alimentation', montant: null, montant_manquant: true });
 
 test('produit et marché : prix du marché demandé', () => {

@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { creerClientAsr, ErreurAsr, extensionAudio } from './asr.js';
 import { repondrePrix, resumerBase } from './prix.js';
+import { creerTextes } from './reponses.js';
 import { analyserSignalement, creerRegistre, destinataire } from './signalement.js';
 
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -83,7 +84,14 @@ function memeCode(fourni, attendu) {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-export function creerApplication({ asr, base, lexique, communes, registre, codeConseiller = '', dossierPublic = path.join(RACINE, 'public') }) {
+// Erreurs pour lesquelles une phrase existe aussi en fongbé.
+const PHRASES_ERREUR = {
+  asr_indisponible: 'erreur_reessayer',
+  asr_injoignable: 'erreur_reessayer',
+  audio_trop_court: 'erreur_trop_court',
+};
+
+export function creerApplication({ asr, base, lexique, communes, registre, textes, codeConseiller = '', dossierPublic = path.join(RACINE, 'public') }) {
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
   const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
 
@@ -116,7 +124,7 @@ export function creerApplication({ asr, base, lexique, communes, registre, codeC
     if (m === 'POST' && p === '/api/prix') {
       const { audio, type } = await lireAudio(req);
       const reponseApi = await asr.marche(audio, type, { noms: nomsMarches });
-      return envoyerJson(res, 200, { ...repondrePrix(base, reponseApi), simulation: asr.simulation });
+      return envoyerJson(res, 200, { ...repondrePrix(base, textes, reponseApi), simulation: asr.simulation });
     }
 
     if (m === 'POST' && p === '/api/signalements') {
@@ -149,7 +157,17 @@ export function creerApplication({ asr, base, lexique, communes, registre, codeC
         id_requete: reponseApi.id ?? null,
         simulation: asr.simulation,
       });
-      return envoyerJson(res, 201, vuePublique(signalement));
+      return envoyerJson(res, 201, {
+        ...vuePublique(signalement),
+        messages: {
+          titre: textes.phrase('signalement_transmis'),
+          recu: commune
+            ? textes.phrase('signalement_recu_commune', { commune: commune.nom })
+            : textes.phrase('signalement_recu_gps'),
+          attente: textes.phrase('signalement_attente'),
+          pris: textes.phrase('signalement_pris'),
+        },
+      });
     }
 
     if (m === 'GET' && p === '/api/signalements') {
@@ -235,6 +253,7 @@ export function creerApplication({ asr, base, lexique, communes, registre, codeC
       if (e instanceof ErreurHttp && e.statut === 413) res.setHeader('Connection', 'close');
       envoyerJson(res, connue ? e.statut : 500, {
         erreur: connue ? e.message : 'Erreur interne du serveur.',
+        erreur_fon: connue && PHRASES_ERREUR[e.code] ? textes.phrase(PHRASES_ERREUR[e.code]).fon : null,
         code: connue ? e.code : 'erreur_interne',
       });
     }
@@ -258,13 +277,14 @@ export async function demarrer() {
     motDePasse: env.ASR_MDP,
     simulation: env.ASR_SIMULATION === '1' || process.argv.includes('--simulation'),
   });
-  const [base, lexique, { communes }] = await Promise.all([
+  const [base, lexique, { communes }, reponses] = await Promise.all([
     lireJson('data/prix.json'),
     lireJson('data/lexique.json'),
     lireJson('data/communes.json'),
+    lireJson('data/reponses.json'),
   ]);
   const registre = await creerRegistre(path.resolve(RACINE, env.DOSSIER_DONNEES || 'stockage'));
-  const gerer = creerApplication({ asr, base, lexique, communes, registre, codeConseiller: env.CODE_CONSEILLER || '' });
+  const gerer = creerApplication({ asr, base, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '' });
 
   // Un hébergeur peut fournir un socket (chemin) au lieu d'un numéro de port.
   const port = /^\d+$/.test(env.PORT ?? '') ? Number(env.PORT) : env.PORT || 3000;
