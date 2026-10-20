@@ -37,7 +37,7 @@ function ligne(titre, ...valeur) {
 
 function lieu({ gps, commune }) {
   return [
-    commune ? `${commune.nom} (${commune.departement})${commune.source === 'entendue' ? ' — entendu dans le message' : ''}` : 'Commune non précisée',
+    commune ? `${commune.nom} (${commune.departement})${commune.source === 'entendue' ? ', entendu dans le message' : ''}` : 'Commune non précisée',
     gps
       ? [' · ', el('a', { href: lienCarte(gps), target: '_blank', rel: 'noopener' }, `voir la position GPS${gps.precision ? ` (± ${nombre(Math.round(gps.precision))} m)` : ''}`)]
       : ' · pas de position GPS',
@@ -66,7 +66,7 @@ function carte(s) {
       ligne('Référence', `${s.reference} · reçu le ${dateHeure(s.recu_le)}${s.simulation ? ' · simulation' : ''}`),
       ligne('Ce qui est observé', observe + parties),
       ligne('Lieu', lieu(s.localisation)),
-      ligne('Message (fongbé)', el('span', { class: 'fon', lang: 'fon' }, s.transcription || '—'))),
+      ligne('Message (fongbé)', el('span', { class: 'fon', lang: 'fon' }, s.transcription || 'aucune transcription'))),
     audio,
     el('div', { class: 'actions' }, bouton));
 }
