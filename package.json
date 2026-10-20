@@ -1,0 +1,16 @@
+{
+  "name": "agrifon-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PWA de démonstration : prix du marché et signalement de maladies des cultures par commande vocale en fongbé (API JaimeMaLangue).",
+  "type": "module",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "simulation": "ASR_SIMULATION=1 node server/index.js",
+    "test": "node --test"
+  },
+  "license": "MIT"
+}
