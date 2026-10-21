@@ -17,13 +17,13 @@ L'application est une PWA (application web installable sur téléphone). La reco
   </tr>
 </table>
 
-<sub>Captures réalisées en mode simulation (réponses factices), bandeau « Mode simulation » masqué.</sub>
+<sub>Captures réalisées en mode simulation (transcriptions factices, prix réels), bandeau « Mode simulation » masqué.</sub>
 
 ## Les deux démos
 
 | Démo | La personne dit (en fongbé) | Ce qui est extrait | Ce que fait le système |
 | --- | --- | --- | --- |
-| Prix du marché | « Combien coûte le maïs au marché de Glazoué ? » | le produit et le marché | cherche le prix dans la base et l'affiche |
+| Prix du marché | « Combien coûte le maïs au marché de Glazoué ? » | le produit et le marché | cherche le dernier prix relevé et l'affiche |
 | Signalement d'une maladie des cultures | « Les feuilles de mon maïs jaunissent. » | la culture et le symptôme | transmet le signalement localisé au conseiller agricole et confirme la réception |
 
 Un écran conseiller (`/conseiller`) reçoit les signalements en direct. Quand le conseiller prend un signalement en charge, le téléphone de la personne affiche « Pris en charge par le conseiller ».
@@ -54,7 +54,7 @@ Le fichier `.env` est lu au démarrage. Il est ignoré par Git : les identifiant
 | `ASR_URL` | adresse de l'API | `https://51-159-167-70.sslip.io` |
 | `ASR_SIMULATION` | `1` pour des réponses factices, sans appel à l'API | désactivé |
 | `PORT`, `HOST` | port et interface d'écoute | `3000`, `0.0.0.0` |
-| `DOSSIER_DONNEES` | dossier des signalements et de leurs audios | `stockage` |
+| `DOSSIER_DONNEES` | dossier des signalements, de leurs audios et des prix importés | `stockage` |
 | `CODE_CONSEILLER` | si renseigné, l'écran conseiller demande ce code | aucun |
 
 ### Essayer sans identifiants
@@ -84,14 +84,20 @@ git clone https://github.com/Magloire04/demo_agriculture.git ~/agrifon-app
 cd ~/agrifon-app && bash scripts/deployer.sh mon-domaine.example
 ```
 
-Au premier passage, le script demande les identifiants de l'API et crée `.env`, lisible par le seul compte. Il déclare ensuite l'application Node.js avec la version la plus récente proposée (20.12 au minimum) et le fichier de démarrage `app.cjs`, la redémarre et vérifie que `/api/etat` répond.
+Au premier passage, le script demande les identifiants de l'API et crée `.env`, lisible par le seul compte. Il déclare ensuite l'application Node.js avec la version la plus récente proposée (20.12 au minimum) et le fichier de démarrage `app.cjs`, importe les derniers prix (voir « Prix réels »), redémarre l'application et vérifie que `/api/etat` répond.
 
 Pour mettre à jour le site, relancer la seconde commande : le code est récupéré depuis GitHub, `.env` et `stockage/` sont conservés.
+
+Pour importer les prix chaque semaine sans redéployer, ajouter cette tâche dans « Cron Jobs » de cPanel (ici le lundi à 6 h 17) :
+
+```
+17 6 * * 1 bash $HOME/agrifon-app/scripts/importer-prix.sh >> $HOME/agrifon-app/stockage/import-prix.log 2>&1
+```
 
 ## Déroulé de la démo
 
 1. Ouvrir `/conseiller` sur l'écran de la salle.
-2. Sur le téléphone, ouvrir « Prix du marché ». Appuyer sur le micro, dire la phrase, appuyer de nouveau. La réponse s'affiche, par exemple « Au marché de Glazoué, le maïs coûte 250 F CFA le kilo », avec le prix en grands caractères. Toucher « Comparer avec les autres marchés » affiche les prix des autres marchés.
+2. Sur le téléphone, ouvrir « Prix du marché ». Appuyer sur le micro, dire la phrase, appuyer de nouveau. La réponse s'affiche, par exemple « Au marché de Glazoué, le maïs coûte 90 F CFA le kilo », avec le prix en grands caractères, le mois du relevé et l'évolution depuis le relevé précédent. Toucher « Comparer avec les autres marchés » affiche les prix des autres marchés.
 3. Ouvrir « Signaler », partager la position ou choisir la commune, puis dire la phrase. Le téléphone confirme la réception avec une référence. Le signalement apparaît sur l'écran conseiller avec la transcription et le message vocal.
 4. Sur l'écran conseiller, cliquer sur « Prendre en charge ». Quelques secondes plus tard, le téléphone affiche « Pris en charge par le conseiller ».
 
@@ -106,11 +112,11 @@ L'application retrouve les mots attendus dans la transcription, sans tenir compt
 | Symptômes | `data/lexique.json`, champ `fon` des `symptomes` | vide : seuls les mots français sont reconnus |
 | Parties de la plante | `data/lexique.json`, champ `fon` des `parties` | seul « ama » (feuilles) ; tiges, racines et fruits vides |
 | Cultures | `data/lexique.json`, champ `fon` des `cultures` | quelques noms courants (gbadé, mɔlikun, azin…) à vérifier |
-| Produits | `data/prix.json`, champ `termes_fon` | idem |
-| Marchés | `data/prix.json`, champ `termes` | variantes de prononciation des noms de lieux |
+| Produits | `data/referentiel.json`, champ `termes_fon` | idem |
+| Marchés | `data/referentiel.json`, champ `termes` | variantes de prononciation des noms de lieux |
 | Communes | `data/communes.json`, champ `termes` | noms officiels ; variantes pour 13 communes sur 77 seulement |
-| Réponses affichées | `data/reponses.json`, champ `fon` | 14 phrases et 2 unités, rédigées d'après des sources publiées, à faire relire |
-| Noms des produits | `data/prix.json`, champ `nom_fon` | affichés à côté du nom français, à faire relire |
+| Réponses affichées | `data/reponses.json`, champ `fon` | 15 phrases et 2 unités, rédigées d'après des sources publiées, à faire relire |
+| Noms des produits | `data/referentiel.json`, champ `nom_fon` | affichés à côté du nom français, à faire relire |
 
 Méthode : dire chaque phrase de démonstration dans l'application, lire la ligne « Vous avez dit : … », ajouter les mots tels qu'ils y sont transcrits dans le fichier concerné, puis redémarrer le serveur.
 
@@ -131,13 +137,23 @@ flowchart LR
 
 Le téléphone n'appelle jamais l'API directement : il envoie l'audio au serveur AgriFon, qui ajoute les identifiants, comme l'exige la documentation de l'API. Le serveur n'envoie qu'une requête à la fois, car l'API traite les phrases une par une. Les codes d'erreur de l'API (audio trop court, trop long, service indisponible…) sont traduits en messages lisibles.
 
-Prix du marché (`server/prix.js`). L'audio part vers le mode marché de l'API (`POST /marche`), qui rend les produits reconnus dans son lexique. Le produit est rapproché de la base de prix et le marché est cherché dans la transcription. Sans marché, la réponse donne la fourchette de prix et le marché le moins cher. Avec un marché mais sans produit, elle liste tous les prix de ce marché.
+Prix du marché (`server/prix.js`). L'audio part vers le mode marché de l'API (`POST /marche`), qui rend les produits reconnus dans son lexique. Le produit est rapproché du référentiel des produits et le marché est cherché dans la transcription. Sans marché, la réponse donne la fourchette de prix et le marché le moins cher. Avec un marché mais sans produit, elle liste tous les prix de ce marché.
 
 Signalement (`server/signalement.js`). L'audio part vers le modèle général (`POST /transcribe`). La culture, la partie de la plante, le symptôme et la commune sont cherchés dans la transcription. Le signalement est enregistré dans `stockage/` avec la position GPS, la commune et le message vocal. Si une commune est choisie, les communes du même département sont transmises à l'API (paramètre `noms`) pour l'aider à reconnaître un nom de lieu.
 
 Réponses (`server/reponses.js`). Chaque réponse est construite dans les deux langues à partir des phrases-modèles de `data/reponses.json`, dont les `{…}` reçoivent le produit, le marché, le prix ou la commune. L'écran affiche le fongbé en grand, puis le français. Les montants restent écrits en chiffres, comme dans les textes publiés en fongbé.
 
-Base de prix (`data/prix.json`). Ce sont des données de démonstration, fictives mais vraisemblables : 13 produits, 13 marchés, prix de la semaine et de la semaine précédente. L'application le rappelle sous chaque réponse. Elles sont à remplacer par un vrai relevé.
+### Prix réels
+
+Les prix viennent du jeu de données « Benin - Food Prices » du Programme alimentaire mondial (PAM), publié sur [HDX](https://data.humdata.org/dataset/wfp-food-prices-for-benin) sous licence CC BY-IGO. Ce sont des prix de détail moyens en F CFA, relevés une fois par mois. Sous chaque réponse, l'application indique le mois du relevé et la source.
+
+- `data/referentiel.json` décrit les 13 produits et les 14 marchés de l'application, avec leurs noms en fongbé et le libellé correspondant dans le fichier du PAM (champ `pam`). Lokossa n'est pas suivi par le PAM : l'application répond qu'aucun prix n'y est relevé, puis donne ceux des autres marchés.
+- `scripts/importer-prix.js` télécharge le fichier CSV du PAM. Pour chaque produit et chaque marché, il garde le dernier relevé de moins de six mois et le relevé précédent, puis écrit `stockage/releves-prix.json`. Le serveur relit ce fichier dès qu'il change, sans redémarrage. Si l'import échoue, les prix précédents restent en place.
+- `data/releves-prix.json` est un instantané livré avec le code (relevés jusqu'au 15 septembre 2026). Le serveur s'en sert tant qu'aucun import n'a eu lieu.
+
+```bash
+npm run importer-prix
+```
 
 ### Routes du serveur
 
@@ -171,15 +187,20 @@ Les armoiries (`public/img/armoiries.png`) sont extraites du PDF de la charte, s
 app.cjs             point d'entrée pour les hébergeurs qui chargent l'application avec require()
 scripts/
   deployer.sh       installation et mise à jour sur un hébergement cPanel
+  importer-prix.js  import des prix du PAM
+  importer-prix.sh  le même import, pour une tâche planifiée cPanel
 server/
   index.js          serveur HTTP : fichiers de la PWA et routes /api
   asr.js            client de l'API de reconnaissance vocale (et mode simulation)
   prix.js           réponse « prix du marché »
+  pam.js            lecture du fichier de prix du PAM
+  releves.js        relevés de prix lus par le serveur, relus à chaque import
   reponses.js       phrases de réponse en français et en fongbé
   signalement.js    analyse et registre des signalements
   texte.js          comparaison de mots sans tons ni accents
 data/
-  prix.json         base de prix de démonstration (produits, marchés)
+  referentiel.json  produits et marchés, avec leurs libellés dans le fichier du PAM
+  releves-prix.json instantané des prix du PAM
   lexique.json      cultures, parties de la plante, symptômes
   reponses.json     phrases de réponse en français et en fongbé
   communes.json     les 77 communes du Bénin
@@ -198,16 +219,17 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 31 tests couvrent la comparaison de texte, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
+Les 45 tests couvrent la comparaison de texte, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
 
 ## Limites connues
 
 - Le vocabulaire fongbé des symptômes reste à fournir (voir « Préparer le vocabulaire en fongbé »).
 - Les réponses en fongbé n'ont pas encore été relues par un locuteur natif.
-- Les prix sont fictifs.
+- Les prix sont mensuels : entre deux relevés du PAM, ils ne suivent pas les variations d'un jour à l'autre.
+- Au dernier import, le PAM ne relevait pas le riz local à Ouando, Pobè, Azovè, Bohicon et Djougou, ni le manioc frais à Pobè, Parakou, Djougou et Natitingou. Pour ces cas, l'application le dit et donne les prix des autres marchés.
 - Les signalements sont enregistrés dans un fichier JSON. Cela suffit pour une démo, pas pour un service en production.
 - D'après la documentation de l'API, les nombres dits en français et les noms propres rares sont les points faibles de la reconnaissance.
 
 ## Licence
 
-Le code est sous licence MIT (voir [LICENSE](LICENSE)). La police Montserrat est distribuée sous licence SIL Open Font License ([public/fonts/OFL.txt](public/fonts/OFL.txt)). Les armoiries sont l'emblème de la République du Bénin, utilisé ici selon la charte graphique du Gouvernement.
+Le code est sous licence MIT (voir [LICENSE](LICENSE)). Les prix sont ceux du PAM, sous licence [CC BY-IGO](https://creativecommons.org/licenses/by/3.0/igo/), cités comme source dans l'application. La police Montserrat est distribuée sous licence SIL Open Font License ([public/fonts/OFL.txt](public/fonts/OFL.txt)). Les armoiries sont l'emblème de la République du Bénin, utilisé ici selon la charte graphique du Gouvernement.

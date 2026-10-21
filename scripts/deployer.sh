@@ -6,6 +6,7 @@
 #   cd ~/agrifon-app && bash scripts/deployer.sh agrifon.bytechnum.com
 #
 # Relancer la même commande pour mettre à jour : .env et stockage/ sont conservés.
+# Les prix réels sont importés à chaque passage (voir aussi scripts/importer-prix.sh).
 
 set -euo pipefail
 
@@ -59,6 +60,9 @@ else
   # L'adresse racine s'écrit vide ou « / » selon les versions du sélecteur.
   creer "" || creer "/" || echec "la création de l'application a été refusée (message ci-dessus)."
 fi
+
+etape "Prix réels"
+bash "$RACINE/scripts/importer-prix.sh" || echo "Import des prix échoué : les prix précédents sont conservés."
 
 etape "Redémarrage"
 selecteur restart --app-root="$DOSSIER_APP"

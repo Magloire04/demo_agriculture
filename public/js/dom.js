@@ -27,8 +27,8 @@ export function heure(iso) {
   return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 }
 
-export function dateLongue(jour) {
-  return new Date(`${jour}T12:00:00`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+export function mois(jour) {
+  return new Date(`${jour}T12:00:00`).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
 }
 
 export function dateHeure(iso) {

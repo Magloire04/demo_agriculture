@@ -1,0 +1,428 @@
+{
+  "_note": "Marchés et produits reconnus par l'application. Les prix viennent des relevés importés (scripts/importer-prix.js). Le champ pam donne le nom du marché ou les libellés du produit dans le jeu de données du PAM, par ordre de préférence ; un marché sans pam (Lokossa) n'a pas de prix.",
+  "marches": [
+    {
+      "id": "dantokpa",
+      "nom": "Dantokpa",
+      "ville": "Cotonou",
+      "departement": "Littoral",
+      "au": "au marché Dantokpa (Cotonou)",
+      "termes": [
+        "Dantokpa",
+        "Dantɔkpa",
+        "Tokpa",
+        "Tɔkpa",
+        "Cotonou",
+        "Kutonu"
+      ],
+      "pam": "Dantokpa"
+    },
+    {
+      "id": "ouando",
+      "nom": "Ouando",
+      "ville": "Porto-Novo",
+      "departement": "Ouémé",
+      "au": "au marché Ouando (Porto-Novo)",
+      "termes": [
+        "Ouando",
+        "Wando",
+        "Porto-Novo",
+        "Xogbonu",
+        "Hogbonu"
+      ],
+      "pam": "Ouando"
+    },
+    {
+      "id": "pobe",
+      "nom": "Pobè",
+      "ville": "Pobè",
+      "departement": "Plateau",
+      "au": "au marché de Pobè",
+      "termes": [
+        "Pobè",
+        "Pobɛ"
+      ],
+      "pam": "Pobè"
+    },
+    {
+      "id": "lokossa",
+      "nom": "Lokossa",
+      "ville": "Lokossa",
+      "departement": "Mono",
+      "au": "au marché de Lokossa",
+      "termes": [
+        "Lokossa",
+        "Lokosa"
+      ],
+      "pam": null
+    },
+    {
+      "id": "come",
+      "nom": "Comé",
+      "ville": "Comé",
+      "departement": "Mono",
+      "au": "au marché de Comé",
+      "termes": [
+        "Comé",
+        "Come"
+      ],
+      "pam": "Comé"
+    },
+    {
+      "id": "azove",
+      "nom": "Azovè",
+      "ville": "Aplahoué",
+      "departement": "Couffo",
+      "au": "au marché d'Azovè",
+      "termes": [
+        "Azovè",
+        "Azovɛ"
+      ],
+      "pam": "Azovè"
+    },
+    {
+      "id": "bohicon",
+      "nom": "Bohicon",
+      "ville": "Bohicon",
+      "departement": "Zou",
+      "au": "au marché de Bohicon",
+      "termes": [
+        "Bohicon",
+        "Bohikon"
+      ],
+      "pam": "Bohicon"
+    },
+    {
+      "id": "abomey",
+      "nom": "Houndjro",
+      "ville": "Abomey",
+      "departement": "Zou",
+      "au": "au marché Houndjro (Abomey)",
+      "termes": [
+        "Houndjro",
+        "Hunjro",
+        "Abomey",
+        "Agbomɛ",
+        "Agbome"
+      ],
+      "pam": "Abomey"
+    },
+    {
+      "id": "glazoue",
+      "nom": "Glazoué",
+      "ville": "Glazoué",
+      "departement": "Collines",
+      "au": "au marché de Glazoué",
+      "termes": [
+        "Glazoué",
+        "Glazue",
+        "Glazuwe"
+      ],
+      "pam": "Glazoué"
+    },
+    {
+      "id": "dassa",
+      "nom": "Dassa-Zoumè",
+      "ville": "Dassa-Zoumè",
+      "departement": "Collines",
+      "au": "au marché de Dassa-Zoumè",
+      "termes": [
+        "Dassa-Zoumè",
+        "Dassa",
+        "Dasa"
+      ],
+      "pam": "Dassa-Zoumè"
+    },
+    {
+      "id": "parakou",
+      "nom": "Arzèkè",
+      "ville": "Parakou",
+      "departement": "Borgou",
+      "au": "au marché Arzèkè (Parakou)",
+      "termes": [
+        "Arzèkè",
+        "Arzeke",
+        "Parakou",
+        "Paraku"
+      ],
+      "pam": "Parakou"
+    },
+    {
+      "id": "djougou",
+      "nom": "Djougou",
+      "ville": "Djougou",
+      "departement": "Donga",
+      "au": "au marché de Djougou",
+      "termes": [
+        "Djougou",
+        "Jugu",
+        "Dyugu"
+      ],
+      "pam": "Djougou"
+    },
+    {
+      "id": "natitingou",
+      "nom": "Natitingou",
+      "ville": "Natitingou",
+      "departement": "Atacora",
+      "au": "au marché de Natitingou",
+      "termes": [
+        "Natitingou",
+        "Natitingu"
+      ],
+      "pam": "Natitingou"
+    },
+    {
+      "id": "malanville",
+      "nom": "Malanville",
+      "ville": "Malanville",
+      "departement": "Alibori",
+      "au": "au marché de Malanville",
+      "termes": [
+        "Malanville",
+        "Malanvil"
+      ],
+      "pam": "Malanville (CBM)"
+    }
+  ],
+  "produits": [
+    {
+      "id": "mais",
+      "nom": "Maïs",
+      "nom_fon": "gbadé",
+      "article": "le maïs",
+      "emoji": "🌽",
+      "unite": "kg",
+      "termes_fon": [
+        "gbadé",
+        "gbàdé"
+      ],
+      "termes_fr": [
+        "maïs"
+      ],
+      "pam": [
+        "Maize (white)"
+      ]
+    },
+    {
+      "id": "riz",
+      "nom": "Riz local",
+      "nom_fon": "mɔ̌likún",
+      "article": "le riz local",
+      "emoji": "🍚",
+      "unite": "kg",
+      "termes_fon": [
+        "mɔlikun",
+        "mɔ̌likún"
+      ],
+      "termes_fr": [
+        "riz"
+      ],
+      "pam": [
+        "Rice (local)",
+        "Rice (milled, local)"
+      ]
+    },
+    {
+      "id": "haricot",
+      "nom": "Haricot (niébé)",
+      "nom_fon": "ayikún",
+      "article": "le haricot",
+      "emoji": "🫘",
+      "unite": "kg",
+      "termes_fon": [
+        "ayikun",
+        "ayikún"
+      ],
+      "termes_fr": [
+        "haricot",
+        "niébé"
+      ],
+      "pam": [
+        "Beans (white)",
+        "Beans (red)"
+      ]
+    },
+    {
+      "id": "arachide",
+      "nom": "Arachide (coque)",
+      "nom_fon": "aziín",
+      "article": "l'arachide en coque",
+      "emoji": "🥜",
+      "unite": "kg",
+      "termes_fon": [
+        "azin",
+        "aziín"
+      ],
+      "termes_fr": [
+        "arachide"
+      ],
+      "pam": [
+        "Groundnuts (small, unshelled)"
+      ]
+    },
+    {
+      "id": "igname",
+      "nom": "Igname",
+      "nom_fon": "tevi",
+      "article": "l'igname",
+      "emoji": "🍠",
+      "unite": "kg",
+      "termes_fon": [
+        "tɛvi",
+        "tevi"
+      ],
+      "termes_fr": [
+        "igname"
+      ],
+      "pam": [
+        "Yam",
+        "Yam (white)"
+      ]
+    },
+    {
+      "id": "gari",
+      "nom": "Gari",
+      "nom_fon": "gali",
+      "article": "le gari",
+      "emoji": "🥣",
+      "unite": "kg",
+      "termes_fon": [
+        "gali"
+      ],
+      "termes_fr": [
+        "gari"
+      ],
+      "pam": [
+        "Cassava meal (gari)",
+        "Cassava meal (gari, fine)"
+      ]
+    },
+    {
+      "id": "manioc",
+      "nom": "Manioc frais",
+      "nom_fon": "fɛnnyɛ",
+      "article": "le manioc frais",
+      "emoji": "🌿",
+      "unite": "kg",
+      "termes_fon": [
+        "fɛnnyɛ"
+      ],
+      "termes_fr": [
+        "manioc"
+      ],
+      "pam": [
+        "Cassava (fresh)"
+      ]
+    },
+    {
+      "id": "tomate",
+      "nom": "Tomate",
+      "nom_fon": "timati",
+      "article": "la tomate",
+      "emoji": "🍅",
+      "unite": "kg",
+      "termes_fon": [
+        "timati",
+        "timáti"
+      ],
+      "termes_fr": [
+        "tomate"
+      ],
+      "pam": [
+        "Tomatoes"
+      ]
+    },
+    {
+      "id": "piment",
+      "nom": "Piment sec",
+      "nom_fon": "takín",
+      "article": "le piment sec",
+      "emoji": "🌶️",
+      "unite": "kg",
+      "termes_fon": [
+        "takin",
+        "takín"
+      ],
+      "termes_fr": [
+        "piment",
+        "piment sec"
+      ],
+      "pam": [
+        "Peppers (red, dry)"
+      ]
+    },
+    {
+      "id": "oignon",
+      "nom": "Oignon",
+      "nom_fon": "ayoma",
+      "article": "l'oignon",
+      "emoji": "🧅",
+      "unite": "kg",
+      "termes_fon": [
+        "ayoma"
+      ],
+      "termes_fr": [
+        "oignon"
+      ],
+      "pam": [
+        "Onions"
+      ]
+    },
+    {
+      "id": "soja",
+      "nom": "Soja",
+      "nom_fon": "soja",
+      "article": "le soja",
+      "emoji": "🫛",
+      "unite": "kg",
+      "termes_fon": [
+        "sɔja",
+        "soja"
+      ],
+      "termes_fr": [
+        "soja"
+      ],
+      "pam": [
+        "Soybeans"
+      ]
+    },
+    {
+      "id": "sorgho",
+      "nom": "Sorgho",
+      "nom_fon": "abɔ̀",
+      "article": "le sorgho",
+      "emoji": "🌾",
+      "unite": "kg",
+      "termes_fon": [
+        "abɔ̀"
+      ],
+      "termes_fr": [
+        "sorgho"
+      ],
+      "pam": [
+        "Sorghum",
+        "Sorghum (red)"
+      ]
+    },
+    {
+      "id": "huile_palme",
+      "nom": "Huile de palme",
+      "nom_fon": "amivɔvɔ",
+      "article": "l'huile de palme",
+      "emoji": "🫗",
+      "unite": "litre",
+      "termes_fon": [
+        "amivɔvɔ",
+        "ami vɔvɔ"
+      ],
+      "termes_fr": [
+        "huile rouge",
+        "huile de palme"
+      ],
+      "pam": [
+        "Oil (palm)"
+      ]
+    }
+  ]
+}

@@ -27,6 +27,10 @@
       "fr": "Pas de prix relevé pour {produit} {au_marche}.",
       "fon": "Mǐ ko tuun {produit} sín akwɛ́ ɖo {marche} axi mɛ ǎ."
     },
+    "prix_inconnu": {
+      "fr": "Pas encore de prix relevé pour {produit}.",
+      "fon": "Mǐ ko tuun {produit} sín akwɛ́ ǎ."
+    },
     "prix_marche_seul": {
       "fr": "Je n'ai pas compris le produit. Voici les prix relevés {au_marche}.",
       "fon": "Un ma se nǔ ɔ sín nyǐkɔ ǎ. Ɖo {marche} axi mɛ ɔ, nǔ lɛ́ sín akwɛ́ ɖíe."

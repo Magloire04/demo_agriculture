@@ -1,4 +1,4 @@
-import { appelerApi, dateLongue, ecrireMemoire, el, enregistrerServiceWorker, heure, lireMemoire, nombre, svg } from './dom.js';
+import { appelerApi, ecrireMemoire, el, enregistrerServiceWorker, heure, lireMemoire, mois, nombre, svg } from './dom.js';
 import { demarrerEnregistrement, enregistrementPossible } from './enregistreur.js';
 
 const DUREE_MAX = 30; // secondes ; l'API accepte jusqu'à 60 s
@@ -222,22 +222,36 @@ function nomMarche(marche) {
   return marche.nom === marche.ville ? marche.nom : `${marche.nom} (${marche.ville})`;
 }
 
-function tendance({ prix, precedent }) {
+// Évolution par rapport au relevé précédent (en général le mois d'avant).
+function tendance({ prix, precedent, date_precedente: datePrecedente }) {
+  if (precedent === null) return null;
+  const depuis = `depuis ${mois(datePrecedente)}`;
   const ecart = prix - precedent;
-  if (ecart > 0) return el('p', { class: 'tendance tendance-hausse' }, `▲ +${nombre(ecart)} F depuis la semaine dernière`);
-  if (ecart < 0) return el('p', { class: 'tendance tendance-baisse' }, `▼ −${nombre(-ecart)} F depuis la semaine dernière`);
-  return el('p', { class: 'tendance' }, 'Stable depuis la semaine dernière');
+  if (ecart > 0) return el('p', { class: 'tendance tendance-hausse' }, `▲ +${nombre(ecart)} F ${depuis}`);
+  if (ecart < 0) return el('p', { class: 'tendance tendance-baisse' }, `▼ −${nombre(-ecart)} F ${depuis}`);
+  return el('p', { class: 'tendance' }, `Stable ${depuis}`);
+}
+
+// Mois de référence d'une liste de relevés : le plus récent.
+function moisReference(lignes) {
+  return lignes.reduce((plusRecent, l) => (l.date > plusRecent ? l.date : plusRecent), '').slice(0, 7);
+}
+
+// Mois du relevé, affiché seulement s'il diffère du mois de référence.
+function moisSiAncien(ligne, reference) {
+  return ligne.date.slice(0, 7) === reference ? null : el('small', {}, `relevé de ${mois(ligne.date)}`);
 }
 
 function carteProduit({ produit, ici, lignes }) {
   const unite = produit.unite;
+  const reference = moisReference(lignes);
   const liste = el('ol', { class: 'liste-prix' }, lignes.map((ligne, i) =>
     el('li', { class: ici && ligne.marche.id === ici.marche.id ? 'ici' : null },
       el('span', {},
         nomMarche(ligne.marche),
         i === 0 ? el('span', { class: 'badge' }, 'le moins cher') : null,
         el('small', {}, ligne.marche.departement)),
-      el('span', { class: 'valeur' }, `${nombre(ligne.prix)} F`))));
+      el('span', { class: 'valeur' }, `${nombre(ligne.prix)} F`, moisSiAncien(ligne, reference)))));
 
   return el('article', { class: 'carte' },
     el('div', { class: 'carte-entete' },
@@ -245,7 +259,7 @@ function carteProduit({ produit, ici, lignes }) {
       el('h2', {}, produit.nom, produit.nom_fon && el('span', { class: 'nom-fon fon', lang: 'fon' }, produit.nom_fon))),
     ici && el('div', { class: 'prix-principal' },
       el('p', {}, el('span', { class: 'montant' }, nombre(ici.prix)), el('span', { class: 'devise' }, `F CFA / ${unite}`)),
-      el('p', { class: 'prix-lieu' }, `Marché ${nomMarche(ici.marche)} · ${ici.marche.departement}`),
+      el('p', { class: 'prix-lieu' }, `Marché ${nomMarche(ici.marche)} · ${ici.marche.departement} · prix moyen de ${mois(ici.date)}`),
       tendance(ici)),
     ici
       ? el('details', { class: 'comparer' }, el('summary', {}, 'Comparer avec les autres marchés'), liste)
@@ -253,23 +267,30 @@ function carteProduit({ produit, ici, lignes }) {
 }
 
 function carteMarche(marche, produits) {
+  const reference = moisReference(produits);
   return el('article', { class: 'carte' },
     el('div', { class: 'carte-entete' }, el('h2', {}, `Marché ${nomMarche(marche)}`)),
-    el('ul', { class: 'liste-prix' }, produits.map(({ produit, prix }) =>
+    el('ul', { class: 'liste-prix' }, produits.map((ligne) =>
       el('li', {},
-        el('span', {}, el('span', { 'aria-hidden': 'true' }, `${produit.emoji} `), produit.nom,
-          produit.nom_fon && el('small', { class: 'fon', lang: 'fon' }, produit.nom_fon)),
-        el('span', { class: 'valeur' }, `${nombre(prix)} F / ${produit.unite}`)))));
+        el('span', {}, el('span', { 'aria-hidden': 'true' }, `${ligne.produit.emoji} `), ligne.produit.nom,
+          ligne.produit.nom_fon && el('small', { class: 'fon', lang: 'fon' }, ligne.produit.nom_fon)),
+        el('span', { class: 'valeur' }, `${nombre(ligne.prix)} F / ${ligne.produit.unite}`, moisSiAncien(ligne, reference))))));
+}
+
+function texteSource(source) {
+  return el('p', { class: 'source' },
+    'Prix de détail moyens relevés chaque mois. Source : ',
+    el('a', { href: source.url, target: '_blank', rel: 'noopener' }, source.nom),
+    `, jeu « ${source.jeu} », licence ${source.licence}.`);
 }
 
 function afficherPrix(r) {
   montrerResultat(zonePrix,
     vousAvezDit(r.transcription),
     el('div', { class: 'reponse' }, bilingue({ fr: r.message, fon: r.message_fon }, 'reponse-message')),
-    r.reponses.map(carteProduit),
+    r.reponses.filter((x) => x.lignes.length > 0).map(carteProduit),
     r.statut === 'marche_seul' && carteMarche(r.marche, r.produits_du_marche),
-    (r.reponses.length > 0 || r.statut === 'marche_seul') &&
-      el('p', { class: 'source' }, `Prix relevés le ${dateLongue(r.releve.date)} · ${r.releve.source}.`),
+    r.source && (r.reponses.some((x) => x.lignes.length > 0) || r.statut === 'marche_seul') && texteSource(r.source),
     boutonRecommencer('Poser une autre question', microPrix));
 }
 
