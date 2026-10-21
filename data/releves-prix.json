@@ -1,0 +1,1478 @@
+{
+ "source": {
+  "nom": "PAM (Programme alimentaire mondial)",
+  "jeu": "Benin - Food Prices",
+  "url": "https://data.humdata.org/dataset/wfp-food-prices-for-benin",
+  "licence": "CC BY-IGO"
+ },
+ "importe_le": "2026-10-21T06:17:13.566Z",
+ "derniere_date": "2026-09-15",
+ "prix": {
+  "mais": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 160,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 174
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 114,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 136
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 134,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 134
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 169,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 174
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 67,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 89
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 105,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 138
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 127,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 142
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 90,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 95
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 112,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 107
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 167,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 179
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 145,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 145
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 165,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 165
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 158,
+    "libelle": "Maize (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 158
+    }
+   }
+  },
+  "riz": {
+   "dantokpa": {
+    "date": "2026-05-15",
+    "prix": 650,
+    "libelle": "Rice (local)",
+    "precedent": {
+     "date": "2026-03-15",
+     "prix": 647
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 381,
+    "libelle": "Rice (local)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 381
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 454,
+    "libelle": "Rice (local)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 459
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 430,
+    "libelle": "Rice (local)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 426
+    }
+   },
+   "dassa": {
+    "date": "2026-07-15",
+    "prix": 532,
+    "libelle": "Rice (local)",
+    "precedent": {
+     "date": "2026-05-15",
+     "prix": 426
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 345,
+    "libelle": "Rice (local)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 350
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 372,
+    "libelle": "Rice (local)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 330
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 426,
+    "libelle": "Rice (local)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 426
+    }
+   }
+  },
+  "haricot": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 707,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 743
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 652,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 652
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 652,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 639
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 614,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 561
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 577,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 455
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 652,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 625
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 548,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 512
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 432,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 335
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 652,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 679
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 405,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 405
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 618,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 574
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 652,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 652
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 598,
+    "libelle": "Beans (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 598
+    }
+   }
+  },
+  "arachide": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 1216,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 1216
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 811,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 828
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 972,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 955
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 1498,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 1441
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 542,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 542
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 541,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 609
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 760,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 760
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 719,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 721
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 638,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 867
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 871,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 871
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 858,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 825
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 1014,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 1031
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 653,
+    "libelle": "Groundnuts (small, unshelled)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 770
+    }
+   }
+  },
+  "igname": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 300,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 500
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 300,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 388
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 475,
+    "libelle": "Yam (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 475
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 375,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 394
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 403,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 407
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 363,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 344
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 271,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 293
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 203,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 300
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 468,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 661
+    }
+   },
+   "parakou": {
+    "date": "2026-05-15",
+    "prix": 96,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-02-15",
+     "prix": 113
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 304,
+    "libelle": "Yam (white)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 545
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 465,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 619
+    }
+   },
+   "malanville": {
+    "date": "2026-05-15",
+    "prix": 389,
+    "libelle": "Yam",
+    "precedent": {
+     "date": "2026-04-15",
+     "prix": 339
+    }
+   }
+  },
+  "gari": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 298,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 298
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 184,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 200
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 205,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 197
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 318,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 318
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 177,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 177
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 159,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 172
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 215,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 206
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 240,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 236
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 268,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 286
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 310,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 314
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 488,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 488
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 366,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 381
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 354,
+    "libelle": "Cassava meal (gari)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 355
+    }
+   }
+  },
+  "manioc": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 118,
+    "libelle": "Cassava (fresh)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 188
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 238,
+    "libelle": "Cassava (fresh)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 250
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 78,
+    "libelle": "Cassava (fresh)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 81
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 74,
+    "libelle": "Cassava (fresh)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 72
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 136,
+    "libelle": "Cassava (fresh)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 138
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 79,
+    "libelle": "Cassava (fresh)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 81
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 148,
+    "libelle": "Cassava (fresh)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 150
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 183,
+    "libelle": "Cassava (fresh)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 296
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 217,
+    "libelle": "Cassava (fresh)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 274
+    }
+   }
+  },
+  "tomate": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 483,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 413
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 325,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 669
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 450,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 450
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 513,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 438
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 597,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 632
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 598,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 452
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 399,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 452
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 520,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 606
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 335,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 404
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 482,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 442
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 450,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 713
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 251,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 331
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 564,
+    "libelle": "Tomatoes",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 595
+    }
+   }
+  },
+  "piment": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 6191,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 6176
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 3442,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 3825
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 2800,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 2775
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 9209,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 9167
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 2620,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 2615
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 5333,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 5875
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 1754,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 2646
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 1520,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 1508
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 4832,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 4614
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 696,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 687
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 3000,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 2650
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 2231,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 2218
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 1488,
+    "libelle": "Peppers (red, dry)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 1707
+    }
+   }
+  },
+  "oignon": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 744,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 521
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 576,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 299
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 325,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 294
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 708,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 652
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 654,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 628
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 850,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 842
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 756,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 584
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 617,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 404
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 752,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 674
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 252,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 245
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 744,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 573
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 740,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 642
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 599,
+    "libelle": "Onions",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 581
+    }
+   }
+  },
+  "soja": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 523,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 432
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 465,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 465
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 472,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 487
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 581,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 581
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 500,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 392
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 407,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 364
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 373,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 365
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 268,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 268
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 554,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 484
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 190,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 210
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 406,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 375
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 349,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 349
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 417,
+    "libelle": "Soybeans",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 407
+    }
+   }
+  },
+  "sorgho": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 460,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 345
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 489,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 517
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 381,
+    "libelle": "Sorghum (red)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 352
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 575,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 570
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 410,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 410
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 294,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 283
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 376,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 367
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 195,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 199
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 374,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 354
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 143,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 152
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 278,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 278
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 230,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 230
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 230,
+    "libelle": "Sorghum",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 230
+    }
+   }
+  },
+  "huile_palme": {
+   "dantokpa": {
+    "date": "2026-09-15",
+    "prix": 1000,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 925
+    }
+   },
+   "ouando": {
+    "date": "2026-09-15",
+    "prix": 763,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 750
+    }
+   },
+   "pobe": {
+    "date": "2026-09-15",
+    "prix": 700,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 706
+    }
+   },
+   "come": {
+    "date": "2026-09-15",
+    "prix": 867,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 850
+    }
+   },
+   "azove": {
+    "date": "2026-09-15",
+    "prix": 900,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 856
+    }
+   },
+   "bohicon": {
+    "date": "2026-09-15",
+    "prix": 806,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 800
+    }
+   },
+   "abomey": {
+    "date": "2026-09-15",
+    "prix": 917,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 908
+    }
+   },
+   "glazoue": {
+    "date": "2026-09-15",
+    "prix": 1033,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 1096
+    }
+   },
+   "dassa": {
+    "date": "2026-09-15",
+    "prix": 800,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 800
+    }
+   },
+   "parakou": {
+    "date": "2026-09-15",
+    "prix": 1184,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 1200
+    }
+   },
+   "djougou": {
+    "date": "2026-09-15",
+    "prix": 1300,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 1300
+    }
+   },
+   "natitingou": {
+    "date": "2026-09-15",
+    "prix": 1000,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 1000
+    }
+   },
+   "malanville": {
+    "date": "2026-09-15",
+    "prix": 1225,
+    "libelle": "Oil (palm)",
+    "precedent": {
+     "date": "2026-08-15",
+     "prix": 1217
+    }
+   }
+  }
+ }
+}

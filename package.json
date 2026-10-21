@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node server/index.js",
     "simulation": "node server/index.js --simulation",
+    "importer-prix": "node scripts/importer-prix.js",
     "test": "node --test"
   },
   "license": "MIT"
