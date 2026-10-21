@@ -16,6 +16,7 @@ import argparse
 import json
 import os
 import subprocess
+import sys
 import tempfile
 import unicodedata
 
@@ -25,22 +26,34 @@ from transformers import AutoTokenizer, VitsModel
 
 MODELE = "facebook/mms-tts-fon"
 # Le modèle ne connaît que l'accent aigu et le caron : les autres accents (grave)
-# sont retirés, la ponctuation devient une pause.
-ACCENTS_CONNUS = {"́", "̌"}
+# sont retirés, la ponctuation devient une pause. Il n'a pas de « r » : on le dit
+# « l », comme en fon (« lǐtli » pour litre).
+ACCENTS_CONNUS = {"\u0301", "\u030c"}  # aigu, caron
+PONCTUATION = ".,;:?!"
 
 
 def preparer(texte, vocabulaire):
-    sortie = []
-    for c in unicodedata.normalize("NFC", texte.lower()):
+    """Rend le texte à donner au modèle et les caractères qu'il a fallu retirer."""
+    sortie, perdus = [], set()
+    for c in unicodedata.normalize("NFC", texte.lower().replace("r", "l")):
         if c in vocabulaire:
             sortie.append(c)
             continue
         d = unicodedata.normalize("NFD", c)
         if d[0] in vocabulaire:
-            sortie.append(d[0] + "".join(m for m in d[1:] if m in ACCENTS_CONNUS))
-        elif c in ".,;:?!":
+            gardes = "".join(m for m in d[1:] if m in ACCENTS_CONNUS)
+            compose = unicodedata.normalize("NFC", d[0] + gardes)
+            # La lettre accentuée d'un seul tenant si le modèle la connaît, sinon lettre puis accent.
+            sortie.append(compose if compose in vocabulaire else d[0] + gardes)
+        elif c in PONCTUATION:
             sortie.append(" ")
-    return unicodedata.normalize("NFC", "".join(sortie)).strip()
+        elif unicodedata.combining(c):
+            continue  # ton bas (accent grave) : le modèle ne le marque pas
+        elif not c.isspace():
+            perdus.add(c)
+        else:
+            sortie.append(" ")
+    return " ".join("".join(sortie).split()), perdus
 
 
 def main():
@@ -53,7 +66,11 @@ def main():
 
     with open(args.liste, encoding="utf-8") as f:
         liste = json.load(f)
-    a_faire = [x for x in liste if x["fichier"] in args.refaire or not os.path.exists(os.path.join(args.dossier, x["fichier"]))]
+    refaire = {os.path.basename(n) if n.endswith(".mp3") else os.path.basename(n) + ".mp3" for n in args.refaire}
+    inconnus = refaire - {x["fichier"] for x in liste}
+    if inconnus:
+        sys.exit(f"Absents de la liste : {', '.join(sorted(inconnus))}")
+    a_faire = [x for x in liste if x["fichier"] in refaire or not os.path.exists(os.path.join(args.dossier, x["fichier"]))]
     print(f"{len(a_faire)} extraits à générer sur {len(liste)}.")
     if not a_faire:
         return
@@ -63,19 +80,22 @@ def main():
     vocabulaire = {k for k in tokenizer.get_vocab() if len(k) == 1}
     os.makedirs(args.dossier, exist_ok=True)
 
-    for i, x in enumerate(a_faire, 1):
-        entree = tokenizer(preparer(x["texte"], vocabulaire), return_tensors="pt")
-        torch.manual_seed(args.graine)
-        with torch.no_grad():
-            onde = modele(**entree).waveform[0].numpy()
-        with tempfile.NamedTemporaryFile(suffix=".wav") as wav:
-            scipy.io.wavfile.write(wav.name, modele.config.sampling_rate, onde)
+    with tempfile.TemporaryDirectory() as temporaire:
+        wav = os.path.join(temporaire, "extrait.wav")
+        for i, x in enumerate(a_faire, 1):
+            texte, perdus = preparer(x["texte"], vocabulaire)
+            if perdus:
+                print(f"  attention : {''.join(sorted(perdus))} non prononçable(s) dans « {x['texte']} »")
+            torch.manual_seed(args.graine)
+            with torch.no_grad():
+                onde = modele(**tokenizer(texte, return_tensors="pt")).waveform[0].numpy()
+            scipy.io.wavfile.write(wav, modele.config.sampling_rate, onde)
             subprocess.run(
-                ["ffmpeg", "-loglevel", "error", "-y", "-i", wav.name, "-ac", "1", "-b:a", "40k",
+                ["ffmpeg", "-loglevel", "error", "-y", "-i", wav, "-ac", "1", "-b:a", "40k",
                  os.path.join(args.dossier, x["fichier"])],
                 check=True,
             )
-        print(f"{i}/{len(a_faire)}  {x['fichier']}  {x['texte']}")
+            print(f"{i}/{len(a_faire)}  {x['fichier']}  {x['texte']}")
 
 
 if __name__ == "__main__":

@@ -23,7 +23,14 @@ const liste = listerMorceaux(reponses, base, communes).map((texte) => ({ fichier
 const manquants = liste.filter((x) => !existsSync(path.join(RACINE, 'public', 'voix', x.fichier)));
 
 const i = process.argv.indexOf('--json');
-if (i > 0) await writeFile(process.argv[i + 1], `${JSON.stringify(liste, null, 1)}\n`);
+if (i > 0) {
+  const sortie = process.argv[i + 1];
+  if (!sortie || sortie.startsWith('--')) {
+    console.error('Usage : node scripts/lister-voix.js [--json liste.json]');
+    process.exit(1);
+  }
+  await writeFile(sortie, `${JSON.stringify(liste, null, 1)}\n`);
+}
 console.log(`${liste.length} extraits, ${manquants.length} manquants dans public/voix.`);
 for (const x of manquants.slice(0, 20)) console.log(`  ${x.fichier}  ${x.texte}`);
 if (manquants.length > 20) console.log(`  … et ${manquants.length - 20} autres`);
