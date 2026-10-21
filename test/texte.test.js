@@ -18,15 +18,23 @@ test('chercher tolère une lettre sur les mots moyens, aucune sur les mots court
 });
 
 test('chercher recolle les mots coupés', () => {
-  assert.deepEqual(chercher(mots('xwe gla zoue'), 'Glazoué'), { position: 1, ecart: 0 });
+  assert.deepEqual(chercher(mots('xwe gla zoue'), 'Glazoué'), { position: 1, ecart: 0, longueur: 2 });
   assert.ok(chercher(mots('portonovo'), 'Porto-Novo'));
 });
 
 test('chercherExact : même suite de mots, tons seuls ignorés', () => {
-  assert.deepEqual(chercherExact(mots('Mɔ̌likún ce sín ama fí ɔ́.'), 'ama fí ɔ́'), { position: 3, ecart: 0 });
+  assert.deepEqual(chercherExact(mots('Mɔ̌likún ce sín ama fí ɔ́.'), 'ama fí ɔ́'), { position: 3, ecart: 0, longueur: 3 });
   assert.equal(chercherExact(mots('a ma fɔ́n'), 'ama'), null);
   assert.equal(chercherExact(mots('wan nu'), 'wànvú'), null);
   assert.ok(chercher(mots('wan nu'), 'wànvú')); // ce que la recherche tolérante aurait accepté
+});
+
+test('reperer préfère l’expression la plus longue sur les mêmes mots', () => {
+  const entrees = [{ id: 'riz', t: ['mɔlikun'] }, { id: 'riz_importe', t: ['mɔlikun', 'mɔ̌likún àblɛ́'] }];
+  assert.deepEqual(reperer('mɔ̌likún àblɛ́', entrees, (e) => e.t, { exact: true }).map((x) => x.entree.id), ['riz_importe']);
+  assert.deepEqual(reperer('mɔ̌likún', entrees, (e) => e.t, { exact: true }).map((x) => x.entree.id), ['riz', 'riz_importe']);
+  const arachide = [{ id: 'arachide', t: ['aziín'] }, { id: 'voandzou', t: ['aziíngòkwín'] }];
+  assert.deepEqual(reperer('aziín gokwín', arachide, (e) => e.t).map((x) => x.entree.id), ['voandzou']);
 });
 
 test('reperer classe par sûreté puis par position', () => {
