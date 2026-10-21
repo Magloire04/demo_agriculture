@@ -30,14 +30,26 @@ test('produit et marché : prix relevé dans ce marché, avec sa date et le rele
   assert.equal(r.id_requete, 'x');
 });
 
-test('produit seul : fourchette et marché le moins cher', () => {
+test('produit seul : fourchette et marché le moins cher, pour chaque riz', () => {
   const r = repondrePrix({ transcription: 'mɔ̌likún', produits: [produit('mɔ̌likún')] });
   assert.equal(r.marche, null);
+  assert.deepEqual(r.reponses.map((x) => x.produit.id), ['riz', 'riz_importe']);
   assert.equal(r.reponses[0].ici, null);
   assert.deepEqual(r.reponses[0].lignes.map((l) => l.marche.id), ['parakou', 'glazoue', 'dantokpa']);
   assert.equal(r.reponses[0].lignes[2].date, '2026-05-15');
-  assert.equal(r.message, `Le riz local coûte de 344 à 650${NB}F${NB}CFA le kilo selon les marchés. Le moins cher : Arzèkè (Parakou).`);
-  assert.equal(r.message_fon, `È nɔ sa mɔ̌likún kilo ɖokpó sín 344 sɔ́ yi 650${NB}F${NB}CFA ɖo axi vovo lɛ́ mɛ. Axi e mɛ é kpɔ hú bǐ é ɔ, Arzèkè wɛ.`);
+  assert.equal(r.message, `Le riz local coûte de 344 à 650${NB}F${NB}CFA le kilo selon les marchés. Le moins cher : Arzèkè (Parakou). `
+    + `Le riz importé coûte de 560 à 575${NB}F${NB}CFA le kilo selon les marchés. Le moins cher : Dantokpa (Cotonou).`);
+  assert.ok(r.message_fon.startsWith(`È nɔ sa mɔ̌likún kilo ɖokpó sín 344 sɔ́ yi 650${NB}F${NB}CFA ɖo axi vovo lɛ́ mɛ. Axi e mɛ é kpɔ hú bǐ é ɔ, Arzèkè wɛ. È nɔ sa mɔ̌likún àblɛ́ kilo`));
+});
+
+test('un mot pour deux produits relevés : « hweví » donne les deux poissons', () => {
+  const r = repondrePrix({ transcription: 'hweví', produits: [produit('hweví')] });
+  assert.deepEqual(r.reponses.map((x) => x.produit.id), ['chinchard', 'carpe']);
+});
+
+test('sans produit de l’API, la phrase entière est lue sans tolérance', () => {
+  assert.equal(repondrePrix({ transcription: 'a ma fɔ́n ganji à', produits: [] }).statut, 'non_compris');
+  assert.deepEqual(repondrePrix({ transcription: 'feví dantɔkpa', produits: [] }).reponses.map((x) => x.produit.id), ['gombo']);
 });
 
 test('même prix partout', () => {
