@@ -112,7 +112,7 @@ L'application retrouve les mots attendus dans la transcription, sans tenir compt
 | Symptômes | `data/lexique.json`, champ `fon` des `symptomes` | 49 termes pour 8 symptômes (koklojonɔ, fyɔ́, xú, wànvú, gblé…), tirés de textes publiés, à faire valider |
 | Parties de la plante | `data/lexique.json`, champ `fon` des `parties` | ama, atínkàn, atínɖɔ̀, sínsɛ́n… ; racine (« ɖɔ̀ ») écarté car confondu avec « ɖɔ » (dire) |
 | Cultures | `data/lexique.json`, champ `fon` des `cultures` | quelques noms courants (gbadé, mɔlikun, azin…) à vérifier |
-| Produits | `data/referentiel.json`, champ `termes_fon` | idem |
+| Produits | `data/referentiel.json`, champ `termes_fon` | 33 produits ; les 20 derniers ajoutés d'après le corpus FFR et le dictionnaire edutechbenin, à vérifier. Carotte, pomme de terre et tapioca se disent surtout en français |
 | Marchés | `data/referentiel.json`, champ `termes` | variantes de prononciation des noms de lieux |
 | Communes | `data/communes.json`, champ `termes` | noms officiels ; variantes pour 13 communes sur 77 seulement |
 | Réponses affichées | `data/reponses.json`, champ `fon` | 15 phrases et 2 unités, rédigées d'après des sources publiées, à faire relire |
@@ -149,7 +149,7 @@ Réponses (`server/reponses.js`). Chaque réponse est construite dans les deux l
 
 Les prix viennent du jeu de données « Benin - Food Prices » du Programme alimentaire mondial (PAM), publié sur [HDX](https://data.humdata.org/dataset/wfp-food-prices-for-benin) sous licence CC BY-IGO. Ce sont des prix de détail moyens en F CFA, relevés une fois par mois. Sous chaque réponse, l'application indique le mois du relevé et la source.
 
-- `data/referentiel.json` décrit les 13 produits et les 14 marchés de l'application, avec leurs noms en fongbé et le libellé correspondant dans le fichier du PAM (champ `pam`). Lokossa n'est pas suivi par le PAM : l'application répond qu'aucun prix n'y est relevé, puis donne ceux des autres marchés.
+- `data/referentiel.json` décrit les 33 produits et les 14 marchés de l'application, avec leurs noms en fongbé et le libellé correspondant dans le fichier du PAM (champ `pam`). Lokossa n'est pas suivi par le PAM : l'application répond qu'aucun prix n'y est relevé, puis donne ceux des autres marchés. Les produits sont ceux que le PAM relève dans la plupart de nos marchés : céréales et farines, tubercules, légumineuses, légumes, fruits, poissons et huiles. Quand un mot fon désigne plusieurs produits relevés, l'application donne le prix de chacun : « mɔ̌likún » donne le riz local et le riz importé, « hweví » (poisson) le chinchard et la carpe. La série « Peas (green, dry) » du PAM correspond au pois d'Angole : ses prix sont ceux que la DSA publie pour ce produit.
 - `scripts/importer-prix.js` télécharge le fichier CSV du PAM. Pour chaque produit et chaque marché, il garde le dernier relevé de moins de six mois et le relevé précédent, puis écrit `stockage/releves-prix.json`. Le serveur relit ce fichier dès qu'il change, sans redémarrage. Si l'import échoue, les prix précédents restent en place.
 - `data/releves-prix.json` est un instantané livré avec le code (relevés jusqu'au 15 septembre 2026). Le serveur s'en sert tant qu'aucun import n'a eu lieu.
 
@@ -220,14 +220,14 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 48 tests couvrent la comparaison de texte, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
+Les 50 tests couvrent la comparaison de texte, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
 
 ## Limites connues
 
 - Le vocabulaire fongbé des symptômes vient de textes publiés et n'a pas encore été validé par des agriculteurs ou des conseillers (voir « Préparer le vocabulaire en fongbé »).
 - Les réponses en fongbé n'ont pas encore été relues par un locuteur natif.
 - Les prix sont mensuels : entre deux relevés du PAM, ils ne suivent pas les variations d'un jour à l'autre.
-- Au dernier import, le PAM ne relevait pas le riz local à Ouando, Pobè, Azovè, Bohicon et Djougou, ni le manioc frais à Pobè, Parakou, Djougou et Natitingou. Pour ces cas, l'application le dit et donne les prix des autres marchés.
+- Au dernier import, 31 couples produit × marché n'avaient pas de relevé récent, surtout à Pobè (riz local, manioc frais, banane plantain, pois d'Angole…). Pour ces cas, l'application le dit et donne les prix des autres marchés. `npm run importer-prix` affiche la liste à jour.
 - Les signalements sont enregistrés dans un fichier JSON. Cela suffit pour une démo, pas pour un service en production.
 - D'après la documentation de l'API, les nombres dits en français et les noms propres rares sont les points faibles de la reconnaissance.
 
