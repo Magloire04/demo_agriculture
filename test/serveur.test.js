@@ -78,6 +78,17 @@ test('POST /api/prix : la voix est donnée seulement si tous ses extraits existe
   assert.deepEqual(r.voix, attendus);
 });
 
+test('fichiers statiques : revalidés par ETag, 304 s’ils n’ont pas changé', async (t) => {
+  const url = await demarrer(t, { asr: fausseAsr() });
+  const premiere = await fetch(`${url}/js/voix.js`);
+  assert.equal(premiere.status, 200);
+  assert.equal(premiere.headers.get('cache-control'), 'no-cache');
+  const etag = premiere.headers.get('etag');
+  assert.ok(etag);
+  const seconde = await fetch(`${url}/js/voix.js`, { headers: { 'If-None-Match': etag } });
+  assert.equal(seconde.status, 304);
+});
+
 test('POST /api/prix refuse ce qui n’est pas de l’audio, et un corps vide', async (t) => {
   const url = await demarrer(t, { asr: fausseAsr() });
   assert.equal((await envoyer(`${url}/api/prix`, 'x', 'text/plain')).status, 415);

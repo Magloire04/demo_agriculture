@@ -29,6 +29,18 @@ test('creerVoix : null dès qu’un extrait manque', async (t) => {
   assert.equal(voix.fichiers(['a', 'c']), null);
   assert.equal(voix.fichiers(null), null);
   assert.equal(creerVoix('/inexistant').fichiers(['a']), null);
+  // Un extrait déposé ou retiré pendant que le serveur tourne compte aussitôt.
+  await writeFile(path.join(dossier, fichierVoix('c')), '');
+  assert.deepEqual(voix.fichiers(['a', 'c']), [fichierVoix('a'), fichierVoix('c')]);
+  await rm(path.join(dossier, fichierVoix('a')));
+  assert.equal(voix.fichiers(['a', 'c']), null);
+});
+
+test('listerMorceaux : un produit sans nom fon ne donne aucun morceau', () => {
+  const avecTrou = { ...base, produits: [...base.produits, { id: 'x', nom: 'X', nom_fon: null, unite: 'kg' }, { id: 'y', nom: 'Y', nom_fon: 'y', unite: 'tas' }] };
+  const liste = listerMorceaux(reponses, avecTrou, communes);
+  assert.equal(liste.length, listerMorceaux(reponses, base, communes).length);
+  assert.ok(liste.every((m) => !/undefined|null/.test(m)));
 });
 
 test('chaque morceau que disent les réponses figure dans la liste des extraits à préparer', () => {

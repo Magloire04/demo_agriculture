@@ -5,7 +5,8 @@
 // toucher au code.
 
 import { createHash } from 'node:crypto';
-import { readdirSync } from 'node:fs';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 import { morceauxDeMontants } from './nombres-fon.js';
 
 export function texteVoix(texte) {
@@ -17,18 +18,13 @@ export function fichierVoix(texte) {
 }
 
 export function creerVoix(dossier) {
-  let presents = new Set();
-  try {
-    presents = new Set(readdirSync(dossier));
-  } catch (e) {
-    if (e.code !== 'ENOENT') throw e;
-  }
   return {
-    // Fichiers à enchaîner pour dire ces morceaux, ou null s'il en manque un.
+    // Fichiers à enchaîner pour dire ces morceaux, ou null s'il en manque un. Le
+    // dossier est regardé à chaque fois : un extrait ajouté ou retiré compte aussitôt.
     fichiers(morceaux) {
       if (!morceaux?.length) return null;
       const fichiers = morceaux.map(fichierVoix);
-      return fichiers.every((f) => presents.has(f)) ? fichiers : null;
+      return fichiers.every((f) => existsSync(path.join(dossier, f))) ? fichiers : null;
     },
   };
 }
@@ -36,14 +32,16 @@ export function creerVoix(dossier) {
 // Tous les morceaux que les réponses peuvent dire : modèles « voix » remplis avec
 // chaque produit, marché ou commune, plus les morceaux de montants.
 export function listerMorceaux(reponses, base, communes) {
+  // Une valeur sans traduction fon ne donne pas de phrase fon, donc pas de voix.
+  const complet = (valeurs) => Object.values(valeurs).every(Boolean);
   const domaines = {
-    produit: base.produits.map((p) => ({ produit: p.nom_fon, unite: reponses.unites[p.unite]?.fon })),
+    produit: base.produits.map((p) => ({ produit: p.nom_fon, unite: reponses.unites[p.unite]?.fon })).filter(complet),
     marche: base.marches.map((m) => ({ marche: m.nom })),
     commune: communes.map((c) => ({ commune: c.nom })),
   };
   const morceaux = new Set(morceauxDeMontants().map(texteVoix));
-  for (const { voix } of Object.values(reponses.phrases)) {
-    for (const morceau of voix ? voix.split('|').map((m) => m.trim()) : []) {
+  for (const { fon, voix } of Object.values(reponses.phrases)) {
+    for (const morceau of fon && voix ? voix.split('|').map((m) => m.trim()) : []) {
       const noms = [...morceau.matchAll(/\{(\w+)\}/g)].map((x) => x[1]);
       if (noms.length === 1 && morceau === `{${noms[0]}}`) continue; // montant
       const groupes = [...new Set(noms.map((n) => (n === 'unite' ? 'produit' : n)))];

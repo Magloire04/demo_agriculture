@@ -220,11 +220,19 @@ export function creerApplication({
       throw new ErreurHttp(404, 'Fichier introuvable.', 'introuvable');
     }
     if (!infos.isFile()) throw new ErreurHttp(404, 'Fichier introuvable.', 'introuvable');
+    // Un fichier remplacé sous le même nom (extrait de voix) est revu dès la requête suivante.
+    const etag = `"${infos.size.toString(36)}-${Math.floor(infos.mtimeMs).toString(36)}"`;
+    if (req.headers['if-none-match'] === etag) {
+      res.writeHead(304, { ...ENTETES_SECURITE, ETag: etag, 'Cache-Control': cache });
+      return res.end();
+    }
     res.writeHead(200, {
       ...ENTETES_SECURITE,
       'Content-Type': TYPES[path.extname(chemin)] ?? 'application/octet-stream',
       'Content-Length': infos.size,
       'Cache-Control': cache,
+      ETag: etag,
+      'Last-Modified': infos.mtime.toUTCString(),
     });
     if (req.method === 'HEAD') return res.end();
     createReadStream(chemin).pipe(res);
@@ -243,7 +251,7 @@ export function creerApplication({
     const chemin = path.join(dossierPublic, path.normalize(relatif));
     if (!chemin.startsWith(dossierPublic + path.sep)) throw new ErreurHttp(404, 'Fichier introuvable.', 'introuvable');
     const ext = path.extname(chemin);
-    const cache = ['.woff2', '.png'].includes(ext) ? 'public, max-age=604800' : ext === '.mp3' ? 'public, max-age=86400' : 'no-cache';
+    const cache = ['.woff2', '.png'].includes(ext) ? 'public, max-age=604800' : 'no-cache';
     return envoyerFichier(req, res, chemin, cache);
   }
 
