@@ -1,0 +1,32 @@
+{
+ "source": {
+  "nom": "PAM (Programme alimentaire mondial)",
+  "jeu": "Benin - Food Prices",
+  "url": "https://data.humdata.org/dataset/wfp-food-prices-for-benin",
+  "licence": "CC BY-IGO"
+ },
+ "importe_le": "2026-10-21T06:00:00.000Z",
+ "derniere_date": "2026-09-15",
+ "prix": {
+  "mais": {
+   "glazoue": { "date": "2026-09-15", "prix": 90, "libelle": "Maize (white)", "precedent": { "date": "2026-08-15", "prix": 95 } },
+   "dantokpa": { "date": "2026-09-15", "prix": 160, "libelle": "Maize (white)", "precedent": { "date": "2026-08-15", "prix": 155 } },
+   "malanville": { "date": "2026-09-15", "prix": 158, "libelle": "Maize (white)", "precedent": null }
+  },
+  "riz": {
+   "glazoue": { "date": "2026-09-15", "prix": 430, "libelle": "Rice (local)", "precedent": { "date": "2026-08-15", "prix": 430 } },
+   "parakou": { "date": "2026-09-15", "prix": 344, "libelle": "Rice (local)", "precedent": { "date": "2026-08-15", "prix": 350 } },
+   "dantokpa": { "date": "2026-05-15", "prix": 650, "libelle": "Rice (local)", "precedent": { "date": "2026-03-15", "prix": 647 } }
+  },
+  "soja": {
+   "glazoue": { "date": "2026-09-15", "prix": 268, "libelle": "Soybeans", "precedent": null },
+   "parakou": { "date": "2026-09-15", "prix": 268, "libelle": "Soybeans", "precedent": null }
+  },
+  "tomate": {
+   "dantokpa": { "date": "2026-09-15", "prix": 482, "libelle": "Tomatoes", "precedent": { "date": "2026-08-15", "prix": 500 } }
+  },
+  "huile_palme": {
+   "dantokpa": { "date": "2026-09-15", "prix": 1000, "libelle": "Oil (palm)", "precedent": { "date": "2026-08-15", "prix": 1000 } }
+  }
+ }
+}

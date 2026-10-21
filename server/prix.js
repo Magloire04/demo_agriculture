@@ -1,5 +1,5 @@
 // « Prix du marché » : à partir de la réponse du mode marché de l'API, retrouve le
-// produit et le marché demandés, puis cherche le prix dans la base.
+// produit et le marché demandés, puis cherche le prix dans les relevés importés.
 
 import { mots, reperer } from './texte.js';
 
@@ -11,18 +11,28 @@ function termesProduit(produit) {
 }
 
 function versProduit(produit, entendu) {
-  const { prix, termes_fon, termes_fr, ...reste } = produit;
+  const { pam, termes_fon, termes_fr, ...reste } = produit;
   return { ...reste, nom_fon: produit.nom_fon ?? null, entendu };
 }
 
-function versMarche({ termes, ...marche }) {
+function versMarche({ termes, pam, ...marche }) {
   return marche;
 }
 
-function lignesPrix(base, produit) {
+function versLigne(releve) {
+  return {
+    prix: releve.prix,
+    date: releve.date,
+    precedent: releve.precedent?.prix ?? null,
+    date_precedente: releve.precedent?.date ?? null,
+  };
+}
+
+function lignesPrix(base, releves, produit) {
+  const parMarche = releves.prix[produit.id] ?? {};
   return base.marches
-    .filter((m) => produit.prix[m.id])
-    .map((m) => ({ marche: versMarche(m), prix: produit.prix[m.id].actuel, precedent: produit.prix[m.id].precedent }))
+    .filter((m) => parMarche[m.id])
+    .map((m) => ({ marche: versMarche(m), ...versLigne(parMarche[m.id]) }))
     .sort((a, b) => a.prix - b.prix);
 }
 
@@ -63,12 +73,12 @@ export function trouverProduits(base, reponseApi) {
   return { trouves, sansPrix };
 }
 
-export function repondrePrix(base, textes, reponseApi) {
+export function repondrePrix(base, releves, textes, reponseApi) {
   const marche = trouverMarche(base, transcriptions(reponseApi));
   const { trouves, sansPrix } = trouverProduits(base, reponseApi);
 
   const reponses = trouves.map(({ produit, entendu }) => {
-    const lignes = lignesPrix(base, produit);
+    const lignes = lignesPrix(base, releves, produit);
     const ici = marche ? lignes.find((l) => l.marche.id === marche.id) : null;
     return { produit: versProduit(produit, entendu), ici: ici ?? null, lignes };
   });
@@ -78,6 +88,10 @@ export function repondrePrix(base, textes, reponseApi) {
     const valeurs = { produit: { fr: produit.article, fon: produit.nom_fon }, unite: textes.unite(produit.unite) };
     if (ici) {
       phrases.push(textes.phrase('prix_ici', { ...valeurs, au_marche: marche.au, marche: marche.nom, prix: nombre(ici.prix) }));
+      continue;
+    }
+    if (lignes.length === 0) {
+      phrases.push(textes.phrase('prix_inconnu', valeurs));
       continue;
     }
     if (marche) phrases.push(textes.phrase('prix_absent', { ...valeurs, au_marche: marche.au, marche: marche.nom }));
@@ -99,11 +113,11 @@ export function repondrePrix(base, textes, reponseApi) {
   if (reponses.length === 0) {
     if (sansPrix.length > 0) {
       statut = 'sans_prix';
-    } else if (marche) {
+    } else if (marche && base.produits.some((p) => releves.prix[p.id]?.[marche.id])) {
       statut = 'marche_seul';
       produitsDuMarche = base.produits
-        .filter((p) => p.prix[marche.id])
-        .map((p) => ({ produit: versProduit(p, null), prix: p.prix[marche.id].actuel, precedent: p.prix[marche.id].precedent }));
+        .filter((p) => releves.prix[p.id]?.[marche.id])
+        .map((p) => ({ produit: versProduit(p, null), ...versLigne(releves.prix[p.id][marche.id]) }));
       phrases.push(textes.phrase('prix_marche_seul', { au_marche: marche.au, marche: marche.nom }));
     } else {
       statut = 'non_compris';
@@ -120,15 +134,16 @@ export function repondrePrix(base, textes, reponseApi) {
     marche: marche ? versMarche(marche) : null,
     reponses,
     produits_du_marche: produitsDuMarche,
-    releve: base.releve,
+    source: releves.source,
     id_requete: reponseApi.id ?? null,
   };
 }
 
-// Liste publique de la base (pour l'écran d'aide).
-export function resumerBase(base) {
+// Liste publique du référentiel et de l'état des relevés.
+export function resumerBase(base, releves) {
   return {
-    releve: base.releve,
+    source: releves.source,
+    derniere_date: releves.derniere_date,
     marches: base.marches.map(versMarche),
     produits: base.produits.map((p) => versProduit(p, null)),
   };

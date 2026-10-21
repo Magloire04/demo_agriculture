@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { creerClientAsr, ErreurAsr, extensionAudio } from './asr.js';
 import { repondrePrix, resumerBase } from './prix.js';
+import { creerReleves } from './releves.js';
 import { creerTextes } from './reponses.js';
 import { analyserSignalement, creerRegistre, destinataire } from './signalement.js';
 
@@ -91,7 +92,7 @@ const PHRASES_ERREUR = {
   audio_trop_court: 'erreur_trop_court',
 };
 
-export function creerApplication({ asr, base, lexique, communes, registre, textes, codeConseiller = '', dossierPublic = path.join(RACINE, 'public') }) {
+export function creerApplication({ asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierPublic = path.join(RACINE, 'public') }) {
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
   const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
 
@@ -116,7 +117,7 @@ export function creerApplication({ asr, base, lexique, communes, registre, texte
         conseiller_protege: Boolean(codeConseiller),
       });
     }
-    if (m === 'GET' && p === '/api/prix/base') return envoyerJson(res, 200, resumerBase(base));
+    if (m === 'GET' && p === '/api/prix/base') return envoyerJson(res, 200, resumerBase(base, releves.lire()));
     if (m === 'GET' && p === '/api/communes') {
       return envoyerJson(res, 200, { communes: communes.map(({ nom, departement }) => ({ nom, departement })) });
     }
@@ -124,7 +125,7 @@ export function creerApplication({ asr, base, lexique, communes, registre, texte
     if (m === 'POST' && p === '/api/prix') {
       const { audio, type } = await lireAudio(req);
       const reponseApi = await asr.marche(audio, type, { noms: nomsMarches });
-      return envoyerJson(res, 200, { ...repondrePrix(base, textes, reponseApi), simulation: asr.simulation });
+      return envoyerJson(res, 200, { ...repondrePrix(base, releves.lire(), textes, reponseApi), simulation: asr.simulation });
     }
 
     if (m === 'POST' && p === '/api/signalements') {
@@ -278,13 +279,18 @@ export async function demarrer() {
     simulation: env.ASR_SIMULATION === '1' || process.argv.includes('--simulation'),
   });
   const [base, lexique, { communes }, reponses] = await Promise.all([
-    lireJson('data/prix.json'),
+    lireJson('data/referentiel.json'),
     lireJson('data/lexique.json'),
     lireJson('data/communes.json'),
     lireJson('data/reponses.json'),
   ]);
-  const registre = await creerRegistre(path.resolve(RACINE, env.DOSSIER_DONNEES || 'stockage'));
-  const gerer = creerApplication({ asr, base, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '' });
+  const dossierDonnees = path.resolve(RACINE, env.DOSSIER_DONNEES || 'stockage');
+  const registre = await creerRegistre(dossierDonnees);
+  // Prix importés par scripts/importer-prix.js, sinon l'instantané livré avec le code.
+  const releves = creerReleves([path.join(dossierDonnees, 'releves-prix.json'), path.join(RACINE, 'data', 'releves-prix.json')]);
+  const gerer = creerApplication({
+    asr, base, releves, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '',
+  });
 
   // Un hébergeur peut fournir un socket (chemin) au lieu d'un numéro de port.
   const port = /^\d+$/.test(env.PORT ?? '') ? Number(env.PORT) : env.PORT || 3000;

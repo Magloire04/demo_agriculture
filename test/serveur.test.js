@@ -17,7 +17,8 @@ async function demarrer(t, { asr, codeConseiller = '' }) {
   const registre = await creerRegistre(dossier);
   const gerer = creerApplication({
     asr,
-    base: lire('prix.json'),
+    base: lire('referentiel.json'),
+    releves: { lire: () => JSON.parse(readFileSync(new URL('./fixtures/releves.json', import.meta.url), 'utf8')) },
     lexique: lire('lexique.json'),
     communes: lire('communes.json').communes,
     registre,
@@ -60,8 +61,9 @@ test('POST /api/prix relaie l’audio et répond le prix', async (t) => {
   const rep = await envoyer(`${url}/api/prix`, 'abc', 'audio/webm;codecs=opus');
   assert.equal(rep.status, 200);
   const r = await rep.json();
-  assert.equal(r.message, 'Au marché de Glazoué, le maïs coûte 250\u00a0F\u00a0CFA le kilo.');
-  assert.deepEqual(asr.appels, [{ point: 'marche', type: 'audio/webm', taille: 3, noms: 18 }]);
+  assert.equal(r.message, 'Au marché de Glazoué, le maïs coûte 90\u00a0F\u00a0CFA le kilo.');
+  assert.equal(r.source.nom, 'PAM (Programme alimentaire mondial)');
+  assert.deepEqual(asr.appels, [{ point: 'marche', type: 'audio/webm', taille: 3, noms: 19 }]);
 });
 
 test('POST /api/prix refuse ce qui n’est pas de l’audio, et un corps vide', async (t) => {
