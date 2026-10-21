@@ -105,12 +105,12 @@ Un enregistrement dure 30 secondes au plus. Le lien « ou envoyer un fichier aud
 
 ## Préparer le vocabulaire en fongbé
 
-L'application retrouve les mots attendus dans la transcription, sans tenir compte des tons et avec une petite tolérance sur l'orthographe. Les listes suivantes sont à vérifier et à compléter par des locuteurs du fongbé avant le jour de la démo.
+L'application retrouve les mots attendus dans la transcription, sans tenir compte des tons. Pour les produits, les marchés, les cultures et les communes, elle accepte aussi une petite différence d'orthographe. Pour les symptômes et les parties de la plante, elle exige la suite de mots exacte : beaucoup de ces mots sont courts ou courants en fon, et une tolérance les ferait trouver à tort (« wànvú », chenille, dans « wan nu »). Les listes suivantes sont à vérifier et à compléter par des locuteurs du fongbé avant le jour de la démo.
 
 | Liste | Fichier | État |
 | --- | --- | --- |
-| Symptômes | `data/lexique.json`, champ `fon` des `symptomes` | vide : seuls les mots français sont reconnus |
-| Parties de la plante | `data/lexique.json`, champ `fon` des `parties` | seul « ama » (feuilles) ; tiges, racines et fruits vides |
+| Symptômes | `data/lexique.json`, champ `fon` des `symptomes` | 49 termes pour 8 symptômes (koklojonɔ, fyɔ́, xú, wànvú, gblé…), tirés de textes publiés, à faire valider |
+| Parties de la plante | `data/lexique.json`, champ `fon` des `parties` | ama, atínkàn, atínɖɔ̀, sínsɛ́n… ; racine (« ɖɔ̀ ») écarté car confondu avec « ɖɔ » (dire) |
 | Cultures | `data/lexique.json`, champ `fon` des `cultures` | quelques noms courants (gbadé, mɔlikun, azin…) à vérifier |
 | Produits | `data/referentiel.json`, champ `termes_fon` | idem |
 | Marchés | `data/referentiel.json`, champ `termes` | variantes de prononciation des noms de lieux |
@@ -121,6 +121,8 @@ L'application retrouve les mots attendus dans la transcription, sans tenir compt
 Méthode : dire chaque phrase de démonstration dans l'application, lire la ligne « Vous avez dit : … », ajouter les mots tels qu'ils y sont transcrits dans le fichier concerné, puis redémarrer le serveur.
 
 Quand un symptôme n'est pas reconnu, le signalement est quand même transmis, marqué « à préciser ». Le conseiller dispose de la transcription et du message vocal.
+
+Les termes des symptômes viennent du corpus fon-français FFR, du dictionnaire edutechbenin.com, de la Bible en fon (jw.org) et des vidéos en fon d'Access Agriculture. Chacun a été passé sur les 78 000 phrases du corpus FFR pour écarter ceux qui se confondent avec des mots courants. Exemple réel : « Mɔ̌likún ce sín ama fí ɔ́ » est compris comme « les feuilles de mon riz se dessèchent », la reconnaissance vocale ayant coupé le verbe « fyɔ́ » en « fí ɔ́ ».
 
 Les phrases fongbé de `data/reponses.json` ont été rédigées à partir de textes publiés en fɔngbè (jw.org, corpus fon-français FFR, dictionnaire fongbebenin.com, guide Peace Corps), mais aucune n'a encore été relue par un locuteur natif. Pour en corriger une, modifier le champ `fon` en gardant les `{…}`, puis redémarrer le serveur. Une phrase fongbé mise à `null` n'est plus affichée : seul le français reste.
 
@@ -218,11 +220,11 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 45 tests couvrent la comparaison de texte, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
+Les 48 tests couvrent la comparaison de texte, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
 
 ## Limites connues
 
-- Le vocabulaire fongbé des symptômes reste à fournir (voir « Préparer le vocabulaire en fongbé »).
+- Le vocabulaire fongbé des symptômes vient de textes publiés et n'a pas encore été validé par des agriculteurs ou des conseillers (voir « Préparer le vocabulaire en fongbé »).
 - Les réponses en fongbé n'ont pas encore été relues par un locuteur natif.
 - Les prix sont mensuels : entre deux relevés du PAM, ils ne suivent pas les variations d'un jour à l'autre.
 - Au dernier import, le PAM ne relevait pas le riz local à Ouando, Pobè, Azovè, Bohicon et Djougou, ni le manioc frais à Pobè, Parakou, Djougou et Natitingou. Pour ces cas, l'application le dit et donne les prix des autres marchés.
