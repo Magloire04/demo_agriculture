@@ -1,6 +1,6 @@
 # AgriFon
 
-Démo de commande vocale en fongbé pour l'agriculture. On parle à son téléphone pour connaître le prix d'un produit sur un marché, ou pour signaler une maladie sur ses cultures. La réponse s'affiche à l'écran en fongbé, avec sa traduction en français.
+Démo de commande vocale en fongbé pour l'agriculture. On parle à son téléphone pour connaître le prix d'un produit sur un marché, ou pour signaler une maladie sur ses cultures. La réponse s'affiche à l'écran en fongbé, avec sa traduction en français, et peut être écoutée en fongbé.
 
 L'application est une PWA (application web installable sur téléphone). La reconnaissance vocale du fongbé est assurée par l'API JaimeMaLangue.
 
@@ -97,7 +97,7 @@ Pour importer les prix chaque semaine sans redéployer, ajouter cette tâche dan
 ## Déroulé de la démo
 
 1. Ouvrir `/conseiller` sur l'écran de la salle.
-2. Sur le téléphone, ouvrir « Prix du marché ». Appuyer sur le micro, dire la phrase, appuyer de nouveau. La réponse s'affiche, par exemple « Au marché de Glazoué, le maïs coûte 90 F CFA le kilo », avec le prix en grands caractères, le mois du relevé et l'évolution depuis le relevé précédent. Toucher « Comparer avec les autres marchés » affiche les prix des autres marchés.
+2. Sur le téléphone, ouvrir « Prix du marché ». Appuyer sur le micro, dire la phrase, appuyer de nouveau. La réponse s'affiche, par exemple « Au marché de Glazoué, le maïs coûte 90 F CFA le kilo », avec le prix en grands caractères, le mois du relevé et l'évolution depuis le relevé précédent. « Écouter en fongbé » dit la réponse à voix haute. Toucher « Comparer avec les autres marchés » affiche les prix des autres marchés.
 3. Ouvrir « Signaler », partager la position ou choisir la commune, puis dire la phrase. Le téléphone confirme la réception avec une référence. Le signalement apparaît sur l'écran conseiller avec la transcription et le message vocal.
 4. Sur l'écran conseiller, cliquer sur « Prendre en charge ». Quelques secondes plus tard, le téléphone affiche « Pris en charge par le conseiller ».
 
@@ -157,6 +157,23 @@ Les prix viennent du jeu de données « Benin - Food Prices » du Programme alim
 npm run importer-prix
 ```
 
+### Réponse à voix haute
+
+Le bouton « Écouter en fongbé » dit la réponse avec des extraits audio préparés à l'avance (`public/voix`, 460 fichiers MP3, 6 Mo). Le champ `voix` de `data/reponses.json` reprend chaque phrase fon, coupée en morceaux par `|` : « È nɔ sa gbadé kilo ɖokpó yí | 90 | ɖo Glazoué axi mɛ. ». Le serveur rend la liste des fichiers à enchaîner, et le téléphone les lit l'un après l'autre (`public/js/voix.js`). S'il manque un seul extrait, le bouton n'apparaît pas. Le serveur regarde le dossier à chaque réponse : un extrait ajouté, remplacé ou retiré compte tout de suite, sans redémarrage.
+
+Les prix sont dits comme au marché, en kpɔ́nwun (25 F), ɖɔ̌la (5 F) et caki (1 000 F) : 90 F se dit « kpɔ́nwun atɔ̀n ɖɔ̌la atɔ̀n », 1 500 F « caki ɖokpó adaɖé » (`server/nombres-fon.js`, règles du guide de fon du Corps de la Paix, des dictionnaires fongbebenin.com et edutechbenin.com et de la presse traduite en fon). Le prix est arrondi à 5 F à l'oral, suivi de « mɔ̌ » (environ) quand on arrondit ; l'écran garde le prix exact.
+
+Les extraits actuels sont produits par la voix de synthèse fon de Meta, [MMS-TTS](https://huggingface.co/facebook/mms-tts-fon), sous licence CC BY-NC 4.0 (usage non commercial, attribution). L'application le signale sous le bouton. Chaque extrait a été relu par la reconnaissance vocale JaimeMaLangue : 14 % d'écart moyen sur les montants, 17 % sur les phrases. Les 34 extraits les plus mal relus ont été regénérés avec d'autres graines, et la version la mieux comprise a été gardée. « ɖɔ̌la ɛnɛ̀ » (20 F) reste mal rendu. La voix reste à faire valider par des locuteurs.
+
+Pour remplacer la voix de synthèse par une voix humaine, faire enregistrer chaque texte de la liste et déposer le fichier sous le même nom : le nom d'un extrait se déduit du texte qu'il dit, aucun code n'est à modifier. La voix de synthèse ne connaît pas le « r » : le générateur le fait dire « l » (Palakou, kalotte), comme on le prononce en fon, et signale tout autre caractère qu'elle ne sait pas dire.
+
+```bash
+node scripts/lister-voix.js --json liste.json         # textes à dire et noms de fichier, extraits manquants
+python3 scripts/voix/generer.py liste.json public/voix # génère les manquants (sur un poste : torch, transformers, scipy, ffmpeg)
+```
+
+Après une modification de `data/reponses.json` ou l'ajout d'un produit, d'un marché ou d'une commune, relancer ces deux commandes. Le bouton « En français » lit la traduction avec la voix du téléphone, quand le navigateur en propose une.
+
 ### Routes du serveur
 
 | Méthode | Adresse | Rôle |
@@ -190,6 +207,8 @@ scripts/
   deployer.sh       installation et mise à jour sur un hébergement cPanel
   importer-prix.js  import des prix du PAM
   importer-prix.sh  le même import, pour une tâche planifiée cPanel
+  lister-voix.js    extraits audio que les réponses peuvent dire, et ceux qui manquent
+  voix/generer.py   génération des extraits manquants avec la voix de synthèse (sur un poste)
 server/
   index.js          serveur HTTP : fichiers de la PWA et routes /api
   asr.js            client de l'API de reconnaissance vocale (et mode simulation)
@@ -197,6 +216,8 @@ server/
   pam.js            lecture du fichier de prix du PAM
   releves.js        relevés de prix lus par le serveur, relus à chaque import
   reponses.js       phrases de réponse en français et en fongbé
+  nombres-fon.js    prix dits en fon (kpɔ́nwun, ɖɔ̌la, caki)
+  voix.js           extraits audio à enchaîner pour dire une réponse
   signalement.js    analyse et registre des signalements
   texte.js          comparaison de mots sans tons ni accents
 data/
@@ -209,6 +230,7 @@ public/
   index.html        application (accueil, prix, signalement)
   conseiller.html   écran conseiller
   css/, js/, fonts/, img/, icons/
+  voix/             extraits audio des réponses en fongbé
   manifest.webmanifest, sw.js
 test/               tests (node --test)
 docs/captures/      captures d'écran du README
@@ -220,12 +242,13 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 52 tests couvrent la comparaison de texte, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
+Les 62 tests couvrent la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
 
 ## Limites connues
 
 - Le vocabulaire fongbé des symptômes vient de textes publiés et n'a pas encore été validé par des agriculteurs ou des conseillers (voir « Préparer le vocabulaire en fongbé »).
 - Les réponses en fongbé n'ont pas encore été relues par un locuteur natif.
+- La voix de synthèse fon est apprise sur une lecture de la Bible : certains tons sonnent faux et des mots courts (ɛnɛ̀, wɛ̌nɛ̀) sont parfois déformés. Sa licence interdit l'usage commercial. Une voix enregistrée par un locuteur est prévue pour la remplacer.
 - Les prix sont mensuels : entre deux relevés du PAM, ils ne suivent pas les variations d'un jour à l'autre.
 - Au dernier import, 31 couples produit × marché n'avaient pas de relevé récent, surtout à Pobè (riz local, manioc frais, banane plantain, pois d'Angole…). Pour ces cas, l'application le dit et donne les prix des autres marchés. `npm run importer-prix` affiche la liste à jour.
 - Les signalements sont enregistrés dans un fichier JSON. Cela suffit pour une démo, pas pour un service en production.
@@ -233,4 +256,4 @@ Les 52 tests couvrent la comparaison de texte, la lecture du fichier du PAM, le 
 
 ## Licence
 
-Le code est sous licence MIT (voir [LICENSE](LICENSE)). Les prix sont ceux du PAM, sous licence [CC BY-IGO](https://creativecommons.org/licenses/by/3.0/igo/), cités comme source dans l'application. La police Montserrat est distribuée sous licence SIL Open Font License ([public/fonts/OFL.txt](public/fonts/OFL.txt)).
+Le code est sous licence MIT (voir [LICENSE](LICENSE)). Les prix sont ceux du PAM, sous licence [CC BY-IGO](https://creativecommons.org/licenses/by/3.0/igo/), cités comme source dans l'application. La police Montserrat est distribuée sous licence SIL Open Font License ([public/fonts/OFL.txt](public/fonts/OFL.txt)). Les extraits audio de `public/voix` sont produits avec MMS-TTS de Meta et suivent sa licence [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).

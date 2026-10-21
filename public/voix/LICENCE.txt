@@ -1,0 +1,8 @@
+Extraits audio des réponses d'AgriFon en fongbé.
+
+Produits avec MMS-TTS, la voix de synthèse fon de Meta (facebook/mms-tts-fon),
+sous licence Creative Commons Attribution - Pas d'utilisation commerciale 4.0
+(CC BY-NC 4.0) : https://creativecommons.org/licenses/by-nc/4.0/
+
+Chaque fichier porte le nom tiré du texte qu'il dit (voir server/voix.js).
+Un enregistrement humain déposé sous le même nom remplace l'extrait de synthèse.

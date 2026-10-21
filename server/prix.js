@@ -3,9 +3,6 @@
 
 import { mots, reperer } from './texte.js';
 
-const FORMAT_NOMBRE = new Intl.NumberFormat('fr-FR');
-const nombre = (montant) => FORMAT_NOMBRE.format(montant);
-
 function termesProduit(produit) {
   return [...produit.termes_fon, ...produit.termes_fr];
 }
@@ -92,7 +89,7 @@ export function repondrePrix(base, releves, textes, reponseApi) {
   for (const { produit, ici, lignes } of reponses) {
     const valeurs = { produit: { fr: produit.article, fon: produit.nom_fon }, unite: textes.unite(produit.unite) };
     if (ici) {
-      phrases.push(textes.phrase('prix_ici', { ...valeurs, au_marche: marche.au, marche: marche.nom, prix: nombre(ici.prix) }));
+      phrases.push(textes.phrase('prix_ici', { ...valeurs, au_marche: marche.au, marche: marche.nom, prix: ici.prix }));
       continue;
     }
     if (lignes.length === 0) {
@@ -103,11 +100,11 @@ export function repondrePrix(base, releves, textes, reponseApi) {
     const min = lignes[0];
     const max = lignes[lignes.length - 1];
     phrases.push(min.prix === max.prix
-      ? textes.phrase('prix_partout', { ...valeurs, prix: nombre(min.prix) })
+      ? textes.phrase('prix_partout', { ...valeurs, prix: min.prix })
       : textes.phrase('prix_fourchette', {
         ...valeurs,
-        min: nombre(min.prix),
-        max: nombre(max.prix),
+        min: min.prix,
+        max: max.prix,
         marche: { fr: nomMarche(min.marche), fon: min.marche.nom },
       }));
   }
@@ -135,6 +132,7 @@ export function repondrePrix(base, releves, textes, reponseApi) {
     statut,
     message: message.fr,
     message_fon: message.fon,
+    voix: message.voix,
     transcription: reponseApi.transcription ?? '',
     marche: marche ? versMarche(marche) : null,
     reponses,

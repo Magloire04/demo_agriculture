@@ -5,8 +5,15 @@ const DUREE_MAX = 30; // secondes ; l'API accepte jusqu'à 60 s
 const DELAI_API = 100_000; // l'API demande de prévoir au moins 90 s
 const VUES = ['accueil', 'prix', 'signalement'];
 const ICONE_COCHE = '<path d="M5 12.5l4.5 4.5L19 7.5"/>';
+const ICONE_ECOUTER = '<path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>';
 
 const $ = (selecteur, racine = document) => racine.querySelector(selecteur);
+
+// Lecture à voix haute, chargée à part : si le module manque, le reste de
+// l'application fonctionne et les boutons « Écouter » ne s'affichent pas.
+let voix = null;
+import('./voix.js').then((m) => { voix = m; }).catch(() => {});
+const arreterLecture = () => voix?.arreterLecture();
 const principal = $('main');
 
 /* ---------- Navigation entre les vues ---------- */
@@ -18,6 +25,7 @@ function afficherVue() {
   const demande = location.hash.replace(/^#\/?/, '');
   const vue = VUES.includes(demande) ? demande : 'accueil';
   micros.forEach((m) => m.annuler());
+  arreterLecture();
   for (const section of document.querySelectorAll('[data-vue]')) section.hidden = section.dataset.vue !== vue;
   for (const lien of document.querySelectorAll('[data-lien]')) {
     if (lien.dataset.lien === vue) lien.setAttribute('aria-current', 'page');
@@ -121,6 +129,7 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
   }
 
   bouton.addEventListener('click', async () => {
+    arreterLecture(); // le micro ne doit pas enregistrer la réponse lue à voix haute
     if (racine.dataset.etat === 'analyse') return;
     if (session) {
       session.arreter();
@@ -162,6 +171,7 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
   });
 
   fichier.addEventListener('change', () => {
+    arreterLecture();
     const choisi = fichier.files?.[0];
     fichier.value = '';
     if (choisi && racine.dataset.etat === 'pret') analyser(choisi);
@@ -178,6 +188,7 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
 }
 
 function montrerResultat(zone, ...contenu) {
+  arreterLecture();
   zone.replaceChildren(...contenu.flat().filter(Boolean));
   zone.hidden = false;
   zone.focus({ preventScroll: true });
@@ -190,6 +201,38 @@ function bilingue({ fr, fon }, classeFrancaisSeul = '') {
   return el('div', { class: 'bilingue' },
     el('p', { class: 'texte-fon fon', lang: 'fon' }, fon),
     el('p', { class: 'texte-fr', lang: 'fr' }, fr));
+}
+
+function boutonLecture(libelle, lire) {
+  const texte = el('span', {}, libelle);
+  const bouton = el('button', { type: 'button', class: 'bouton-secondaire bouton-ecouter' }, svg(ICONE_ECOUTER), texte);
+  bouton.addEventListener('click', async () => {
+    if (bouton.classList.contains('en-cours')) return arreterLecture();
+    bouton.classList.add('en-cours');
+    texte.textContent = 'Arrêter';
+    try {
+      await lire();
+      texte.textContent = libelle;
+    } catch {
+      texte.textContent = 'Lecture impossible';
+    } finally {
+      bouton.classList.remove('en-cours');
+    }
+  });
+  return bouton;
+}
+
+// Boutons pour écouter la réponse : en fongbé si ses extraits audio existent, en
+// français avec la voix du téléphone.
+function lecture(extraits, francais) {
+  if (!voix) return null;
+  const boutons = [
+    extraits && boutonLecture('Écouter en fongbé', () => voix.lireExtraits(extraits)),
+    francais && 'speechSynthesis' in window && boutonLecture('En français', () => voix.lireFrancais(francais)),
+  ].filter(Boolean);
+  if (!boutons.length) return null;
+  return el('div', { class: 'lecture' }, boutons,
+    extraits && el('p', { class: 'lecture-mention' }, 'Voix de synthèse MMS-TTS (Meta, licence CC BY-NC 4.0), en attente de relecture par un locuteur.'));
 }
 
 function erreurDans(zone) {
@@ -292,7 +335,7 @@ function texteSource(source) {
 function afficherPrix(r) {
   montrerResultat(zonePrix,
     vousAvezDit(r.transcription),
-    el('div', { class: 'reponse' }, bilingue({ fr: r.message, fon: r.message_fon }, 'reponse-message')),
+    el('div', { class: 'reponse' }, bilingue({ fr: r.message, fon: r.message_fon }, 'reponse-message'), lecture(r.voix, r.message)),
     r.reponses.filter((x) => x.lignes.length > 0).map(carteProduit),
     r.statut === 'marche_seul' && carteMarche(r.marche, r.produits_du_marche),
     r.source && (r.reponses.some((x) => x.lignes.length > 0) || r.statut === 'marche_seul') && texteSource(r.source),
@@ -433,6 +476,7 @@ function afficherSignalement(s) {
       s.messages.titre.fon && el('p', { class: 'texte-fr', lang: 'fr' }, s.messages.titre.fr),
       el('p', { class: 'reference' }, 'Référence : ', el('strong', {}, s.reference)),
       bilingue(s.messages.recu),
+      lecture(s.voix, `${s.messages.titre.fr}. ${s.messages.recu.fr}`),
       el('ol', { class: 'etapes' }, el('li', { class: 'fait' }, `Reçu par le service à ${heure(s.recu_le)}`), etape)),
     el('dl', { class: 'recap' },
       ligneRecap('Culture', s.culture ? s.culture.nom : aPreciser('À préciser par le conseiller')),
