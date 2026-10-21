@@ -60,7 +60,7 @@ test('POST /api/prix relaie l’audio et répond le prix', async (t) => {
   const rep = await envoyer(`${url}/api/prix`, 'abc', 'audio/webm;codecs=opus');
   assert.equal(rep.status, 200);
   const r = await rep.json();
-  assert.equal(r.message, 'Au marché de Glazoué, le maïs coûte 250 F CFA le kilo.');
+  assert.equal(r.message, 'Au marché de Glazoué, le maïs coûte 250\u00a0F\u00a0CFA le kilo.');
   assert.deepEqual(asr.appels, [{ point: 'marche', type: 'audio/webm', taille: 3, noms: 18 }]);
 });
 
@@ -81,6 +81,8 @@ test('signalement : enregistré, suivi public, réservé au conseiller ensuite',
   assert.deepEqual(s.symptomes.map((x) => x.id), ['jaunissement']);
   assert.deepEqual(s.localisation, { gps: { lat: 7.97, lon: 2.24, precision: 12 }, commune: { nom: 'Glazoué', departement: 'Collines', source: 'choisie' } });
   assert.equal(s.destinataire, 'Conseiller agricole de la commune de Glazoué (Collines)');
+  assert.equal(s.messages.recu.fr, 'Votre signalement a été reçu. Il est transmis au conseiller agricole de la commune de Glazoué.');
+  assert.equal(s.messages.recu.fon, 'Mǐ se xó mitɔn. Mǐ sɛ́ ɛ dó glegán Glazoué tɔn.');
   assert.equal(s.audio, undefined);
   assert.equal(s.audio_disponible, true);
   // Les communes du département sont proposées à l'API comme noms attendus.
@@ -113,7 +115,10 @@ test('une erreur de l’API devient un message lisible', async (t) => {
   const url = await demarrer(t, { asr: fausseAsr({ erreur }) });
   const rep = await envoyer(`${url}/api/signalements`);
   assert.equal(rep.status, 503);
-  assert.deepEqual(await rep.json(), { erreur: erreur.message, erreur_fon: null, code: 'asr_indisponible' });
+  const corps = await rep.json();
+  assert.equal(corps.erreur, erreur.message);
+  assert.equal(corps.code, 'asr_indisponible');
+  assert.equal(corps.erreur_fon, lire('reponses.json').phrases.erreur_reessayer.fon);
 });
 
 test('fichiers statiques, sans sortir du dossier public', async (t) => {

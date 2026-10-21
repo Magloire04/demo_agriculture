@@ -168,6 +168,7 @@
     {
       "id": "mais",
       "nom": "Maïs",
+      "nom_fon": "gbadé",
       "article": "le maïs",
       "emoji": "🌽",
       "unite": "kg",
@@ -236,6 +237,7 @@
     {
       "id": "riz",
       "nom": "Riz local",
+      "nom_fon": "mɔ̌likún",
       "article": "le riz local",
       "emoji": "🍚",
       "unite": "kg",
@@ -304,11 +306,13 @@
     {
       "id": "haricot",
       "nom": "Haricot (niébé)",
+      "nom_fon": "ayikún",
       "article": "le haricot",
       "emoji": "🫘",
       "unite": "kg",
       "termes_fon": [
-        "ayikun"
+        "ayikun",
+        "ayikún"
       ],
       "termes_fr": [
         "haricot",
@@ -372,11 +376,13 @@
     {
       "id": "arachide",
       "nom": "Arachide décortiquée",
+      "nom_fon": "aziín",
       "article": "l'arachide décortiquée",
       "emoji": "🥜",
       "unite": "kg",
       "termes_fon": [
-        "azin"
+        "azin",
+        "aziín"
       ],
       "termes_fr": [
         "arachide"
@@ -439,11 +445,13 @@
     {
       "id": "igname",
       "nom": "Igname",
+      "nom_fon": "tevi",
       "article": "l'igname",
       "emoji": "🍠",
       "unite": "kg",
       "termes_fon": [
-        "tɛvi"
+        "tɛvi",
+        "tevi"
       ],
       "termes_fr": [
         "igname"
@@ -506,6 +514,7 @@
     {
       "id": "gari",
       "nom": "Gari",
+      "nom_fon": "gali",
       "article": "le gari",
       "emoji": "🥣",
       "unite": "kg",
@@ -573,10 +582,13 @@
     {
       "id": "manioc",
       "nom": "Manioc frais",
+      "nom_fon": "fɛnnyɛ",
       "article": "le manioc frais",
       "emoji": "🌿",
       "unite": "kg",
-      "termes_fon": [],
+      "termes_fon": [
+        "fɛnnyɛ"
+      ],
       "termes_fr": [
         "manioc"
       ],
@@ -638,6 +650,7 @@
     {
       "id": "tomate",
       "nom": "Tomate",
+      "nom_fon": "timati",
       "article": "la tomate",
       "emoji": "🍅",
       "unite": "kg",
@@ -706,6 +719,7 @@
     {
       "id": "piment",
       "nom": "Piment",
+      "nom_fon": "takín",
       "article": "le piment",
       "emoji": "🌶️",
       "unite": "kg",
@@ -774,10 +788,13 @@
     {
       "id": "oignon",
       "nom": "Oignon",
+      "nom_fon": "ayoma",
       "article": "l'oignon",
       "emoji": "🧅",
       "unite": "kg",
-      "termes_fon": [],
+      "termes_fon": [
+        "ayoma"
+      ],
       "termes_fr": [
         "oignon"
       ],
@@ -839,11 +856,13 @@
     {
       "id": "soja",
       "nom": "Soja",
+      "nom_fon": "soja",
       "article": "le soja",
       "emoji": "🫛",
       "unite": "kg",
       "termes_fon": [
-        "sɔja"
+        "sɔja",
+        "soja"
       ],
       "termes_fr": [
         "soja"
@@ -906,10 +925,13 @@
     {
       "id": "sorgho",
       "nom": "Sorgho",
+      "nom_fon": "abɔ̀",
       "article": "le sorgho",
       "emoji": "🌾",
       "unite": "kg",
-      "termes_fon": [],
+      "termes_fon": [
+        "abɔ̀"
+      ],
       "termes_fr": [
         "sorgho"
       ],
@@ -971,6 +993,7 @@
     {
       "id": "huile_palme",
       "nom": "Huile de palme",
+      "nom_fon": "amivɔvɔ",
       "article": "l'huile de palme",
       "emoji": "🫗",
       "unite": "litre",

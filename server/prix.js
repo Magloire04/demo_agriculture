@@ -80,7 +80,7 @@ export function repondrePrix(base, textes, reponseApi) {
       phrases.push(textes.phrase('prix_ici', { ...valeurs, au_marche: marche.au, marche: marche.nom, prix: nombre(ici.prix) }));
       continue;
     }
-    if (marche) phrases.push(textes.phrase('prix_absent', { au_marche: marche.au, marche: marche.nom }));
+    if (marche) phrases.push(textes.phrase('prix_absent', { ...valeurs, au_marche: marche.au, marche: marche.nom }));
     const min = lignes[0];
     const max = lignes[lignes.length - 1];
     phrases.push(min.prix === max.prix
