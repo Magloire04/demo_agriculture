@@ -86,7 +86,7 @@ a {
   background: linear-gradient(to right, var(--vert) 0 33.34%, var(--jaune) 33.34% 66.67%, var(--rouge) 66.67% 100%);
 }
 
-/* ---------- En-tête : logotype (armoiries + libellé + bande + pays) ---------- */
+/* ---------- En-tête : logo AgriFon (micro + bande tricolore) et nom ---------- */
 
 .entete {
   padding: 12px 16px;
@@ -111,35 +111,30 @@ a {
   text-decoration: none;
 }
 
-.logo-armoiries {
+.logo-marque {
   flex: none;
-  width: 58px;
+  width: 30px;
   height: auto;
 }
 
 .logo-texte {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 2px;
 }
 
-.logo-institution {
+.logo-nom {
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--vert);
+}
+
+.logo-devise {
   font-size: 0.6875rem;
   line-height: 1.3;
   letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-
-.logo .bande {
-  width: 100%;
-  max-width: 200px;
-  height: 2px;
-}
-
-.logo-pays {
-  font-size: 0.625rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  color: var(--texte-doux);
 }
 
 .etiquette-demo {
@@ -1028,16 +1023,16 @@ select {
 }
 
 @media (min-width: 720px) {
-  .logo-armoiries {
-    width: 72px;
+  .logo-marque {
+    width: 35px;
   }
 
-  .logo-institution {
+  .logo-nom {
+    font-size: 1.625rem;
+  }
+
+  .logo-devise {
     font-size: 0.8125rem;
-  }
-
-  .logo-pays {
-    font-size: 0.6875rem;
   }
 
   .navigation ul {
