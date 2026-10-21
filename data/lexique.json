@@ -23,18 +23,18 @@
   ],
   "parties": [
     { "id": "feuilles", "libelle": "feuilles", "fon": ["ama", "atínmá", "ayimá"], "fr": ["feuille", "feuilles"] },
-    { "id": "tiges", "libelle": "tiges", "fon": ["atínkàn", "hankán", "fɛnnyɛ́ntín", "aziínkàn"], "fr": ["tige", "tiges"] },
+    { "id": "tiges", "libelle": "tiges", "fon": ["atínkàn", "hankán", "fɛnnyɛ́ntín", "aziínkàn", "fɛnnyɛtin"], "fr": ["tige", "tiges"] },
     { "id": "racines", "libelle": "racines", "fon": ["atínɖɔ̀"], "fr": ["racine", "racines"] },
     { "id": "fruits", "libelle": "fruits, épis ou gousses", "fon": ["sínsɛ́n", "atínsínsɛ́n", "kwín", "aziínfló", "gbadégotín"], "fr": ["fruit", "fruits", "épi", "épis", "gousse", "gousses"] }
   ],
   "symptomes": [
     { "id": "jaunissement", "libelle": "Jaunissement", "fon": ["koklojonɔ", "koklójó"], "fr": ["jaune", "jaunes", "jaunit", "jaunir", "jaunissent", "jaunissement", "jaunies", "jauni", "jaunie", "jaunis"] },
     { "id": "taches", "libelle": "Taches", "fon": ["wuntun", "hwa funfun", "ɖixó"], "fr": ["tache", "taches", "tacheté", "tachetées", "rouille", "taché", "tachée", "tachées"] },
-    { "id": "fletrissement", "libelle": "Flétrissement ou dessèchement", "fon": ["fyɔ́", "ama fí ɔ́", "xú", "xúxú", "mlú", "kú", "kúkú"], "fr": ["fane", "fanent", "flétri", "flétrissent", "flétrissement", "sèche", "sèchent", "séché", "séchés", "meurent", "mort", "morts", "fané", "fanées", "sec", "secs", "sèches", "meurt"] },
-    { "id": "ravageurs", "libelle": "Insectes ou chenilles", "fon": ["wànvú", "ahwangɔnu wánvú", "nùvíɖogbɛ̀", "nùvínúví", "bɔ̀klé", "kɔ́súkɔ́sú", "sukpɔ wewe"], "fr": ["chenille", "chenilles", "insecte", "insectes", "criquet", "criquets", "puceron", "pucerons", "termite", "termites", "légionnaire", "mouche", "mouches"] },
+    { "id": "fletrissement", "libelle": "Flétrissement ou dessèchement", "fon": ["fyɔ́", "ama fí ɔ́", "xú", "xúxú", "mlú", "kú", "ama kúkú", "yajaà", "amaywɛ", "dɛ go", "cákwécákwé", "tákwétákwé", "klácóklácó"], "fr": ["fane", "fanent", "flétri", "flétrissent", "flétrissement", "sèche", "sèchent", "séché", "séchés", "meurent", "mort", "morts", "fané", "fanées", "sec", "secs", "sèches", "meurt"] },
+    { "id": "ravageurs", "libelle": "Insectes ou chenilles", "fon": ["wànvú", "ahwangɔnu wánvú", "nùvíɖogbɛ̀", "nùvínúví", "bɔ̀klé", "kɔ́súkɔ́sú", "sukpɔ wewe", "nùhɛngble", "bɔ̀kéklé", "adimáxwé", "hannuhannu"], "fr": ["chenille", "chenilles", "insecte", "insectes", "criquet", "criquets", "puceron", "pucerons", "termite", "termites", "légionnaire", "mouche", "mouches"] },
     { "id": "feuilles_mangees", "libelle": "Parties trouées ou mangées", "fon": ["ɖù"], "fr": ["trou", "trous", "troué", "trouées", "mangé", "mangées", "mangent", "rongé", "rongées", "dévorées", "troués", "mangés", "rongés"] },
     { "id": "pourriture", "libelle": "Pourriture ou moisissure", "fon": ["gblé", "jɛ̀ vǎ", "jɛ̀ wɔvlì", "fùn hwà", "kpɔnnyɔɔ̀"], "fr": ["pourri", "pourrie", "pourris", "pourrissent", "pourriture", "moisi", "moisissure", "champignon", "champignons", "moisies", "pourries"] },
-    { "id": "deformation", "libelle": "Feuilles enroulées ou déformées", "fon": ["ama wunwun", "logwélógwé", "xásáxásá", "cákwécákwé", "gbàndán", "slósló"], "fr": ["enroulé", "enroulées", "recroquevillé", "recroquevillées", "frisé", "frisées", "déformé", "déformées", "mosaïque"] },
-    { "id": "croissance", "libelle": "Croissance bloquée", "fon": ["kɛ́ncɛ́nkɛ́ncɛ́n", "kéjèkéjè", "jɛ jeké", "hlekéjè", "gánmágánmá", "ma sù ǎ", "jɛ gbɛ̀n"], "fr": ["rabougri", "rabougris", "nain", "nains", "bloqué", "bloquée"] }
+    { "id": "deformation", "libelle": "Feuilles enroulées ou déformées", "fon": ["ama wunwun", "logwélógwé", "xásáxásá", "gbàndán", "slósló", "amawunwun"], "fr": ["enroulé", "enroulées", "recroquevillé", "recroquevillées", "frisé", "frisées", "déformé", "déformées", "mosaïque"] },
+    { "id": "croissance", "libelle": "Croissance bloquée", "fon": ["kɛ́ncɛ́nkɛ́ncɛ́n", "kéjèkéjè", "jɛ jeké", "hlekéjè", "gánmágánmá", "ma sù ǎ", "jɛ gbɛ̀n", "sù ɖěbǔ ǎ"], "fr": ["rabougri", "rabougris", "nain", "nains", "bloqué", "bloquée"] }
   ]
 }

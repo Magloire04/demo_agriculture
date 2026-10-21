@@ -109,7 +109,7 @@ L'application retrouve les mots attendus dans la transcription, sans tenir compt
 
 | Liste | Fichier | État |
 | --- | --- | --- |
-| Symptômes | `data/lexique.json`, champ `fon` des `symptomes` | 38 termes pour 8 symptômes (koklojonɔ, fyɔ́, xú, wànvú, gblé…), tirés de textes publiés, à faire valider |
+| Symptômes | `data/lexique.json`, champ `fon` des `symptomes` | 49 termes pour 8 symptômes (koklojonɔ, fyɔ́, xú, wànvú, gblé…), tirés de textes publiés, à faire valider |
 | Parties de la plante | `data/lexique.json`, champ `fon` des `parties` | ama, atínkàn, atínɖɔ̀, sínsɛ́n… ; racine (« ɖɔ̀ ») écarté car confondu avec « ɖɔ » (dire) |
 | Cultures | `data/lexique.json`, champ `fon` des `cultures` | quelques noms courants (gbadé, mɔlikun, azin…) à vérifier |
 | Produits | `data/referentiel.json`, champ `termes_fon` | idem |
