@@ -113,7 +113,7 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
       await traiter(audio);
       pret('Appuyez pour parler à nouveau');
     } catch (e) {
-      afficherErreur(e.message);
+      afficherErreur(e);
       pret('Appuyez pour réessayer');
     } finally {
       clearTimeout(lent);
@@ -184,8 +184,16 @@ function montrerResultat(zone, ...contenu) {
   zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+// Texte en fongbé (mis en avant) suivi du français ; le français seul si le fongbé manque.
+function bilingue({ fr, fon }, classeFrancaisSeul = '') {
+  if (!fon) return el('p', { class: classeFrancaisSeul || null, lang: 'fr' }, fr);
+  return el('div', { class: 'bilingue' },
+    el('p', { class: 'texte-fon fon', lang: 'fon' }, fon),
+    el('p', { class: 'texte-fr', lang: 'fr' }, fr));
+}
+
 function erreurDans(zone) {
-  return (message) => montrerResultat(zone, el('p', { class: 'message-erreur', role: 'alert' }, message));
+  return (e) => montrerResultat(zone, el('div', { class: 'message-erreur', role: 'alert' }, bilingue({ fr: e.message, fon: e.fon })));
 }
 
 function vousAvezDit(texte) {
@@ -234,7 +242,7 @@ function carteProduit({ produit, ici, lignes }) {
   return el('article', { class: 'carte' },
     el('div', { class: 'carte-entete' },
       el('span', { class: 'emoji', 'aria-hidden': 'true' }, produit.emoji),
-      el('h2', {}, produit.nom)),
+      el('h2', {}, produit.nom, produit.nom_fon && el('span', { class: 'nom-fon fon', lang: 'fon' }, produit.nom_fon))),
     ici && el('div', { class: 'prix-principal' },
       el('p', {}, el('span', { class: 'montant' }, nombre(ici.prix)), el('span', { class: 'devise' }, `F CFA / ${unite}`)),
       el('p', { class: 'prix-lieu' }, `Marché ${nomMarche(ici.marche)} · ${ici.marche.departement}`),
@@ -249,14 +257,15 @@ function carteMarche(marche, produits) {
     el('div', { class: 'carte-entete' }, el('h2', {}, `Marché ${nomMarche(marche)}`)),
     el('ul', { class: 'liste-prix' }, produits.map(({ produit, prix }) =>
       el('li', {},
-        el('span', {}, el('span', { 'aria-hidden': 'true' }, `${produit.emoji} `), produit.nom),
+        el('span', {}, el('span', { 'aria-hidden': 'true' }, `${produit.emoji} `), produit.nom,
+          produit.nom_fon && el('small', { class: 'fon', lang: 'fon' }, produit.nom_fon)),
         el('span', { class: 'valeur' }, `${nombre(prix)} F / ${produit.unite}`)))));
 }
 
 function afficherPrix(r) {
   montrerResultat(zonePrix,
     vousAvezDit(r.transcription),
-    el('p', { class: 'reponse-message' }, r.message),
+    el('div', { class: 'reponse' }, bilingue({ fr: r.message, fon: r.message_fon }, 'reponse-message')),
     r.reponses.map(carteProduit),
     r.statut === 'marche_seul' && carteMarche(r.marche, r.produits_du_marche),
     (r.reponses.length > 0 || r.statut === 'marche_seul') &&
@@ -356,14 +365,14 @@ function ligneRecap(titre, valeur) {
   return el('div', {}, el('dt', {}, titre), el('dd', {}, valeur));
 }
 
-function etapePriseEnCharge(s) {
-  return s.statut === 'pris_en_charge'
-    ? el('li', { class: 'fait' }, `Pris en charge par le conseiller à ${heure(s.pris_en_charge_le)}`)
-    : el('li', {}, 'En attente de prise en charge par le conseiller');
+function etapePriseEnCharge(statut, messages) {
+  return statut.statut === 'pris_en_charge'
+    ? el('li', { class: 'fait' }, bilingue({ ...messages.pris, fr: `${messages.pris.fr.replace(/\.$/, '')} (${heure(statut.pris_en_charge_le)}).` }))
+    : el('li', {}, bilingue(messages.attente));
 }
 
 let suivi = 0;
-function suivreStatut(s) {
+function suivreStatut(s, messages) {
   clearInterval(suivi);
   if (s.statut === 'pris_en_charge') return;
   const fin = Date.now() + 15 * 60_000;
@@ -374,7 +383,7 @@ function suivreStatut(s) {
       const statut = await appelerApi(`api/signalements/${encodeURIComponent(s.reference)}`);
       if (statut.statut === 'pris_en_charge') {
         clearInterval(suivi);
-        const nouvelle = etapePriseEnCharge(statut);
+        const nouvelle = etapePriseEnCharge(statut, messages);
         nouvelle.dataset.etape = '';
         etape.replaceWith(nouvelle);
       }
@@ -388,14 +397,16 @@ function afficherSignalement(s) {
   const observe = s.symptomes.length
     ? [s.symptomes.map((x) => x.libelle).join(' · '), s.parties.length ? ` (${s.parties.map((p) => p.libelle).join(', ')})` : '']
     : aPreciser(`À préciser par le conseiller${s.parties.length ? ` (${s.parties.map((p) => p.libelle).join(', ')})` : ''} : il reçoit votre message vocal.`);
-  const etape = etapePriseEnCharge(s);
+  const etape = etapePriseEnCharge(s, s.messages);
   etape.dataset.etape = '';
 
   montrerResultat(zoneSignalement,
     el('div', { class: 'confirmation', 'data-reference': s.reference },
-      el('p', { class: 'confirmation-titre' }, el('span', { class: 'coche' }, svg(ICONE_COCHE)), 'Signalement transmis'),
+      el('p', { class: 'confirmation-titre' }, el('span', { class: 'coche' }, svg(ICONE_COCHE)),
+        s.messages.titre.fon ? el('span', { class: 'fon', lang: 'fon' }, s.messages.titre.fon) : s.messages.titre.fr),
+      s.messages.titre.fon && el('p', { class: 'texte-fr', lang: 'fr' }, s.messages.titre.fr),
       el('p', { class: 'reference' }, 'Référence : ', el('strong', {}, s.reference)),
-      el('p', {}, `Destinataire : ${s.destinataire}.`),
+      bilingue(s.messages.recu),
       el('ol', { class: 'etapes' }, el('li', { class: 'fait' }, `Reçu par le service à ${heure(s.recu_le)}`), etape)),
     el('dl', { class: 'recap' },
       ligneRecap('Culture', s.culture ? s.culture.nom : aPreciser('À préciser par le conseiller')),
@@ -403,7 +414,7 @@ function afficherSignalement(s) {
       ligneRecap('Lieu', texteLieu(s.localisation))),
     vousAvezDit(s.transcription),
     boutonRecommencer('Faire un autre signalement', microSignalement));
-  suivreStatut(s);
+  suivreStatut(s, s.messages);
 }
 
 brancherMicro(microSignalement, {

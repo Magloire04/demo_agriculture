@@ -4,11 +4,7 @@
 import { mots, reperer } from './texte.js';
 
 const FORMAT_NOMBRE = new Intl.NumberFormat('fr-FR');
-const LIBELLES_UNITE = { kg: 'le kilo', litre: 'le litre' };
-
-export function formaterPrix(montant) {
-  return `${FORMAT_NOMBRE.format(montant)} F CFA`;
-}
+const nombre = (montant) => FORMAT_NOMBRE.format(montant);
 
 function termesProduit(produit) {
   return [...produit.termes_fon, ...produit.termes_fr];
@@ -16,7 +12,7 @@ function termesProduit(produit) {
 
 function versProduit(produit, entendu) {
   const { prix, termes_fon, termes_fr, ...reste } = produit;
-  return { ...reste, libelle_unite: LIBELLES_UNITE[produit.unite] ?? `l'unité (${produit.unite})`, entendu };
+  return { ...reste, nom_fon: produit.nom_fon ?? null, entendu };
 }
 
 function versMarche({ termes, ...marche }) {
@@ -32,10 +28,6 @@ function lignesPrix(base, produit) {
 
 function nomMarche(marche) {
   return marche.nom === marche.ville ? marche.nom : `${marche.nom} (${marche.ville})`;
-}
-
-function majuscule(texte) {
-  return texte.charAt(0).toUpperCase() + texte.slice(1);
 }
 
 // Les transcriptions rendues par /marche (la retenue et celles de diagnostic) :
@@ -71,7 +63,7 @@ export function trouverProduits(base, reponseApi) {
   return { trouves, sansPrix };
 }
 
-export function repondrePrix(base, reponseApi) {
+export function repondrePrix(base, textes, reponseApi) {
   const marche = trouverMarche(base, transcriptions(reponseApi));
   const { trouves, sansPrix } = trouverProduits(base, reponseApi);
 
@@ -81,21 +73,26 @@ export function repondrePrix(base, reponseApi) {
     return { produit: versProduit(produit, entendu), ici: ici ?? null, lignes };
   });
 
-  const phrases = reponses.map(({ produit, ici, lignes }) => {
+  const phrases = [];
+  for (const { produit, ici, lignes } of reponses) {
+    const valeurs = { produit: { fr: produit.article, fon: produit.nom_fon }, unite: textes.unite(produit.unite) };
     if (ici) {
-      return `${majuscule(marche.au)}, ${produit.article} coûte ${formaterPrix(ici.prix)} ${produit.libelle_unite}.`;
+      phrases.push(textes.phrase('prix_ici', { ...valeurs, au_marche: marche.au, marche: marche.nom, prix: nombre(ici.prix) }));
+      continue;
     }
+    if (marche) phrases.push(textes.phrase('prix_absent', { ...valeurs, au_marche: marche.au, marche: marche.nom }));
     const min = lignes[0];
     const max = lignes[lignes.length - 1];
-    const absent = marche ? `Pas de prix relevé ${marche.au}. ` : '';
-    const fourchette = min.prix === max.prix
-      ? `${formaterPrix(min.prix)} ${produit.libelle_unite} dans tous les marchés`
-      : `de ${FORMAT_NOMBRE.format(min.prix)} à ${formaterPrix(max.prix)} ${produit.libelle_unite} selon les marchés. Le moins cher : ${nomMarche(min.marche)}`;
-    return `${absent}${majuscule(produit.article)} coûte ${fourchette}.`;
-  });
-  for (const terme of sansPrix) {
-    phrases.push(`Le prix de « ${terme} » n'est pas encore dans la base.`);
+    phrases.push(min.prix === max.prix
+      ? textes.phrase('prix_partout', { ...valeurs, prix: nombre(min.prix) })
+      : textes.phrase('prix_fourchette', {
+        ...valeurs,
+        min: nombre(min.prix),
+        max: nombre(max.prix),
+        marche: { fr: nomMarche(min.marche), fon: min.marche.nom },
+      }));
   }
+  for (const terme of sansPrix) phrases.push(textes.phrase('prix_sans_prix', { terme }));
 
   let statut = 'ok';
   let produitsDuMarche = [];
@@ -107,16 +104,18 @@ export function repondrePrix(base, reponseApi) {
       produitsDuMarche = base.produits
         .filter((p) => p.prix[marche.id])
         .map((p) => ({ produit: versProduit(p, null), prix: p.prix[marche.id].actuel, precedent: p.prix[marche.id].precedent }));
-      phrases.push(`Je n'ai pas compris le produit. Voici les prix relevés ${marche.au}.`);
+      phrases.push(textes.phrase('prix_marche_seul', { au_marche: marche.au, marche: marche.nom }));
     } else {
       statut = 'non_compris';
-      phrases.push("Je n'ai pas reconnu de produit. Dites le nom du produit, puis le marché.");
+      phrases.push(textes.phrase('prix_non_compris'));
     }
   }
+  const message = textes.joindre(phrases);
 
   return {
     statut,
-    message: phrases.join(' '),
+    message: message.fr,
+    message_fon: message.fon,
     transcription: reponseApi.transcription ?? '',
     marche: marche ? versMarche(marche) : null,
     reponses,

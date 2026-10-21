@@ -601,6 +601,38 @@ select {
   line-height: 1.4;
 }
 
+/* Réponses bilingues : le fongbé d'abord, le français en traduction dessous. */
+.bilingue p {
+  margin: 0;
+}
+
+.texte-fon {
+  font-weight: 600;
+}
+
+.texte-fr {
+  margin-top: 4px !important;
+  font-size: 0.875rem;
+  color: var(--texte-doux);
+}
+
+.reponse .texte-fon {
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.reponse .texte-fr {
+  font-size: 0.9375rem;
+}
+
+.nom-fon {
+  margin-left: 8px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--texte-doux);
+}
+
 .carte {
   border: 1px solid var(--bordure);
   border-radius: var(--rayon);

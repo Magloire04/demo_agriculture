@@ -1,6 +1,6 @@
 # AgriFon
 
-Démo de commande vocale en fongbé pour l'agriculture. On parle à son téléphone pour connaître le prix d'un produit sur un marché, ou pour signaler une maladie sur ses cultures. La réponse s'affiche à l'écran.
+Démo de commande vocale en fongbé pour l'agriculture. On parle à son téléphone pour connaître le prix d'un produit sur un marché, ou pour signaler une maladie sur ses cultures. La réponse s'affiche à l'écran en fongbé, avec sa traduction en français.
 
 L'application est une PWA (application web installable sur téléphone). La reconnaissance vocale du fongbé est assurée par l'API JaimeMaLangue.
 
@@ -109,10 +109,14 @@ L'application retrouve les mots attendus dans la transcription, sans tenir compt
 | Produits | `data/prix.json`, champ `termes_fon` | idem |
 | Marchés | `data/prix.json`, champ `termes` | variantes de prononciation des noms de lieux |
 | Communes | `data/communes.json`, champ `termes` | noms officiels ; variantes pour 13 communes sur 77 seulement |
+| Réponses affichées | `data/reponses.json`, champ `fon` | 14 phrases et 2 unités, rédigées d'après des sources publiées, à faire relire |
+| Noms des produits | `data/prix.json`, champ `nom_fon` | affichés à côté du nom français, à faire relire |
 
 Méthode : dire chaque phrase de démonstration dans l'application, lire la ligne « Vous avez dit : … », ajouter les mots tels qu'ils y sont transcrits dans le fichier concerné, puis redémarrer le serveur.
 
 Quand un symptôme n'est pas reconnu, le signalement est quand même transmis, marqué « à préciser ». Le conseiller dispose de la transcription et du message vocal.
+
+Les phrases fongbé de `data/reponses.json` ont été rédigées à partir de textes publiés en fɔngbè (jw.org, corpus fon-français FFR, dictionnaire fongbebenin.com, guide Peace Corps), mais aucune n'a encore été relue par un locuteur natif. Pour en corriger une, modifier le champ `fon` en gardant les `{…}`, puis redémarrer le serveur. Une phrase fongbé mise à `null` n'est plus affichée : seul le français reste.
 
 ## Fonctionnement
 
@@ -130,6 +134,8 @@ Le téléphone n'appelle jamais l'API directement : il envoie l'audio au serveur
 Prix du marché (`server/prix.js`). L'audio part vers le mode marché de l'API (`POST /marche`), qui rend les produits reconnus dans son lexique. Le produit est rapproché de la base de prix et le marché est cherché dans la transcription. Sans marché, la réponse donne la fourchette de prix et le marché le moins cher. Avec un marché mais sans produit, elle liste tous les prix de ce marché.
 
 Signalement (`server/signalement.js`). L'audio part vers le modèle général (`POST /transcribe`). La culture, la partie de la plante, le symptôme et la commune sont cherchés dans la transcription. Le signalement est enregistré dans `stockage/` avec la position GPS, la commune et le message vocal. Si une commune est choisie, les communes du même département sont transmises à l'API (paramètre `noms`) pour l'aider à reconnaître un nom de lieu.
+
+Réponses (`server/reponses.js`). Chaque réponse est construite dans les deux langues à partir des phrases-modèles de `data/reponses.json`, dont les `{…}` reçoivent le produit, le marché, le prix ou la commune. L'écran affiche le fongbé en grand, puis le français. Les montants restent écrits en chiffres, comme dans les textes publiés en fongbé.
 
 Base de prix (`data/prix.json`). Ce sont des données de démonstration, fictives mais vraisemblables : 13 produits, 13 marchés, prix de la semaine et de la semaine précédente. L'application le rappelle sous chaque réponse. Elles sont à remplacer par un vrai relevé.
 
@@ -169,11 +175,13 @@ server/
   index.js          serveur HTTP : fichiers de la PWA et routes /api
   asr.js            client de l'API de reconnaissance vocale (et mode simulation)
   prix.js           réponse « prix du marché »
+  reponses.js       phrases de réponse en français et en fongbé
   signalement.js    analyse et registre des signalements
   texte.js          comparaison de mots sans tons ni accents
 data/
   prix.json         base de prix de démonstration (produits, marchés)
   lexique.json      cultures, parties de la plante, symptômes
+  reponses.json     phrases de réponse en français et en fongbé
   communes.json     les 77 communes du Bénin
 public/
   index.html        application (accueil, prix, signalement)
@@ -190,11 +198,12 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 25 tests couvrent la comparaison de texte, la réponse « prix du marché », l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
+Les 31 tests couvrent la comparaison de texte, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
 
 ## Limites connues
 
 - Le vocabulaire fongbé des symptômes reste à fournir (voir « Préparer le vocabulaire en fongbé »).
+- Les réponses en fongbé n'ont pas encore été relues par un locuteur natif.
 - Les prix sont fictifs.
 - Les signalements sont enregistrés dans un fichier JSON. Cela suffit pour une démo, pas pour un service en production.
 - D'après la documentation de l'API, les nombres dits en français et les noms propres rares sont les points faibles de la reconnaissance.
