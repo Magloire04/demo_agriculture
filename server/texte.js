@@ -70,16 +70,29 @@ export function chercher(motsTexte, expression) {
   return meilleur;
 }
 
+// Variante stricte : la même suite de mots, seuls les tons et accents peuvent
+// différer. Sert aux mots courts ou courants (symptômes), qu'une lettre d'écart
+// ou deux mots recollés feraient trouver à tort.
+export function chercherExact(motsTexte, expression) {
+  const cible = mots(expression);
+  if (!cible.length) return null;
+  for (let i = 0; i + cible.length <= motsTexte.length; i++) {
+    if (cible.every((mot, k) => motsTexte[i + k] === mot)) return { position: i, ecart: 0 };
+  }
+  return null;
+}
+
 // Parmi des entrées portant chacune une liste de termes, rend celles trouvées dans
 // le texte, de la plus sûre (écart le plus faible) à la moins sûre, puis par ordre
 // d'apparition. `termes(entree)` rend la liste des façons de dire l'entrée.
-export function reperer(texte, entrees, termes) {
+export function reperer(texte, entrees, termes, { exact = false } = {}) {
   const motsTexte = Array.isArray(texte) ? texte : mots(texte);
+  const comparer = exact ? chercherExact : chercher;
   const trouvees = [];
   for (const entree of entrees) {
     let meilleur = null;
     for (const terme of termes(entree)) {
-      const r = chercher(motsTexte, terme);
+      const r = comparer(motsTexte, terme);
       if (r && (!meilleur || r.ecart < meilleur.ecart || (r.ecart === meilleur.ecart && r.position < meilleur.position))) {
         meilleur = { ...r, terme };
       }

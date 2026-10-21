@@ -11,8 +11,9 @@ const termesLexique = (e) => [...e.fon, ...e.fr];
 export function analyserSignalement(lexique, communes, texte) {
   const motsTexte = mots(texte);
   const culture = reperer(motsTexte, lexique.cultures, termesLexique)[0];
-  const parties = reperer(motsTexte, lexique.parties, termesLexique);
-  const symptomes = reperer(motsTexte, lexique.symptomes, termesLexique);
+  // Beaucoup de mots de symptômes sont courts ou courants en fon : on les veut exacts.
+  const parties = reperer(motsTexte, lexique.parties, termesLexique, { exact: true });
+  const symptomes = reperer(motsTexte, lexique.symptomes, termesLexique, { exact: true });
   // Les noms de commune très courts (« Zè ») se confondraient avec des mots fon.
   const commune = reperer(motsTexte, communes.filter((c) => normaliser(c.nom).replace(/ /g, '').length >= 4), (c) => c.termes)[0];
   return {
