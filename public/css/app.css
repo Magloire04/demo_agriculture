@@ -566,6 +566,38 @@ select {
   cursor: default;
 }
 
+/* Écouter la réponse */
+
+.lecture {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.bouton-ecouter {
+  gap: 8px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.bouton-ecouter svg {
+  width: 20px;
+  height: 20px;
+}
+
+.bouton-ecouter.en-cours {
+  background: var(--vert);
+  color: var(--blanc);
+}
+
+.lecture-mention {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--texte-doux);
+}
+
 /* ---------- Résultats ---------- */
 
 .resultat {
