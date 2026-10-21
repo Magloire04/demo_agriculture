@@ -112,7 +112,7 @@ L'application retrouve les mots attendus dans la transcription, sans tenir compt
 | Symptômes | `data/lexique.json`, champ `fon` des `symptomes` | 49 termes pour 8 symptômes (koklojonɔ, fyɔ́, xú, wànvú, gblé…), tirés de textes publiés, à faire valider |
 | Parties de la plante | `data/lexique.json`, champ `fon` des `parties` | ama, atínkàn, atínɖɔ̀, sínsɛ́n… ; racine (« ɖɔ̀ ») écarté car confondu avec « ɖɔ » (dire) |
 | Cultures | `data/lexique.json`, champ `fon` des `cultures` | quelques noms courants (gbadé, mɔlikun, azin…) à vérifier |
-| Produits | `data/referentiel.json`, champ `termes_fon` | 33 produits ; les 20 derniers ajoutés d'après le corpus FFR et le dictionnaire edutechbenin, à vérifier. Carotte, pomme de terre et tapioca se disent surtout en français |
+| Produits | `data/referentiel.json`, champ `termes_fon` | 33 produits ; les 20 derniers ajoutés d'après le corpus FFR et le dictionnaire edutechbenin, à vérifier. Carotte, pomme de terre et farine de blé se disent en français, sans mot fon attesté |
 | Marchés | `data/referentiel.json`, champ `termes` | variantes de prononciation des noms de lieux |
 | Communes | `data/communes.json`, champ `termes` | noms officiels ; variantes pour 13 communes sur 77 seulement |
 | Réponses affichées | `data/reponses.json`, champ `fon` | 15 phrases et 2 unités, rédigées d'après des sources publiées, à faire relire |
@@ -220,7 +220,7 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 50 tests couvrent la comparaison de texte, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
+Les 52 tests couvrent la comparaison de texte, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
 
 ## Limites connues
 

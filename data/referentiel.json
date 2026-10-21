@@ -195,7 +195,8 @@
       "unite": "kg",
       "termes_fon": [
         "gbadé",
-        "gbàdé"
+        "gbàdé",
+        "agbadé"
       ],
       "termes_fr": [
         "maïs"
@@ -213,7 +214,9 @@
       "unite": "kg",
       "termes_fon": [
         "mɔlikun",
-        "mɔ̌likún"
+        "mɔ̌likún",
+        "lɛ̌sì",
+        "lɛsin"
       ],
       "termes_fr": [
         "riz"
@@ -435,11 +438,13 @@
         "mɔlikun",
         "mɔ̌likún",
         "mɔ̌likún àblɛ́",
-        "yovó mɔ̌likún"
+        "lɛ̌sì",
+        "lɛsin"
       ],
       "termes_fr": [
         "riz",
-        "riz importé"
+        "riz importé",
+        "gino"
       ],
       "pam": [
         "Rice (imported)"
@@ -487,13 +492,11 @@
     {
       "id": "farine_ble",
       "nom": "Farine de blé",
-      "nom_fon": "blěe linfín",
+      "nom_fon": "farine",
       "article": "la farine de blé",
       "emoji": "🍞",
       "unite": "kg",
-      "termes_fon": [
-        "blěe linfín"
-      ],
+      "termes_fon": [],
       "termes_fr": [
         "farine",
         "farine de blé"
@@ -546,9 +549,7 @@
       "article": "la pomme de terre",
       "emoji": "🥔",
       "unite": "kg",
-      "termes_fon": [
-        "pɔ́mdetɛ́ɛ"
-      ],
+      "termes_fon": [],
       "termes_fr": [
         "pomme de terre",
         "pommes de terre"
@@ -587,7 +588,8 @@
       "unite": "kg",
       "termes_fon": [
         "aziíngòkwín",
-        "gokwín"
+        "gokwín",
+        "aziígòkwín"
       ],
       "termes_fr": [
         "voandzou",
@@ -605,7 +607,8 @@
       "emoji": "🫘",
       "unite": "kg",
       "termes_fon": [
-        "kwlekún"
+        "kwlekún",
+        "kwlè"
       ],
       "termes_fr": [
         "pois d'angole",
@@ -679,10 +682,7 @@
       "article": "la carotte",
       "emoji": "🥕",
       "unite": "kg",
-      "termes_fon": [
-        "kalɔ́ti",
-        "kawɔti"
-      ],
+      "termes_fon": [],
       "termes_fr": [
         "carotte",
         "carottes"
@@ -761,6 +761,8 @@
       ],
       "termes_fr": [
         "silvi",
+        "silivi",
+        "sylvie",
         "chinchard",
         "poisson"
       ],

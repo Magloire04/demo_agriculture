@@ -47,6 +47,11 @@ test('un mot pour deux produits relevés : « hweví » donne les deux poissons'
   assert.deepEqual(r.reponses.map((x) => x.produit.id), ['chinchard', 'carpe']);
 });
 
+test('« farine d’igname » ne donne pas aussi la farine de blé', () => {
+  const r = repondrePrix({ transcription: 'telibɔ́ línfín', produits: [] });
+  assert.deepEqual(r.reponses.map((x) => x.produit.id), ['farine_igname']);
+});
+
 test('sans produit de l’API, la phrase entière est lue sans tolérance', () => {
   assert.equal(repondrePrix({ transcription: 'a ma fɔ́n ganji à', produits: [] }).statut, 'non_compris');
   assert.deepEqual(repondrePrix({ transcription: 'feví dantɔkpa', produits: [] }).reponses.map((x) => x.produit.id), ['gombo']);
