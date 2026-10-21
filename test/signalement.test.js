@@ -18,6 +18,25 @@ test('culture, partie, symptôme et commune', () => {
   assert.deepEqual(a.commune, { nom: 'Djougou', departement: 'Donga' });
 });
 
+test('symptômes dits en fon', () => {
+  const symptomes = (texte) => analyserSignalement(lexique, communes, texte).symptomes.map((s) => s.id);
+  // Phrase réelle : « fyɔ́ » (se dessécher) transcrit « fí ɔ́ ».
+  const reel = analyserSignalement(lexique, communes, 'Mɔ̌likún ce sín ama fí ɔ́.');
+  assert.equal(reel.culture.id, 'riz');
+  assert.deepEqual(reel.parties.map((p) => p.id), ['feuilles']);
+  assert.deepEqual(reel.symptomes.map((s) => s.id), ['fletrissement']);
+  assert.deepEqual(symptomes('gbàdé cé sín ama lɛ́ ɖò koklojonɔ cí wɛ'), ['jaunissement']);
+  assert.deepEqual(symptomes('wànvú lɛ́ ɖù ama lɛ́'), ['ravageurs', 'feuilles_mangees']);
+  assert.deepEqual(symptomes('tɛvi cé jɛ̀ vǎ'), ['pourriture']);
+});
+
+test('symptômes et parties : pas de détection sur un mot voisin ou deux mots recollés', () => {
+  const a = analyserSignalement(lexique, communes, 'a ma fɔ́n ganji à, un yi wan nu wɛ, é ɖɔ tɔn');
+  assert.deepEqual(a.parties, []);
+  assert.deepEqual(a.symptomes, []);
+  assert.deepEqual(analyserSignalement(lexique, communes, 'un ɖò fí ɔ́').symptomes, []);
+});
+
 test('rien de reconnu', () => {
   const a = analyserSignalement(lexique, communes, 'xxx yyy');
   assert.equal(a.culture, null);

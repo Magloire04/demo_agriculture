@@ -1,5 +1,5 @@
 {
-  "_note": "Lexique du signalement. Les termes sont comparés sans tons ni accents, avec une petite tolérance. Les termes fon sont à valider et à compléter par des locuteurs : répéter la phrase de démonstration, lire la transcription affichée par l'application, et ajouter ici les mots entendus (voir README).",
+  "_note": "Lexique du signalement. Les termes sont comparés sans tons ni accents. Cultures : petite tolérance sur l'orthographe. Parties de la plante et symptômes : suite de mots exacte, car beaucoup de ces mots sont courts ou courants en fon. Les termes fon viennent du corpus fon-français FFR, du dictionnaire edutechbenin.com, de la Bible fon (jw.org) et des vidéos fon d'Access Agriculture ; ils sont à valider et à compléter par des locuteurs : répéter la phrase de démonstration, lire la transcription affichée par l'application, et ajouter ici les mots entendus (voir README).",
   "cultures": [
     { "id": "mais", "nom": "Maïs", "fon": ["gbadé"], "fr": ["maïs"] },
     { "id": "riz", "nom": "Riz", "fon": ["mɔlikun"], "fr": ["riz"] },
@@ -12,29 +12,29 @@
     { "id": "soja", "nom": "Soja", "fon": ["sɔja"], "fr": ["soja"] },
     { "id": "coton", "nom": "Coton", "fon": [], "fr": ["coton"] },
     { "id": "sorgho", "nom": "Sorgho", "fon": ["abɔ̀"], "fr": ["sorgho"] },
-    { "id": "gombo", "nom": "Gombo", "fon": [], "fr": ["gombo"] },
+    { "id": "gombo", "nom": "Gombo", "fon": ["feví"], "fr": ["gombo"] },
     { "id": "oignon", "nom": "Oignon", "fon": ["ayoma"], "fr": ["oignon"] },
     { "id": "ananas", "nom": "Ananas", "fon": ["ablɛndɛ"], "fr": ["ananas"] },
     { "id": "anacarde", "nom": "Anacarde (cajou)", "fon": [], "fr": ["anacarde", "cajou"] },
     { "id": "palmier", "nom": "Palmier à huile", "fon": ["dɛtin"], "fr": ["palmier"] },
-    { "id": "plantain", "nom": "Banane plantain", "fon": [], "fr": ["plantain", "banane"] },
+    { "id": "plantain", "nom": "Banane plantain", "fon": ["kókwé alɔgà"], "fr": ["plantain", "banane"] },
     { "id": "gboma", "nom": "Gboma (légume-feuille)", "fon": ["gbɔma"], "fr": ["gboma"] },
     { "id": "amarante", "nom": "Amarante", "fon": ["fɔtɛtɛ"], "fr": ["amarante"] }
   ],
   "parties": [
-    { "id": "feuilles", "libelle": "feuilles", "fon": ["ama"], "fr": ["feuille", "feuilles"] },
-    { "id": "tiges", "libelle": "tiges", "fon": [], "fr": ["tige", "tiges"] },
-    { "id": "racines", "libelle": "racines", "fon": [], "fr": ["racine", "racines"] },
-    { "id": "fruits", "libelle": "fruits, épis ou gousses", "fon": [], "fr": ["fruit", "fruits", "épi", "épis", "gousse", "gousses"] }
+    { "id": "feuilles", "libelle": "feuilles", "fon": ["ama", "atínmá", "ayimá"], "fr": ["feuille", "feuilles"] },
+    { "id": "tiges", "libelle": "tiges", "fon": ["atínkàn", "hankán", "fɛnnyɛ́ntín", "aziínkàn"], "fr": ["tige", "tiges"] },
+    { "id": "racines", "libelle": "racines", "fon": ["atínɖɔ̀"], "fr": ["racine", "racines"] },
+    { "id": "fruits", "libelle": "fruits, épis ou gousses", "fon": ["sínsɛ́n", "atínsínsɛ́n", "kwín", "aziínfló", "gbadégotín"], "fr": ["fruit", "fruits", "épi", "épis", "gousse", "gousses"] }
   ],
   "symptomes": [
-    { "id": "jaunissement", "libelle": "Jaunissement", "fon": [], "fr": ["jaune", "jaunes", "jaunit", "jaunir", "jaunissent", "jaunissement", "jaunies"] },
-    { "id": "taches", "libelle": "Taches", "fon": [], "fr": ["tache", "taches", "tacheté", "tachetées", "rouille"] },
-    { "id": "fletrissement", "libelle": "Flétrissement ou dessèchement", "fon": [], "fr": ["fane", "fanent", "flétri", "flétrissent", "flétrissement", "sèche", "sèchent", "séché", "séchés", "meurent", "mort", "morts"] },
-    { "id": "ravageurs", "libelle": "Insectes ou chenilles", "fon": [], "fr": ["chenille", "chenilles", "insecte", "insectes", "criquet", "criquets", "puceron", "pucerons", "termite", "termites", "légionnaire", "mouche", "mouches"] },
-    { "id": "feuilles_mangees", "libelle": "Parties trouées ou mangées", "fon": [], "fr": ["trou", "trous", "troué", "trouées", "mangé", "mangées", "mangent", "rongé", "rongées", "dévorées"] },
-    { "id": "pourriture", "libelle": "Pourriture ou moisissure", "fon": [], "fr": ["pourri", "pourrie", "pourris", "pourrissent", "pourriture", "moisi", "moisissure", "champignon", "champignons"] },
-    { "id": "deformation", "libelle": "Feuilles enroulées ou déformées", "fon": [], "fr": ["enroulé", "enroulées", "recroquevillé", "recroquevillées", "frisé", "frisées", "déformé", "déformées", "mosaïque"] },
-    { "id": "croissance", "libelle": "Croissance bloquée", "fon": [], "fr": ["rabougri", "rabougris", "nain", "nains", "bloqué", "bloquée"] }
+    { "id": "jaunissement", "libelle": "Jaunissement", "fon": ["koklojonɔ", "koklójó"], "fr": ["jaune", "jaunes", "jaunit", "jaunir", "jaunissent", "jaunissement", "jaunies", "jauni", "jaunie", "jaunis"] },
+    { "id": "taches", "libelle": "Taches", "fon": ["wuntun", "hwa funfun", "ɖixó"], "fr": ["tache", "taches", "tacheté", "tachetées", "rouille", "taché", "tachée", "tachées"] },
+    { "id": "fletrissement", "libelle": "Flétrissement ou dessèchement", "fon": ["fyɔ́", "ama fí ɔ́", "xú", "xúxú", "mlú", "kú", "kúkú"], "fr": ["fane", "fanent", "flétri", "flétrissent", "flétrissement", "sèche", "sèchent", "séché", "séchés", "meurent", "mort", "morts", "fané", "fanées", "sec", "secs", "sèches", "meurt"] },
+    { "id": "ravageurs", "libelle": "Insectes ou chenilles", "fon": ["wànvú", "ahwangɔnu wánvú", "nùvíɖogbɛ̀", "nùvínúví", "bɔ̀klé", "kɔ́súkɔ́sú", "sukpɔ wewe"], "fr": ["chenille", "chenilles", "insecte", "insectes", "criquet", "criquets", "puceron", "pucerons", "termite", "termites", "légionnaire", "mouche", "mouches"] },
+    { "id": "feuilles_mangees", "libelle": "Parties trouées ou mangées", "fon": ["ɖù"], "fr": ["trou", "trous", "troué", "trouées", "mangé", "mangées", "mangent", "rongé", "rongées", "dévorées", "troués", "mangés", "rongés"] },
+    { "id": "pourriture", "libelle": "Pourriture ou moisissure", "fon": ["gblé", "jɛ̀ vǎ", "jɛ̀ wɔvlì", "fùn hwà", "kpɔnnyɔɔ̀"], "fr": ["pourri", "pourrie", "pourris", "pourrissent", "pourriture", "moisi", "moisissure", "champignon", "champignons", "moisies", "pourries"] },
+    { "id": "deformation", "libelle": "Feuilles enroulées ou déformées", "fon": ["ama wunwun", "logwélógwé", "xásáxásá", "cákwécákwé", "gbàndán", "slósló"], "fr": ["enroulé", "enroulées", "recroquevillé", "recroquevillées", "frisé", "frisées", "déformé", "déformées", "mosaïque"] },
+    { "id": "croissance", "libelle": "Croissance bloquée", "fon": ["kɛ́ncɛ́nkɛ́ncɛ́n", "kéjèkéjè", "jɛ jeké", "hlekéjè", "gánmágánmá", "ma sù ǎ", "jɛ gbɛ̀n"], "fr": ["rabougri", "rabougris", "nain", "nains", "bloqué", "bloquée"] }
   ]
 }
