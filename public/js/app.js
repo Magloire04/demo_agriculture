@@ -256,7 +256,7 @@ function carteProduit({ produit, ici, lignes }) {
   return el('article', { class: 'carte' },
     el('div', { class: 'carte-entete' },
       el('span', { class: 'emoji', 'aria-hidden': 'true' }, produit.emoji),
-      el('h2', {}, produit.nom, produit.nom_fon && el('span', { class: 'nom-fon fon', lang: 'fon' }, produit.nom_fon))),
+      el('h2', {}, produit.nom, nomFon(produit) && el('span', { class: 'nom-fon fon', lang: 'fon' }, nomFon(produit)))),
     ici && el('div', { class: 'prix-principal' },
       el('p', {}, el('span', { class: 'montant' }, nombre(ici.prix)), el('span', { class: 'devise' }, `F CFA / ${unite}`)),
       el('p', { class: 'prix-lieu' }, `Marché ${nomMarche(ici.marche)} · ${ici.marche.departement} · prix moyen de ${mois(ici.date)}`),
@@ -266,6 +266,11 @@ function carteProduit({ produit, ici, lignes }) {
       : liste);
 }
 
+// Nom fon affiché à côté du nom français, sauf s'il est le même mot (carotte).
+function nomFon(produit) {
+  return produit.nom_fon && produit.nom_fon.toLowerCase() !== produit.nom.toLowerCase() ? produit.nom_fon : null;
+}
+
 function carteMarche(marche, produits) {
   const reference = moisReference(produits);
   return el('article', { class: 'carte' },
@@ -273,7 +278,7 @@ function carteMarche(marche, produits) {
     el('ul', { class: 'liste-prix' }, produits.map((ligne) =>
       el('li', {},
         el('span', {}, el('span', { 'aria-hidden': 'true' }, `${ligne.produit.emoji} `), ligne.produit.nom,
-          ligne.produit.nom_fon && el('small', { class: 'fon', lang: 'fon' }, ligne.produit.nom_fon)),
+          nomFon(ligne.produit) && el('small', { class: 'fon', lang: 'fon' }, nomFon(ligne.produit))),
         el('span', { class: 'valeur' }, `${nombre(ligne.prix)} F / ${ligne.produit.unite}`, moisSiAncien(ligne, reference))))));
 }
 

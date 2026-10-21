@@ -18,6 +18,10 @@
    "parakou": { "date": "2026-09-15", "prix": 344, "libelle": "Rice (local)", "precedent": { "date": "2026-08-15", "prix": 350 } },
    "dantokpa": { "date": "2026-05-15", "prix": 650, "libelle": "Rice (local)", "precedent": { "date": "2026-03-15", "prix": 647 } }
   },
+  "riz_importe": {
+   "dantokpa": { "date": "2026-09-15", "prix": 560, "libelle": "Rice (imported)", "precedent": { "date": "2026-08-15", "prix": 560 } },
+   "ouando": { "date": "2026-09-15", "prix": 575, "libelle": "Rice (imported)", "precedent": null }
+  },
   "soja": {
    "glazoue": { "date": "2026-09-15", "prix": 268, "libelle": "Soybeans", "precedent": null },
    "parakou": { "date": "2026-09-15", "prix": 268, "libelle": "Soybeans", "precedent": null }

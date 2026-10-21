@@ -53,20 +53,25 @@ export function trouverMarche(base, textes) {
 }
 
 // Produits demandés : d'abord ceux reconnus par le lexique de l'API, sinon ceux
-// trouvés directement dans la transcription.
+// trouvés directement dans la transcription. Un même mot peut désigner plusieurs
+// produits relevés (« mɔ̌likún » : riz local et riz importé) : on les rend tous.
 export function trouverProduits(base, reponseApi) {
   const trouves = [];
   const sansPrix = [];
   for (const p of reponseApi.produits ?? []) {
     const terme = p.terme_canonique || p.terme;
     if (!terme) continue;
-    const produit = reperer(terme, base.produits, termesProduit)[0]?.entree;
-    if (!produit) sansPrix.push(p.terme || terme);
-    else if (!trouves.some((t) => t.produit.id === produit.id)) trouves.push({ produit, entendu: p.terme || terme });
+    const resultats = reperer(terme, base.produits, termesProduit);
+    const produits = resultats.filter((r) => r.ecart === resultats[0].ecart).map((r) => r.entree);
+    if (!produits.length) sansPrix.push(p.terme || terme);
+    for (const produit of produits) {
+      if (!trouves.some((t) => t.produit.id === produit.id)) trouves.push({ produit, entendu: p.terme || terme });
+    }
   }
   if (trouves.length === 0 && sansPrix.length === 0) {
+    // Dans la phrase entière, des noms courts (klé, feví) se trouveraient à tort avec une tolérance.
     const motsTextes = transcriptions(reponseApi).flatMap((t) => [...mots(t), '|']);
-    for (const r of reperer(motsTextes, base.produits, termesProduit)) {
+    for (const r of reperer(motsTextes, base.produits, termesProduit, { exact: true })) {
       trouves.push({ produit: r.entree, entendu: r.terme });
     }
   }

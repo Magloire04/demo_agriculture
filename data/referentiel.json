@@ -195,7 +195,8 @@
       "unite": "kg",
       "termes_fon": [
         "gbadé",
-        "gbàdé"
+        "gbàdé",
+        "agbadé"
       ],
       "termes_fr": [
         "maïs"
@@ -213,7 +214,9 @@
       "unite": "kg",
       "termes_fon": [
         "mɔlikun",
-        "mɔ̌likún"
+        "mɔ̌likún",
+        "lɛ̌sì",
+        "lɛsin"
       ],
       "termes_fr": [
         "riz"
@@ -422,6 +425,387 @@
       ],
       "pam": [
         "Oil (palm)"
+      ]
+    },
+    {
+      "id": "riz_importe",
+      "nom": "Riz importé",
+      "nom_fon": "mɔ̌likún àblɛ́",
+      "article": "le riz importé",
+      "emoji": "🍚",
+      "unite": "kg",
+      "termes_fon": [
+        "mɔlikun",
+        "mɔ̌likún",
+        "mɔ̌likún àblɛ́",
+        "lɛ̌sì",
+        "lɛsin"
+      ],
+      "termes_fr": [
+        "riz",
+        "riz importé",
+        "gino"
+      ],
+      "pam": [
+        "Rice (imported)"
+      ]
+    },
+    {
+      "id": "tapioca",
+      "nom": "Tapioca",
+      "nom_fon": "tapyókà",
+      "article": "le tapioca",
+      "emoji": "🥣",
+      "unite": "kg",
+      "termes_fon": [
+        "tapyókà",
+        "tapioka",
+        "tapiyoka"
+      ],
+      "termes_fr": [
+        "tapioca"
+      ],
+      "pam": [
+        "Cassava meal (tapioca)"
+      ]
+    },
+    {
+      "id": "farine_igname",
+      "nom": "Farine d'igname",
+      "nom_fon": "telibɔ́ línfín",
+      "article": "la farine d'igname",
+      "emoji": "🥣",
+      "unite": "kg",
+      "termes_fon": [
+        "telibɔ́ línfín",
+        "telibɔ́ lifin",
+        "telibɔ́"
+      ],
+      "termes_fr": [
+        "farine d'igname",
+        "cossettes d'igname"
+      ],
+      "pam": [
+        "Yam (flour)"
+      ]
+    },
+    {
+      "id": "farine_ble",
+      "nom": "Farine de blé",
+      "nom_fon": "farine",
+      "article": "la farine de blé",
+      "emoji": "🍞",
+      "unite": "kg",
+      "termes_fon": [],
+      "termes_fr": [
+        "farine",
+        "farine de blé"
+      ],
+      "pam": [
+        "Wheat flour (imported)"
+      ]
+    },
+    {
+      "id": "mil",
+      "nom": "Mil",
+      "nom_fon": "likún",
+      "article": "le mil",
+      "emoji": "🌾",
+      "unite": "kg",
+      "termes_fon": [
+        "likún"
+      ],
+      "termes_fr": [
+        "mil",
+        "millet"
+      ],
+      "pam": [
+        "Millet"
+      ]
+    },
+    {
+      "id": "patate_douce",
+      "nom": "Patate douce",
+      "nom_fon": "dokwín",
+      "article": "la patate douce",
+      "emoji": "🍠",
+      "unite": "kg",
+      "termes_fon": [
+        "dokwín",
+        "wɛ̌lí"
+      ],
+      "termes_fr": [
+        "patate douce",
+        "patate"
+      ],
+      "pam": [
+        "Sweet potatoes"
+      ]
+    },
+    {
+      "id": "pomme_de_terre",
+      "nom": "Pomme de terre",
+      "nom_fon": "pomme de terre",
+      "article": "la pomme de terre",
+      "emoji": "🥔",
+      "unite": "kg",
+      "termes_fon": [],
+      "termes_fr": [
+        "pomme de terre",
+        "pommes de terre"
+      ],
+      "pam": [
+        "Potatoes"
+      ]
+    },
+    {
+      "id": "plantain",
+      "nom": "Banane plantain",
+      "nom_fon": "kókwé alɔgà",
+      "article": "la banane plantain",
+      "emoji": "🍌",
+      "unite": "kg",
+      "termes_fon": [
+        "kókwé alɔgà",
+        "alɔgà",
+        "kókwé"
+      ],
+      "termes_fr": [
+        "plantain",
+        "banane plantain",
+        "banane"
+      ],
+      "pam": [
+        "Plantains"
+      ]
+    },
+    {
+      "id": "voandzou",
+      "nom": "Voandzou",
+      "nom_fon": "aziíngòkwín",
+      "article": "le voandzou",
+      "emoji": "🫘",
+      "unite": "kg",
+      "termes_fon": [
+        "aziíngòkwín",
+        "gokwín",
+        "aziígòkwín"
+      ],
+      "termes_fr": [
+        "voandzou",
+        "pois de terre"
+      ],
+      "pam": [
+        "Groundnuts (Bambara)"
+      ]
+    },
+    {
+      "id": "pois_angole",
+      "nom": "Pois d'Angole",
+      "nom_fon": "kwlekún",
+      "article": "le pois d'Angole",
+      "emoji": "🫘",
+      "unite": "kg",
+      "termes_fon": [
+        "kwlekún",
+        "kwlè"
+      ],
+      "termes_fr": [
+        "pois d'angole",
+        "pois cajan"
+      ],
+      "pam": [
+        "Peas (green, dry)"
+      ]
+    },
+    {
+      "id": "gombo",
+      "nom": "Gombo",
+      "nom_fon": "feví",
+      "article": "le gombo",
+      "emoji": "🥒",
+      "unite": "kg",
+      "termes_fon": [
+        "feví"
+      ],
+      "termes_fr": [
+        "gombo"
+      ],
+      "pam": [
+        "Okra (fresh)"
+      ]
+    },
+    {
+      "id": "legumes_feuilles",
+      "nom": "Légumes-feuilles",
+      "nom_fon": "amà",
+      "article": "le légume-feuille",
+      "emoji": "🥬",
+      "unite": "kg",
+      "termes_fon": [
+        "amà",
+        "gbòmá",
+        "amavivɛ́"
+      ],
+      "termes_fr": [
+        "légume",
+        "légumes",
+        "légumes-feuilles",
+        "gboma"
+      ],
+      "pam": [
+        "Leafy vegetables"
+      ]
+    },
+    {
+      "id": "chou",
+      "nom": "Chou",
+      "nom_fon": "cuú",
+      "article": "le chou",
+      "emoji": "🥗",
+      "unite": "kg",
+      "termes_fon": [
+        "cuú"
+      ],
+      "termes_fr": [
+        "chou",
+        "choux"
+      ],
+      "pam": [
+        "Cabbage"
+      ]
+    },
+    {
+      "id": "carotte",
+      "nom": "Carotte",
+      "nom_fon": "carotte",
+      "article": "la carotte",
+      "emoji": "🥕",
+      "unite": "kg",
+      "termes_fon": [],
+      "termes_fr": [
+        "carotte",
+        "carottes"
+      ],
+      "pam": [
+        "Carrots"
+      ]
+    },
+    {
+      "id": "citron",
+      "nom": "Citron",
+      "nom_fon": "klé",
+      "article": "le citron",
+      "emoji": "🍋",
+      "unite": "kg",
+      "termes_fon": [
+        "klé",
+        "yovóklé"
+      ],
+      "termes_fr": [
+        "citron",
+        "citrons"
+      ],
+      "pam": [
+        "Lemons"
+      ]
+    },
+    {
+      "id": "orange",
+      "nom": "Orange",
+      "nom_fon": "yovózɛ̀n",
+      "article": "l'orange",
+      "emoji": "🍊",
+      "unite": "kg",
+      "termes_fon": [
+        "yovózɛ̀n",
+        "yovozɔn"
+      ],
+      "termes_fr": [
+        "orange",
+        "oranges"
+      ],
+      "pam": [
+        "Oranges"
+      ]
+    },
+    {
+      "id": "noix_coco",
+      "nom": "Noix de coco sèche",
+      "nom_fon": "agɔnkɛ́",
+      "article": "la noix de coco sèche",
+      "emoji": "🥥",
+      "unite": "kg",
+      "termes_fon": [
+        "agɔnkɛ́"
+      ],
+      "termes_fr": [
+        "coco",
+        "noix de coco"
+      ],
+      "pam": [
+        "Coconut (dried)"
+      ]
+    },
+    {
+      "id": "chinchard",
+      "nom": "Chinchard (silvi)",
+      "nom_fon": "silvi",
+      "article": "le chinchard (silvi)",
+      "emoji": "🐟",
+      "unite": "kg",
+      "termes_fon": [
+        "silvi",
+        "hweví",
+        "hweví mǔ"
+      ],
+      "termes_fr": [
+        "silvi",
+        "silivi",
+        "sylvie",
+        "chinchard",
+        "poisson"
+      ],
+      "pam": [
+        "Fish (fresh, silvi)"
+      ]
+    },
+    {
+      "id": "carpe",
+      "nom": "Carpe (tilapia)",
+      "nom_fon": "akpaví",
+      "article": "la carpe",
+      "emoji": "🐟",
+      "unite": "kg",
+      "termes_fon": [
+        "akpaví",
+        "hweví"
+      ],
+      "termes_fr": [
+        "carpe",
+        "tilapia",
+        "poisson"
+      ],
+      "pam": [
+        "Fish (tilapia)"
+      ]
+    },
+    {
+      "id": "huile_arachide",
+      "nom": "Huile d'arachide",
+      "nom_fon": "aziínmí",
+      "article": "l'huile d'arachide",
+      "emoji": "🫗",
+      "unite": "litre",
+      "termes_fon": [
+        "aziínmí",
+        "aziín mí"
+      ],
+      "termes_fr": [
+        "huile d'arachide"
+      ],
+      "pam": [
+        "Oil (groundnut)"
       ]
     }
   ]

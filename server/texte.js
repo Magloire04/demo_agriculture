@@ -48,7 +48,8 @@ export function tolerance(longueur) {
 // Cherche une expression (un ou plusieurs mots) dans une liste de mots normalisés.
 // Les mots du texte sont aussi comparés collés entre eux, pour accepter
 // « porto novo » contre « portonovo » ou « gla zoue » contre « glazoue ».
-// Rend { position, ecart } pour la meilleure occurrence, ou null.
+// Rend { position, ecart, longueur } pour la meilleure occurrence, ou null
+// (longueur : nombre de mots du texte couverts).
 export function chercher(motsTexte, expression) {
   const cible = mots(expression).join('');
   if (!cible) return null;
@@ -63,7 +64,7 @@ export function chercher(motsTexte, expression) {
       if (cible.length - fenetre.length > tol) continue;
       const ecart = distance(fenetre, cible);
       if (ecart <= tol && (!meilleur || ecart < meilleur.ecart)) {
-        meilleur = { position: i, ecart };
+        meilleur = { position: i, ecart, longueur: k + 1 };
       }
     }
   }
@@ -77,7 +78,7 @@ export function chercherExact(motsTexte, expression) {
   const cible = mots(expression);
   if (!cible.length) return null;
   for (let i = 0; i + cible.length <= motsTexte.length; i++) {
-    if (cible.every((mot, k) => motsTexte[i + k] === mot)) return { position: i, ecart: 0 };
+    if (cible.every((mot, k) => motsTexte[i + k] === mot)) return { position: i, ecart: 0, longueur: cible.length };
   }
   return null;
 }
@@ -93,11 +94,18 @@ export function reperer(texte, entrees, termes, { exact = false } = {}) {
     let meilleur = null;
     for (const terme of termes(entree)) {
       const r = comparer(motsTexte, terme);
-      if (r && (!meilleur || r.ecart < meilleur.ecart || (r.ecart === meilleur.ecart && r.position < meilleur.position))) {
+      if (r && (!meilleur || r.ecart < meilleur.ecart || (r.ecart === meilleur.ecart
+        && (r.position < meilleur.position || (r.position === meilleur.position && r.longueur > meilleur.longueur))))) {
         meilleur = { ...r, terme };
       }
     }
     if (meilleur) trouvees.push({ entree, ...meilleur });
   }
-  return trouvees.sort((a, b) => a.ecart - b.ecart || a.position - b.position);
+  // Une expression plus longue l'emporte sur une plus courte trouvée dans les mêmes
+  // mots : « mɔ̌likún àblɛ́ » désigne le riz importé, pas aussi le riz local.
+  const couvre = (a, b) => a.longueur > b.longueur && a.position <= b.position
+    && a.position + a.longueur >= b.position + b.longueur;
+  return trouvees
+    .filter((t) => !trouvees.some((a) => couvre(a, t)))
+    .sort((a, b) => a.ecart - b.ecart || a.position - b.position);
 }
