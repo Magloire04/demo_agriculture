@@ -171,15 +171,14 @@ Si `CODE_CONSEILLER` est défini, les routes du conseiller demandent ce code, da
 
 ## Charte graphique
 
-L'interface suit la charte graphique du Gouvernement du Bénin :
+L'interface reprend les éléments de la charte graphique du Gouvernement du Bénin :
 
 - police Montserrat (Light pour les titres en capitales, Regular pour le texte), incluse dans `public/fonts/` ;
 - couleurs du drapeau (vert `#006828`, jaune `#FFBE00`, rouge `#EB0000`), complétées par le noir ;
-- logotype de ministère : armoiries, libellé de l'institution, bande tricolore et « République du Bénin » ;
 - bande tricolore courte (un tiers de la largeur), centrée en bas de page, comme sur les documents des ministères ;
 - mise en page reprise du modèle « site internet ministère » : logo en haut à gauche, barre de rubriques grise.
 
-Les armoiries (`public/img/armoiries.png`) sont extraites du PDF de la charte, sans retouche. La charte demande d'utiliser les fichiers officiels fournis par la Direction de la Communication : ils remplaceront ce fichier dès qu'ils seront disponibles. Le libellé de l'institution se modifie dans `public/index.html` et `public/conseiller.html`, à deux endroits dans chaque fichier : le texte du logotype (`logo-institution`) et l'attribut `aria-label` du lien du logo.
+L'en-tête porte le logo d'AgriFon (`public/img/logo-agrifon.svg`) : le micro de l'icône de l'application, au-dessus d'une bande tricolore, suivi du nom AgriFon. L'application n'affiche ni armoiries ni nom de ministère.
 
 ## Arborescence
 
@@ -232,4 +231,4 @@ Les 45 tests couvrent la comparaison de texte, la lecture du fichier du PAM, le 
 
 ## Licence
 
-Le code est sous licence MIT (voir [LICENSE](LICENSE)). Les prix sont ceux du PAM, sous licence [CC BY-IGO](https://creativecommons.org/licenses/by/3.0/igo/), cités comme source dans l'application. La police Montserrat est distribuée sous licence SIL Open Font License ([public/fonts/OFL.txt](public/fonts/OFL.txt)). Les armoiries sont l'emblème de la République du Bénin, utilisé ici selon la charte graphique du Gouvernement.
+Le code est sous licence MIT (voir [LICENSE](LICENSE)). Les prix sont ceux du PAM, sous licence [CC BY-IGO](https://creativecommons.org/licenses/by/3.0/igo/), cités comme source dans l'application. La police Montserrat est distribuée sous licence SIL Open Font License ([public/fonts/OFL.txt](public/fonts/OFL.txt)).
