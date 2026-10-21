@@ -159,13 +159,13 @@ npm run importer-prix
 
 ### Réponse à voix haute
 
-Le bouton « Écouter en fongbé » dit la réponse avec des extraits audio préparés à l'avance (`public/voix`, 460 fichiers MP3, 6 Mo). Le champ `voix` de `data/reponses.json` reprend chaque phrase fon, coupée en morceaux par `|` : « È nɔ sa gbadé kilo ɖokpó yí | 90 | ɖo Glazoué axi mɛ. ». Le serveur rend la liste des fichiers à enchaîner, et le téléphone les lit l'un après l'autre (`public/js/voix.js`). S'il manque un seul extrait, le bouton n'apparaît pas.
+Le bouton « Écouter en fongbé » dit la réponse avec des extraits audio préparés à l'avance (`public/voix`, 460 fichiers MP3, 6 Mo). Le champ `voix` de `data/reponses.json` reprend chaque phrase fon, coupée en morceaux par `|` : « È nɔ sa gbadé kilo ɖokpó yí | 90 | ɖo Glazoué axi mɛ. ». Le serveur rend la liste des fichiers à enchaîner, et le téléphone les lit l'un après l'autre (`public/js/voix.js`). S'il manque un seul extrait, le bouton n'apparaît pas. Le serveur regarde le dossier à chaque réponse : un extrait ajouté, remplacé ou retiré compte tout de suite, sans redémarrage.
 
 Les prix sont dits comme au marché, en kpɔ́nwun (25 F), ɖɔ̌la (5 F) et caki (1 000 F) : 90 F se dit « kpɔ́nwun atɔ̀n ɖɔ̌la atɔ̀n », 1 500 F « caki ɖokpó adaɖé » (`server/nombres-fon.js`, règles du guide de fon du Corps de la Paix, des dictionnaires fongbebenin.com et edutechbenin.com et de la presse traduite en fon). Le prix est arrondi à 5 F à l'oral, suivi de « mɔ̌ » (environ) quand on arrondit ; l'écran garde le prix exact.
 
 Les extraits actuels sont produits par la voix de synthèse fon de Meta, [MMS-TTS](https://huggingface.co/facebook/mms-tts-fon), sous licence CC BY-NC 4.0 (usage non commercial, attribution). L'application le signale sous le bouton. Chaque extrait a été relu par la reconnaissance vocale JaimeMaLangue : 14 % d'écart moyen sur les montants, 17 % sur les phrases. Les 34 extraits les plus mal relus ont été regénérés avec d'autres graines, et la version la mieux comprise a été gardée. « ɖɔ̌la ɛnɛ̀ » (20 F) reste mal rendu. La voix reste à faire valider par des locuteurs.
 
-Pour remplacer la voix de synthèse par une voix humaine, faire enregistrer chaque texte de la liste et déposer le fichier sous le même nom : le nom d'un extrait se déduit du texte qu'il dit, aucun code n'est à modifier.
+Pour remplacer la voix de synthèse par une voix humaine, faire enregistrer chaque texte de la liste et déposer le fichier sous le même nom : le nom d'un extrait se déduit du texte qu'il dit, aucun code n'est à modifier. La voix de synthèse ne connaît pas le « r » : le générateur le fait dire « l » (Palakou, kalotte), comme on le prononce en fon, et signale tout autre caractère qu'elle ne sait pas dire.
 
 ```bash
 node scripts/lister-voix.js --json liste.json         # textes à dire et noms de fichier, extraits manquants
@@ -242,7 +242,7 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 60 tests couvrent la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
+Les 62 tests couvrent la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
 
 ## Limites connues
 
