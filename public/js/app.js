@@ -367,7 +367,7 @@ function ligneRecap(titre, valeur) {
 
 function etapePriseEnCharge(statut, messages) {
   return statut.statut === 'pris_en_charge'
-    ? el('li', { class: 'fait' }, bilingue({ ...messages.pris, fr: `${messages.pris.fr} (${heure(statut.pris_en_charge_le)})` }))
+    ? el('li', { class: 'fait' }, bilingue({ ...messages.pris, fr: `${messages.pris.fr.replace(/\.$/, '')} (${heure(statut.pris_en_charge_le)}).` }))
     : el('li', {}, bilingue(messages.attente));
 }
 
