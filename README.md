@@ -172,7 +172,7 @@ node scripts/lister-voix.js --json liste.json         # textes à dire et noms d
 python3 scripts/voix/generer.py liste.json public/voix # génère les manquants (sur un poste : torch, transformers, scipy, ffmpeg)
 ```
 
-Après une modification de `data/reponses.json` ou l'ajout d'un produit, d'un marché ou d'une commune, relancer ces deux commandes. Le bouton « En français » lit la traduction avec la voix du téléphone, quand le navigateur en propose une.
+Après une modification de `data/reponses.json` ou l'ajout d'un produit, d'un marché ou d'une commune, relancer ces deux commandes.
 
 ### Routes du serveur
 

@@ -1,8 +1,7 @@
-// Lecture à voix haute des réponses. Le fongbé est dit par les extraits audio
-// préparés à l'avance (public/voix), joués l'un après l'autre par un seul
-// élément <audio> : débloqué par le premier appui, il continue d'enchaîner les
-// extraits, y compris sur iPhone en mode silencieux. Le français est lu par la
-// voix du téléphone.
+// Lecture à voix haute des réponses en fongbé : les extraits audio préparés à
+// l'avance (public/voix) sont joués l'un après l'autre par un seul élément
+// <audio>. Débloqué par le premier appui, il continue d'enchaîner les extraits,
+// y compris sur iPhone en mode silencieux.
 
 const PAUSE_MS = 80; // entre deux extraits
 let lecteur = null;
@@ -51,28 +50,5 @@ export function lireExtraits(fichiers) {
     lecteur.onerror = () => terminer(new Error(`Extrait illisible : ${urls[rang]}`));
     enCours = lecture;
     jouer();
-  });
-}
-
-export function lireFrancais(texte) {
-  arreterLecture();
-  return new Promise((fin, echec) => {
-    const enonce = new SpeechSynthesisUtterance(texte.replace(/F\sCFA/g, 'francs CFA'));
-    enonce.lang = 'fr-FR';
-    const voix = speechSynthesis.getVoices().find((v) => v.lang?.toLowerCase().startsWith('fr'));
-    if (voix) enonce.voice = voix;
-    const lecture = {
-      arreter() {
-        speechSynthesis.cancel();
-        fin();
-      },
-    };
-    enonce.onend = () => {
-      if (enCours === lecture) enCours = null;
-      fin();
-    };
-    enonce.onerror = (e) => (e.error === 'interrupted' || e.error === 'canceled' ? fin() : echec(new Error(e.error)));
-    enCours = lecture;
-    speechSynthesis.speak(enonce);
   });
 }

@@ -222,17 +222,12 @@ function boutonLecture(libelle, lire) {
   return bouton;
 }
 
-// Boutons pour écouter la réponse : en fongbé si ses extraits audio existent, en
-// français avec la voix du téléphone.
-function lecture(extraits, francais) {
-  if (!voix) return null;
-  const boutons = [
-    extraits && boutonLecture('Écouter en fongbé', () => voix.lireExtraits(extraits)),
-    francais && 'speechSynthesis' in window && boutonLecture('En français', () => voix.lireFrancais(francais)),
-  ].filter(Boolean);
-  if (!boutons.length) return null;
-  return el('div', { class: 'lecture' }, boutons,
-    extraits && el('p', { class: 'lecture-mention' }, 'Voix de synthèse MMS-TTS (Meta, licence CC BY-NC 4.0), en attente de relecture par un locuteur.'));
+// Bouton pour écouter la réponse en fongbé, si tous ses extraits audio existent.
+function lecture(extraits) {
+  if (!voix || !extraits) return null;
+  return el('div', { class: 'lecture' },
+    boutonLecture('Écouter en fongbé', () => voix.lireExtraits(extraits)),
+    el('p', { class: 'lecture-mention' }, 'Voix de synthèse MMS-TTS (Meta, licence CC BY-NC 4.0), en attente de relecture par un locuteur.'));
 }
 
 function erreurDans(zone) {
@@ -335,7 +330,7 @@ function texteSource(source) {
 function afficherPrix(r) {
   montrerResultat(zonePrix,
     vousAvezDit(r.transcription),
-    el('div', { class: 'reponse' }, bilingue({ fr: r.message, fon: r.message_fon }, 'reponse-message'), lecture(r.voix, r.message)),
+    el('div', { class: 'reponse' }, bilingue({ fr: r.message, fon: r.message_fon }, 'reponse-message'), lecture(r.voix)),
     r.reponses.filter((x) => x.lignes.length > 0).map(carteProduit),
     r.statut === 'marche_seul' && carteMarche(r.marche, r.produits_du_marche),
     r.source && (r.reponses.some((x) => x.lignes.length > 0) || r.statut === 'marche_seul') && texteSource(r.source),
@@ -476,7 +471,7 @@ function afficherSignalement(s) {
       s.messages.titre.fon && el('p', { class: 'texte-fr', lang: 'fr' }, s.messages.titre.fr),
       el('p', { class: 'reference' }, 'Référence : ', el('strong', {}, s.reference)),
       bilingue(s.messages.recu),
-      lecture(s.voix, `${s.messages.titre.fr}. ${s.messages.recu.fr}`),
+      lecture(s.voix),
       el('ol', { class: 'etapes' }, el('li', { class: 'fait' }, `Reçu par le service à ${heure(s.recu_le)}`), etape)),
     el('dl', { class: 'recap' },
       ligneRecap('Culture', s.culture ? s.culture.nom : aPreciser('À préciser par le conseiller')),
