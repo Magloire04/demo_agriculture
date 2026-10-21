@@ -60,9 +60,11 @@ test('montants en fon : exemples des sources', () => {
 
 test('montants en fon : chaque morceau possible figure dans la liste des extraits', () => {
   const liste = new Set(morceauxDeMontants());
-  for (let prix = 3; prix < 40_000; prix += 7) {
+  for (let prix = 1; prix < 40_000; prix++) {
     for (const morceau of montantFon(prix)) assert.ok(liste.has(morceau), `${prix} : ${morceau}`);
   }
+  assert.equal(montantFon(2.5).join(' '), 'ɖɔ̌la ɖokpó mɔ̌');
+  assert.equal(montantFon(39_999).join(' '), 'caki gbàn atɔ́ɔ́n nukún ɛnɛ̀ kpɔ́nwun gbàn atɔ́ɔ́n nukún ɛnɛ̀ ɖɔ̌la ɛnɛ̀ mɔ̌');
 });
 
 test('modèle inconnu ou français incomplet : erreur de programmation', () => {

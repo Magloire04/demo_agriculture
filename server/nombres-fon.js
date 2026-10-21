@@ -17,11 +17,11 @@ export function nombreFon(n) {
   return n === base ? nom : `${nom} nukún ${PREMIERS[n - base]}`;
 }
 
-// Morceaux du montant, arrondi à 5 F (« mɔ̌ », environ, suit le dernier morceau
-// quand on arrondit). Rend null hors de 5 F à 39 995 F.
+// Morceaux du montant, arrondi à 5 F entre 5 et 39 995 F (« mɔ̌ », environ, suit
+// le dernier morceau quand on arrondit). Rend null hors de 1 à 39 999 F.
 export function montantFon(prix) {
-  const arrondi = Math.round(prix / 5) * 5;
-  if (!(arrondi >= 5 && arrondi < 40_000)) return null;
+  if (!(prix > 0 && prix < 40_000)) return null;
+  const arrondi = Math.min(39_995, Math.max(5, Math.round(prix / 5) * 5));
   const morceaux = [];
   if (arrondi < 75 && arrondi % 25) {
     // Sous 75 F, on compte en ɖɔ̌la (ɖɔ̌la wěwè = 60 F), sauf 25 et 50 F.
