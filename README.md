@@ -163,7 +163,7 @@ Le bouton « Écouter en fongbé » dit la réponse avec des extraits audio pré
 
 Les prix sont dits comme au marché, en kpɔ́nwun (25 F), ɖɔ̌la (5 F) et caki (1 000 F) : 90 F se dit « kpɔ́nwun atɔ̀n ɖɔ̌la atɔ̀n », 1 500 F « caki ɖokpó adaɖé » (`server/nombres-fon.js`, règles du guide de fon du Corps de la Paix, des dictionnaires fongbebenin.com et edutechbenin.com et de la presse traduite en fon). Le prix est arrondi à 5 F à l'oral, suivi de « mɔ̌ » (environ) quand on arrondit ; l'écran garde le prix exact.
 
-Les extraits actuels sont produits par la voix de synthèse fon de Meta, [MMS-TTS](https://huggingface.co/facebook/mms-tts-fon), sous licence CC BY-NC 4.0 (usage non commercial, attribution). L'application le signale sous le bouton. La voix reste à faire valider par des locuteurs.
+Les extraits actuels sont produits par la voix de synthèse fon de Meta, [MMS-TTS](https://huggingface.co/facebook/mms-tts-fon), sous licence CC BY-NC 4.0 (usage non commercial, attribution). L'application le signale sous le bouton. Chaque extrait a été relu par la reconnaissance vocale JaimeMaLangue : 14 % d'écart moyen sur les montants, 17 % sur les phrases. Les 34 extraits les plus mal relus ont été regénérés avec d'autres graines, et la version la mieux comprise a été gardée. « ɖɔ̌la ɛnɛ̀ » (20 F) reste mal rendu. La voix reste à faire valider par des locuteurs.
 
 Pour remplacer la voix de synthèse par une voix humaine, faire enregistrer chaque texte de la liste et déposer le fichier sous le même nom : le nom d'un extrait se déduit du texte qu'il dit, aucun code n'est à modifier.
 
