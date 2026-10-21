@@ -1,0 +1,59 @@
+// Réponses à voix haute. Chaque phrase fon est dite par une suite d'extraits audio
+// préparés à l'avance dans public/voix, un par morceau de phrase (voir le champ
+// « voix » de data/reponses.json). Le nom d'un fichier se déduit du texte qu'il
+// dit : un enregistrement humain peut remplacer un extrait de synthèse sans
+// toucher au code.
+
+import { createHash } from 'node:crypto';
+import { readdirSync } from 'node:fs';
+import { morceauxDeMontants } from './nombres-fon.js';
+
+export function texteVoix(texte) {
+  return texte.normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+export function fichierVoix(texte) {
+  return `${createHash('sha1').update(texteVoix(texte)).digest('hex').slice(0, 16)}.mp3`;
+}
+
+export function creerVoix(dossier) {
+  let presents = new Set();
+  try {
+    presents = new Set(readdirSync(dossier));
+  } catch (e) {
+    if (e.code !== 'ENOENT') throw e;
+  }
+  return {
+    // Fichiers à enchaîner pour dire ces morceaux, ou null s'il en manque un.
+    fichiers(morceaux) {
+      if (!morceaux?.length) return null;
+      const fichiers = morceaux.map(fichierVoix);
+      return fichiers.every((f) => presents.has(f)) ? fichiers : null;
+    },
+  };
+}
+
+// Tous les morceaux que les réponses peuvent dire : modèles « voix » remplis avec
+// chaque produit, marché ou commune, plus les morceaux de montants.
+export function listerMorceaux(reponses, base, communes) {
+  const domaines = {
+    produit: base.produits.map((p) => ({ produit: p.nom_fon, unite: reponses.unites[p.unite]?.fon })),
+    marche: base.marches.map((m) => ({ marche: m.nom })),
+    commune: communes.map((c) => ({ commune: c.nom })),
+  };
+  const morceaux = new Set(morceauxDeMontants().map(texteVoix));
+  for (const { voix } of Object.values(reponses.phrases)) {
+    for (const morceau of voix ? voix.split('|').map((m) => m.trim()) : []) {
+      const noms = [...morceau.matchAll(/\{(\w+)\}/g)].map((x) => x[1]);
+      if (noms.length === 1 && morceau === `{${noms[0]}}`) continue; // montant
+      const groupes = [...new Set(noms.map((n) => (n === 'unite' ? 'produit' : n)))];
+      let valeurs = [{}];
+      for (const g of groupes) {
+        if (!domaines[g]) throw new Error(`Emplacement {${g}} sans liste de valeurs dans un modèle « voix »`);
+        valeurs = valeurs.flatMap((v) => domaines[g].map((d) => ({ ...v, ...d })));
+      }
+      for (const v of valeurs) morceaux.add(texteVoix(morceau.replace(/\{(\w+)\}/g, (_, n) => v[n])));
+    }
+  }
+  return [...morceaux];
+}

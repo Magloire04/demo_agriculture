@@ -9,10 +9,11 @@ import { creerClientAsr, ErreurAsr } from '../server/asr.js';
 import { creerApplication } from '../server/index.js';
 import { creerTextes } from '../server/reponses.js';
 import { creerRegistre } from '../server/signalement.js';
+import { creerVoix, fichierVoix } from '../server/voix.js';
 
 const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 
-async function demarrer(t, { asr, codeConseiller = '' }) {
+async function demarrer(t, { asr, codeConseiller = '', voix = creerVoix('/inexistant') }) {
   const dossier = await mkdtemp(path.join(tmpdir(), 'agrifon-'));
   const registre = await creerRegistre(dossier);
   const gerer = creerApplication({
@@ -24,6 +25,7 @@ async function demarrer(t, { asr, codeConseiller = '' }) {
     registre,
     textes: creerTextes(lire('reponses.json')),
     codeConseiller,
+    voix,
   });
   const serveur = createServer(gerer);
   await new Promise((r) => serveur.listen(0, '127.0.0.1', r));
@@ -64,6 +66,16 @@ test('POST /api/prix relaie l’audio et répond le prix', async (t) => {
   assert.equal(r.message, 'Au marché de Glazoué, le maïs coûte 90\u00a0F\u00a0CFA le kilo.');
   assert.equal(r.source.nom, 'PAM (Programme alimentaire mondial)');
   assert.deepEqual(asr.appels, [{ point: 'marche', type: 'audio/webm', taille: 3, noms: 19 }]);
+});
+
+test('POST /api/prix : la voix est donnée seulement si tous ses extraits existent', async (t) => {
+  const sansExtraits = await (await envoyer(`${await demarrer(t, { asr: fausseAsr() })}/api/prix`)).json();
+  assert.equal(sansExtraits.voix, null);
+
+  const toutes = { fichiers: (morceaux) => morceaux.map(fichierVoix) };
+  const r = await (await envoyer(`${await demarrer(t, { asr: fausseAsr(), voix: toutes })}/api/prix`)).json();
+  const attendus = ['È nɔ sa gbadé kilo ɖokpó yí', 'kpɔ́nwun atɔ̀n', 'ɖɔ̌la atɔ̀n', 'ɖo Glazoué axi mɛ.'].map(fichierVoix);
+  assert.deepEqual(r.voix, attendus);
 });
 
 test('POST /api/prix refuse ce qui n’est pas de l’audio, et un corps vide', async (t) => {

@@ -12,6 +12,7 @@ import { repondrePrix, resumerBase } from './prix.js';
 import { creerReleves } from './releves.js';
 import { creerTextes } from './reponses.js';
 import { analyserSignalement, creerRegistre, destinataire } from './signalement.js';
+import { creerVoix } from './voix.js';
 
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TAILLE_MAX_AUDIO = 25 * 1024 * 1024;
@@ -92,7 +93,10 @@ const PHRASES_ERREUR = {
   audio_trop_court: 'erreur_trop_court',
 };
 
-export function creerApplication({ asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierPublic = path.join(RACINE, 'public') }) {
+export function creerApplication({
+  asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierPublic = path.join(RACINE, 'public'),
+  voix = creerVoix(path.join(dossierPublic, 'voix')),
+}) {
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
   const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
 
@@ -125,7 +129,8 @@ export function creerApplication({ asr, base, releves, lexique, communes, regist
     if (m === 'POST' && p === '/api/prix') {
       const { audio, type } = await lireAudio(req);
       const reponseApi = await asr.marche(audio, type, { noms: nomsMarches });
-      return envoyerJson(res, 200, { ...repondrePrix(base, releves.lire(), textes, reponseApi), simulation: asr.simulation });
+      const reponse = repondrePrix(base, releves.lire(), textes, reponseApi);
+      return envoyerJson(res, 200, { ...reponse, voix: voix.fichiers(reponse.voix), simulation: asr.simulation });
     }
 
     if (m === 'POST' && p === '/api/signalements') {
@@ -158,16 +163,20 @@ export function creerApplication({ asr, base, releves, lexique, communes, regist
         id_requete: reponseApi.id ?? null,
         simulation: asr.simulation,
       });
+      const titre = textes.phrase('signalement_transmis');
+      const recu = commune
+        ? textes.phrase('signalement_recu_commune', { commune: commune.nom })
+        : textes.phrase('signalement_recu_gps');
+      const sansVoix = ({ fr, fon }) => ({ fr, fon });
       return envoyerJson(res, 201, {
         ...vuePublique(signalement),
         messages: {
-          titre: textes.phrase('signalement_transmis'),
-          recu: commune
-            ? textes.phrase('signalement_recu_commune', { commune: commune.nom })
-            : textes.phrase('signalement_recu_gps'),
-          attente: textes.phrase('signalement_attente'),
-          pris: textes.phrase('signalement_pris'),
+          titre: sansVoix(titre),
+          recu: sansVoix(recu),
+          attente: sansVoix(textes.phrase('signalement_attente')),
+          pris: sansVoix(textes.phrase('signalement_pris')),
         },
+        voix: voix.fichiers(textes.joindre([titre, recu]).voix),
       });
     }
 
@@ -234,7 +243,7 @@ export function creerApplication({ asr, base, releves, lexique, communes, regist
     const chemin = path.join(dossierPublic, path.normalize(relatif));
     if (!chemin.startsWith(dossierPublic + path.sep)) throw new ErreurHttp(404, 'Fichier introuvable.', 'introuvable');
     const ext = path.extname(chemin);
-    const cache = ['.woff2', '.png'].includes(ext) ? 'public, max-age=604800' : 'no-cache';
+    const cache = ['.woff2', '.png'].includes(ext) ? 'public, max-age=604800' : ext === '.mp3' ? 'public, max-age=86400' : 'no-cache';
     return envoyerFichier(req, res, chemin, cache);
   }
 
