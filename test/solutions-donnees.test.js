@@ -1,0 +1,82 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { test } from 'node:test';
+import { choisirSolutions } from '../server/solutions.js';
+
+const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
+const donnees = lire('solutions.json');
+const lexique = lire('lexique.json');
+
+const complet = (t, ou) => {
+  for (const champ of ['fr', 'fon', 'voix']) assert.ok(t?.[champ]?.trim(), `${ou} : ${champ} manquant`);
+};
+const sourcesExistent = (liste, ou) => {
+  assert.ok(liste?.length, `${ou} : aucune source`);
+  for (const { id } of liste) assert.ok(donnees.sources[id], `${ou} : source inconnue ${id}`);
+};
+
+test('chaque élément a fr, fon, voix et des sources existantes', () => {
+  for (const [id, p] of Object.entries(donnees.phrases)) complet(p, `phrase ${id}`);
+  for (const [id, g] of Object.entries(donnees.gestes)) {
+    complet(g, `geste ${id}`);
+    sourcesExistent(g.sources, `geste ${id}`);
+    assert.ok([undefined, 'pluies', 'seche'].includes(g.saison), `geste ${id} : saison ${g.saison}`);
+  }
+  for (const c of donnees.cas) {
+    for (const champ of ['fr', 'fon']) assert.ok(c.probleme?.[champ]?.trim(), `cas ${c.id} : problème ${champ}`);
+    sourcesExistent(c.sources, `cas ${c.id}`);
+    if (!c.traitement) continue;
+    complet(c.traitement, `cas ${c.id} : traitement`);
+    if (c.traitement.securite) complet(c.traitement.securite, `cas ${c.id} : sécurité`);
+    sourcesExistent(c.traitement.sources, `cas ${c.id} : traitement`);
+  }
+  for (const s of Object.values(donnees.sources)) assert.ok(s.editeur && s.titre && s.url && typeof s.pour_le_benin === 'boolean', JSON.stringify(s));
+});
+
+test('chaque combinaison culture × symptôme donne au moins deux gestes sans saison', () => {
+  for (const culture of lexique.cultures) {
+    for (const symptome of lexique.symptomes) {
+      const s = choisirSolutions(donnees, {
+        culture: { id: culture.id, nom: culture.nom }, parties: [], symptomes: [{ id: symptome.id, libelle: symptome.libelle }], commune: null,
+      }, { departement: null, date: new Date('2026-08-15T12:00:00Z'), transcription: '' });
+      const gestes = s.elements.filter((e) => e.type === 'geste');
+      assert.ok(gestes.length >= 2, `${culture.id} × ${symptome.id} : ${gestes.length} geste(s)`);
+    }
+  }
+});
+
+test('un traitement vient d’une source faite pour le Bénin et d’un cas nette', () => {
+  for (const c of donnees.cas.filter((x) => x.traitement)) {
+    assert.equal(c.certitude, 'nette', `cas ${c.id}`);
+    for (const { id } of c.traitement.sources) assert.equal(donnees.sources[id].pour_le_benin, true, `cas ${c.id} : source ${id}`);
+    assert.ok(['preparation', 'produit'].includes(c.traitement.type), `cas ${c.id} : type ${c.traitement.type}`);
+  }
+});
+
+test('références croisées', () => {
+  const cultures = new Set(lexique.cultures.map((c) => c.id));
+  const symptomes = new Set(lexique.symptomes.map((s) => s.id));
+  const parties = new Set(lexique.parties.map((p) => p.id));
+  const geste = (id, ou) => assert.ok(donnees.gestes[id], `${ou} : geste inconnu ${id}`);
+  for (const [s, liste] of Object.entries(donnees.par_symptome)) {
+    assert.ok(symptomes.has(s), `par_symptome : ${s}`);
+    for (const id of liste) geste(id, `par_symptome.${s}`);
+  }
+  for (const [c, parSymptome] of Object.entries(donnees.par_culture)) {
+    assert.ok(cultures.has(c), `par_culture : ${c}`);
+    for (const [s, liste] of Object.entries(parSymptome)) {
+      assert.ok(symptomes.has(s), `par_culture.${c} : ${s}`);
+      for (const id of liste) geste(id, `par_culture.${c}.${s}`);
+    }
+  }
+  const ids = new Set();
+  for (const c of donnees.cas) {
+    assert.ok(!ids.has(c.id), `cas en double : ${c.id}`);
+    ids.add(c.id);
+    assert.ok(cultures.has(c.culture), `cas ${c.id} : culture ${c.culture}`);
+    for (const s of c.symptomes) assert.ok(symptomes.has(s), `cas ${c.id} : symptôme ${s}`);
+    for (const p of c.parties ?? []) assert.ok(parties.has(p), `cas ${c.id} : partie ${p}`);
+    for (const id of c.gestes ?? []) geste(id, `cas ${c.id}`);
+    assert.ok(['nette', 'possible'].includes(c.certitude), `cas ${c.id} : certitude`);
+  }
+});

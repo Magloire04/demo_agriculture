@@ -1,0 +1,261 @@
+{
+  "version": "2026-10-23",
+  "fon_a_relire": true,
+  "sources": {
+    "inrab-recueil-2020": {
+      "editeur": "INRAB",
+      "titre": "Recueil des technologies agricoles prometteuses développées par le système national de recherche agricole",
+      "annee": 2020,
+      "url": "https://inrab.bj/uploads_files/categories/files/Recueil-des-technologies-agricoles-prometteuses-d-velopp-es-par-le-syst-me-national-de-recherche-agricole-5fd745412517e.pdf",
+      "licence": null,
+      "pour_le_benin": true
+    },
+    "iita-inrab-maraichage-2010": {
+      "editeur": "IITA et INRAB",
+      "titre": "Integrated pest management in vegetable production: a guide for extension workers in West Africa",
+      "annee": 2010,
+      "url": "https://cgspace.cgiar.org/bitstreams/47108e82-3f19-4032-b3c0-543f291eebdd/download",
+      "licence": null,
+      "pour_le_benin": true
+    },
+    "fao-cla-2018": {
+      "editeur": "FAO",
+      "titre": "Gestion intégrée de la chenille légionnaire d'automne sur le maïs : guide pour les champs-écoles des producteurs en Afrique",
+      "annee": 2018,
+      "url": "https://openknowledge.fao.org/handle/20.500.14283/i9124fr",
+      "licence": "CC BY-NC-SA 3.0 IGO",
+      "pour_le_benin": true
+    },
+    "fao-pertes-apres-recolte": {
+      "editeur": "FAO",
+      "titre": "Prevention of post-harvest food losses: fruits, vegetables and root crops",
+      "annee": 1989,
+      "url": "https://www.fao.org/4/x5039e/x5039E06.htm",
+      "licence": null,
+      "pour_le_benin": true
+    },
+    "aa-compost-striga": {
+      "editeur": "Access Agriculture",
+      "titre": "Composting to beat striga",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/composting-beat-striga",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-gombo": {
+      "editeur": "Access Agriculture",
+      "titre": "Taking care of okra",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/taking-care-okra",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-pepiniere-oignon": {
+      "editeur": "Access Agriculture",
+      "titre": "Onion nursery",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/onion-nursery",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-mildiou-tomate": {
+      "editeur": "Access Agriculture",
+      "titre": "Managing tomato late blight",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/managing-tomato-late-blight",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-tuteurage-tomate": {
+      "editeur": "Access Agriculture",
+      "titre": "Staking tomato plants",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/staking-tomato-plants",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-paillage": {
+      "editeur": "Access Agriculture",
+      "titre": "Mulch for a better soil and crop",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/mulch-better-soil-and-crop",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-chenille-legionnaire": {
+      "editeur": "Access Agriculture",
+      "titre": "Killing fall armyworms naturally",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/killing-fall-armyworms-naturally",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-rotation-legumineuses": {
+      "editeur": "Access Agriculture",
+      "titre": "Crop rotation with legumes",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/crop-rotation-legumes",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    }
+  },
+  "phrases": {
+    "titre": {
+      "fr": "En attendant le conseiller, vous pouvez :",
+      "fon": "Hwenu e glegán ɔ ko wá ǎ é ɔ, nǔ e mi sixú wà lɛ́ ɖíe :",
+      "voix": "Hwenu e glegán ɔ ko wá ǎ é ɔ, nǔ e mi sixú wà lɛ́ ɖíe."
+    },
+    "probablement": {
+      "fr": "C'est probablement {probleme}.",
+      "fon": "Nǔ e mǐ mɔ̌ é ɔ, {probleme} wɛ.",
+      "voix": "Nǔ e mǐ mɔ̌ é ɔ, | {probleme} wɛ."
+    },
+    "possible": {
+      "fr": "Ce peut être {probleme}.",
+      "fon": "Vlafo ɔ, {probleme} wɛ.",
+      "voix": "Vlafo ɔ, | {probleme} wɛ."
+    },
+    "mention": {
+      "fr": "À confirmer avec un conseiller.",
+      "fon": "Mi kanbyɔ glegán ɔ jɛ nukɔn.",
+      "voix": "Mi kanbyɔ glegán ɔ jɛ nukɔn."
+    }
+  },
+  "gestes": {
+    "fumure-organique": {
+      "fr": "Mettre du compost ou du fumier bien décomposé au pied des plants.",
+      "fon": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko ɖi é dó atín lɛ́ sín afɔ kpá.",
+      "voix": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko ɖi é dó atín lɛ́ sín afɔ kpá.",
+      "sources": [{ "id": "inrab-recueil-2020", "detail": "fiche S-2" }, { "id": "aa-compost-striga" }]
+    },
+    "desherber": {
+      "fr": "Désherber autour des plants.",
+      "fon": "Mi sá gbe lɛ́ ɖo atín lɛ́ kpá.",
+      "voix": "Mi sá gbe lɛ́ ɖo atín lɛ́ kpá.",
+      "sources": [{ "id": "aa-gombo" }]
+    },
+    "arroser": {
+      "fr": "Arroser régulièrement, tôt le matin ou le soir.",
+      "fon": "Mi nɔ kɔn sìn dó atín lɛ́ jí, zǎnzǎn alǒ gbadanu.",
+      "voix": "Mi nɔ kɔn sìn dó atín lɛ́ jí, zǎnzǎn alǒ gbadanu.",
+      "saison": "seche",
+      "sources": [{ "id": "aa-gombo" }, { "id": "iita-inrab-maraichage-2010", "detail": "p. 65" }]
+    },
+    "drainer": {
+      "fr": "Creuser des rigoles pour que l'eau ne reste pas au pied des plants.",
+      "fon": "Mi kún ali kpɛví lɛ́ bɔ sìn ma nɔ te ɖo atín lɛ́ sín afɔ kpá ǎ.",
+      "voix": "Mi kún ali kpɛví lɛ́ bɔ sìn ma nɔ te ɖo atín lɛ́ sín afɔ kpá ǎ.",
+      "saison": "pluies",
+      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 48" }, { "id": "aa-pepiniere-oignon" }]
+    },
+    "retirer-bruler": {
+      "fr": "Couper les feuilles malades et les brûler loin du champ.",
+      "fon": "Mi sɛ́n ama e jɛ àzɔn lɛ́, bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
+      "voix": "Mi sɛ́n ama e jɛ àzɔn lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
+      "sources": [{ "id": "aa-mildiou-tomate" }, { "id": "iita-inrab-maraichage-2010", "detail": "p. 77" }]
+    },
+    "pas-compost-malade": {
+      "fr": "Ne pas mettre les plants malades au compost.",
+      "fon": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǎ.",
+      "voix": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǎ.",
+      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 77" }]
+    },
+    "aerer": {
+      "fr": "Garder de l'espace entre les plants pour que l'air circule.",
+      "fon": "Mi jo fí ɖo atín lɛ́ tɛntin bɔ jɔhɔn ni nɔ gbɔn.",
+      "voix": "Mi jo fí ɖo atín lɛ́ tɛntin bɔ jɔhɔn ni nɔ gbɔn.",
+      "sources": [{ "id": "aa-tuteurage-tomate" }]
+    },
+    "observer-collet": {
+      "fr": "Regarder le pied des plants fanés : s'il y a un feutrage blanc, le montrer au conseiller.",
+      "fon": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. Nǔ wewe ɖé ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
+      "voix": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. | Nǔ wewe ɖé ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
+      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 45 et 49" }]
+    },
+    "pailler": {
+      "fr": "Couvrir le sol d'herbe sèche pour garder l'humidité.",
+      "fon": "Mi zé gbe xú lɛ́ xá ayǐ ɔ bɔ ayǐ ɔ ni nɔ fá.",
+      "voix": "Mi zé gbe xú lɛ́ xá ayǐ ɔ bɔ ayǐ ɔ ni nɔ fá.",
+      "sources": [{ "id": "aa-paillage" }]
+    },
+    "visiter": {
+      "fr": "Visiter le champ deux fois par semaine et bien regarder les feuilles.",
+      "fon": "Mi nɔ yì gle mitɔn mɛ azɔ̌n wè ɖo azǎn tɛ́nwe mɛ, bo nɔ kpɔ́n ama lɛ́ ganji.",
+      "voix": "Mi nɔ yì gle mitɔn mɛ azɔ̌n wè ɖo azǎn tɛ́nwe mɛ, | bo nɔ kpɔ́n ama lɛ́ ganji.",
+      "sources": [{ "id": "fao-cla-2018" }]
+    },
+    "ecraser-oeufs": {
+      "fr": "Écraser à la main les œufs et les jeunes insectes.",
+      "fon": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo yě sín azin lɛ́ kpo bɔ yě ni kú.",
+      "voix": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo yě sín azin lɛ́ kpo bɔ yě ni kú.",
+      "sources": [{ "id": "fao-cla-2018" }]
+    },
+    "detruire-attaques": {
+      "fr": "Ramasser et détruire les fruits et les feuilles attaqués.",
+      "fon": "Mi bɛ́ sínsɛ́n kpo ama kpo e nùvíɖogbɛ̀ lɛ́ ɖù é lɛ́, bo hu yě.",
+      "voix": "Mi bɛ́ sínsɛ́n kpo ama kpo e nùvíɖogbɛ̀ lɛ́ ɖù é lɛ́, bo hu yě.",
+      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 70" }]
+    },
+    "ramasser-chenilles": {
+      "fr": "Ramasser les chenilles à la main et les tuer.",
+      "fon": "Mi bɛ́ wànvú lɛ́ ɖo alɔ mɛ, bo hu yě.",
+      "voix": "Mi bɛ́ wànvú lɛ́ ɖo alɔ mɛ, bo hu yě.",
+      "sources": [{ "id": "fao-cla-2018" }, { "id": "aa-chenille-legionnaire" }]
+    },
+    "retirer-feuilles-roulees": {
+      "fr": "Retirer les feuilles roulées : les chenilles s'y cachent.",
+      "fon": "Mi ɖe ama e ko wlí lɛ́ : wànvú lɛ́ nɔ ɖo yě mɛ.",
+      "voix": "Mi ɖe ama e ko wlí lɛ́. | Wànvú lɛ́ nɔ ɖo yě mɛ.",
+      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 51 et 81" }]
+    },
+    "retirer-pourri": {
+      "fr": "Retirer les parties pourries et les brûler loin du champ.",
+      "fon": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
+      "voix": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
+      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 49 et 71" }]
+    },
+    "recolter-secher": {
+      "fr": "Récolter sans blesser les produits, puis bien les sécher au soleil.",
+      "fon": "Hwenu e mi ɖo nǔ ɖe wɛ ɔ, mi ma gbá yě ǎ. Énɛ́ gúdo ɔ, mi sá yě dó hwe mɛ ganji.",
+      "voix": "Hwenu e mi ɖo nǔ ɖe wɛ ɔ, mi ma gbá yě ǎ. | Énɛ́ gúdo ɔ, mi sá yě dó hwe mɛ ganji.",
+      "sources": [{ "id": "fao-pertes-apres-recolte", "detail": "section 11.1" }]
+    },
+    "observer-dessous": {
+      "fr": "Regarder le dessous des feuilles : s'il y a de petits insectes, les montrer au conseiller.",
+      "fon": "Mi kpɔ́n ama lɛ́ sín glɔ́. Nùvíɖogbɛ̀ kpɛví lɛ́ ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
+      "voix": "Mi kpɔ́n ama lɛ́ sín glɔ́. | Nùvíɖogbɛ̀ kpɛví lɛ́ ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
+      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 58 et 64" }]
+    },
+    "semences-saines": {
+      "fr": "À la prochaine saison, semer des graines prises sur des plants sains.",
+      "fon": "Xwè e ja é ɔ, mi ná dó kwín sín atín e ma jɛ àzɔn ǎ lɛ́ jí.",
+      "voix": "Xwè e ja é ɔ, mi ná dó kwín sín atín e ma jɛ àzɔn ǎ lɛ́ jí.",
+      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 77" }]
+    },
+    "rotation-legumineuse": {
+      "fr": "À la prochaine saison, cultiver du niébé, de l'arachide ou du soja à cet endroit.",
+      "fon": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ sɔja ɖo fí ɔ.",
+      "voix": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ sɔja ɖo fí ɔ.",
+      "sources": [{ "id": "aa-rotation-legumineuses" }, { "id": "inrab-recueil-2020", "detail": "fiche D-20" }]
+    },
+    "arracher-striga": {
+      "fr": "Arracher le striga avant qu'il fleurisse, pour qu'il ne fasse pas de graines.",
+      "fon": "Mi ɖe striga ɔ cóbɔ é ná jɛ fló.",
+      "voix": "Mi ɖe striga ɔ cóbɔ é ná jɛ fló.",
+      "sources": [{ "id": "inrab-recueil-2020", "detail": "fiche D-20" }]
+    }
+  },
+  "par_symptome": {
+    "jaunissement": ["fumure-organique", "desherber", "arroser", "drainer"],
+    "taches": ["retirer-bruler", "pas-compost-malade", "aerer"],
+    "fletrissement": ["observer-collet", "pailler", "arroser", "drainer"],
+    "ravageurs": ["visiter", "ecraser-oeufs", "detruire-attaques"],
+    "feuilles_mangees": ["ramasser-chenilles", "retirer-feuilles-roulees", "visiter"],
+    "pourriture": ["retirer-pourri", "recolter-secher", "drainer"],
+    "deformation": ["observer-dessous", "semences-saines", "arroser"],
+    "croissance": ["fumure-organique", "desherber", "rotation-legumineuse", "arroser"],
+    "striga": ["arracher-striga", "fumure-organique", "rotation-legumineuse"]
+  },
+  "par_culture": {},
+  "cas": []
+}
