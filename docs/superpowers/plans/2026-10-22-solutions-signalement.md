@@ -102,7 +102,7 @@ Champs facultatifs : `saison` (geste), `parties`, `termes`, `traitement`, `trait
 
 ---
 
-### Tâche 1 : saison d'un département
+### Task 1 : saison d'un département
 
 **Fichiers :** créer `server/saison.js`, `test/saison.test.js`.
 
@@ -149,7 +149,7 @@ test('heure de Porto-Novo, département inconnu', () => {
 - [ ] **Étape 4 : relancer le test** ; attendu : succès.
 - [ ] **Étape 5 : commit** `feat(server): tell the rainy or dry season of a department`.
 
-### Tâche 2 : symptôme « plante parasite (striga) »
+### Task 2 : symptôme « plante parasite (striga) »
 
 **Fichiers :** modifier `data/lexique.json`, `test/signalement.test.js`.
 
@@ -169,7 +169,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 4 : relancer** ; attendu : succès, et `npm test` toujours vert.
 - [ ] **Étape 5 : commit** `feat(data): recognize striga when the farmer names it`.
 
-### Tâche 3 : choix des solutions (module pur)
+### Task 3 : choix des solutions (module pur)
 
 **Fichiers :** créer `server/solutions.js`, `test/solutions.test.js`, `test/fixtures/solutions.json` (petit jeu : 2 cultures, 3 symptômes, gestes avec et sans saison, un cas `nette` avec préparation, un cas `nette` avec `termes`, un cas `possible` avec traitement, un cas avec `parties`).
 
@@ -197,7 +197,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 4 : relancer** ; attendu : succès.
 - [ ] **Étape 5 : commit** `feat(server): choose solutions for a crop disease report`.
 
-### Tâche 4 : données de base (sources, phrases, gestes par défaut)
+### Task 4 : données de base (sources, phrases, gestes par défaut)
 
 **Fichiers :** créer `data/solutions.json`, `test/solutions-donnees.test.js`.
 
@@ -224,7 +224,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 4 : relancer** puis `npm test` ; attendu : succès.
 - [ ] **Étape 5 : commit** `feat(data): add sources, phrases and default actions for each symptom`.
 
-### Tâche 5 : serveur et registre
+### Task 5 : serveur et registre
 
 **Fichiers :** modifier `server/index.js`, `test/serveur.test.js`.
 
@@ -243,7 +243,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 4 : relancer** puis `npm test` ; attendu : succès.
 - [ ] **Étape 5 : commit** `feat(server): answer and store solutions with each report`.
 
-### Tâche 6 : écran de l'agriculteur
+### Task 6 : écran de l'agriculteur
 
 **Fichiers :** modifier `public/js/app.js`, `public/css/app.css`, `public/sw.js`.
 
@@ -257,7 +257,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 4 : vérifier dans un navigateur** : `npm run simulation`, ouvrir http://localhost:3000 en largeur 390 px, onglet « Signaler », envoyer un fichier audio quelconque. La simulation répond « gbàdé ama jaunissent » (maïs, jaunissement) puis « timáti ama taches » (tomate, taches). Attendu : la section apparaît sous le tableau, sans défilement horizontal, mention en bas. Aucune erreur dans la console.
 - [ ] **Étape 5 : commit** `feat(pwa): show suggested solutions after a report`.
 
-### Tâche 7 : écran du conseiller
+### Task 7 : écran du conseiller
 
 **Fichiers :** modifier `public/js/conseiller.js`, `public/css/app.css`.
 
@@ -265,7 +265,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 2 : vérifier** : `npm run simulation`, faire un signalement, ouvrir http://localhost:3000/conseiller : le bloc apparaît. Avec un registre contenant un ancien signalement sans `solutions`, la carte s'affiche sans erreur.
 - [ ] **Étape 3 : commit** `feat(pwa): show the advisor the solutions given to the farmer`.
 
-### Tâche 8 : produits autorisés au Bénin
+### Task 8 : produits autorisés au Bénin
 
 **Fichiers :** créer `scripts/pesticides/extraire_coahp.py`, `data/pesticides.json`, `server/pesticides.js`, `test/pesticides.test.js`, `test/fixtures/pesticides.json`.
 
@@ -286,7 +286,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 7 : `npm test`** ; attendu : succès.
 - [ ] **Étape 8 : commit** `feat(data): check named products against the COAHP list and national bans`.
 
-### Tâche 9 : contenu, céréales, légumineuses et coton
+### Task 9 : contenu, céréales, légumineuses et coton
 
 **Fichiers :** modifier `data/solutions.json`.
 
@@ -299,7 +299,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 3 : `npm test`** ; attendu : succès.
 - [ ] **Étape 4 : commit** `feat(data): add cereal, legume and cotton cases`.
 
-### Tâche 10 : contenu, tubercules et cultures pérennes
+### Task 10 : contenu, tubercules et cultures pérennes
 
 **Fichiers :** modifier `data/solutions.json`.
 
@@ -315,7 +315,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 3 : `npm test`** ; attendu : succès.
 - [ ] **Étape 4 : commit** `feat(data): add root, tuber and tree crop cases`.
 
-### Tâche 11 : contenu, cultures maraîchères
+### Task 11 : contenu, cultures maraîchères
 
 **Fichiers :** modifier `data/solutions.json`.
 
@@ -330,7 +330,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 3 : `npm test`** ; attendu : succès, dont la règle d'autorisation.
 - [ ] **Étape 4 : commit** `feat(data): add vegetable cases`.
 
-### Tâche 12 : voix des solutions
+### Task 12 : voix des solutions
 
 **Fichiers :** modifier `server/voix.js`, `scripts/lister-voix.js`, `scripts/voix/generer.js`, `scripts/voix/evaluer.js`, `test/voix.test.js` ; ajouter les MP3 dans `public/voix`.
 
@@ -346,7 +346,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 6 : `npm test`** ; attendu : succès.
 - [ ] **Étape 7 : commit** `feat(data): add fon voice pieces for the solutions`.
 
-### Tâche 13 : relecture par le locuteur
+### Task 13 : relecture par le locuteur
 
 **Fichiers :** créer `scripts/relecture/csv.js`, `scripts/relecture-solutions.js`, `test/relecture.test.js`.
 
@@ -362,7 +362,7 @@ test('striga reconnu seulement quand il est nommé', () => {
 - [ ] **Étape 4 : relancer** ; attendu : succès. Exporter la fiche réelle dans le scratchpad et l'ouvrir pour contrôle.
 - [ ] **Étape 5 : commit** `feat(scripts): export and import solutions for the fon speaker review`.
 
-### Tâche 14 : documentation et PR
+### Task 14 : documentation et PR
 
 **Fichiers :** modifier `README.md`.
 
