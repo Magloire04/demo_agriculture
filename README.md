@@ -168,8 +168,8 @@ Les extraits actuels sont produits par la voix de synthèse fon de Meta, [MMS-TT
 Pour remplacer la voix de synthèse par une voix humaine, faire enregistrer chaque texte de la liste et déposer le fichier sous le même nom : le nom d'un extrait se déduit du texte qu'il dit, aucun code n'est à modifier. La voix de synthèse ne connaît pas le « r » : le générateur le fait dire « l » (Palakou, kalotte), comme on le prononce en fon, et signale tout autre caractère qu'elle ne sait pas dire.
 
 ```bash
-node scripts/lister-voix.js --json liste.json         # textes à dire et noms de fichier, extraits manquants
-python3 scripts/voix/generer.py liste.json public/voix # génère les manquants (sur un poste : torch, transformers, scipy, ffmpeg)
+node scripts/lister-voix.js --json liste.json   # textes à dire et noms de fichier, extraits manquants
+node scripts/voix/generer.js                    # génère les manquants avec l'API de synthèse FongLab (sur un poste avec ffmpeg)
 ```
 
 Après une modification de `data/reponses.json` ou l'ajout d'un produit, d'un marché ou d'une commune, relancer ces deux commandes.
@@ -208,7 +208,7 @@ scripts/
   importer-prix.js  import des prix du PAM
   importer-prix.sh  le même import, pour une tâche planifiée cPanel
   lister-voix.js    extraits audio que les réponses peuvent dire, et ceux qui manquent
-  voix/generer.py   génération des extraits manquants avec la voix de synthèse (sur un poste)
+  voix/generer.js   génération des extraits avec l'API de synthèse fon FongLab (sur un poste)
 server/
   index.js          serveur HTTP : fichiers de la PWA et routes /api
   asr.js            client de l'API de reconnaissance vocale (et mode simulation)
