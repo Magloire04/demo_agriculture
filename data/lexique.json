@@ -35,6 +35,7 @@
     { "id": "feuilles_mangees", "libelle": "Parties trouées ou mangées", "fon": ["ɖù"], "fr": ["trou", "trous", "troué", "trouées", "mangé", "mangées", "mangent", "rongé", "rongées", "dévorées", "troués", "mangés", "rongés"] },
     { "id": "pourriture", "libelle": "Pourriture ou moisissure", "fon": ["gblé", "jɛ̀ vǎ", "jɛ̀ wɔvlì", "fùn hwà", "kpɔnnyɔɔ̀"], "fr": ["pourri", "pourrie", "pourris", "pourrissent", "pourriture", "moisi", "moisissure", "champignon", "champignons", "moisies", "pourries"] },
     { "id": "deformation", "libelle": "Feuilles enroulées ou déformées", "fon": ["ama wunwun", "logwélógwé", "xásáxásá", "gbàndán", "slósló", "amawunwun"], "fr": ["enroulé", "enroulées", "recroquevillé", "recroquevillées", "frisé", "frisées", "déformé", "déformées", "mosaïque"] },
-    { "id": "croissance", "libelle": "Croissance bloquée", "fon": ["kɛ́ncɛ́nkɛ́ncɛ́n", "kéjèkéjè", "jɛ jeké", "hlekéjè", "gánmágánmá", "ma sù ǎ", "jɛ gbɛ̀n", "sù ɖěbǔ ǎ"], "fr": ["rabougri", "rabougris", "nain", "nains", "bloqué", "bloquée"] }
+    { "id": "croissance", "libelle": "Croissance bloquée", "fon": ["kɛ́ncɛ́nkɛ́ncɛ́n", "kéjèkéjè", "jɛ jeké", "hlekéjè", "gánmágánmá", "ma sù ǎ", "jɛ gbɛ̀n", "sù ɖěbǔ ǎ"], "fr": ["rabougri", "rabougris", "nain", "nains", "bloqué", "bloquée"] },
+    { "id": "striga", "libelle": "Plante parasite (striga)", "fon": [], "fr": ["striga", "plante parasite", "plantes parasites", "herbe parasite", "herbes parasites"] }
   ]
 }

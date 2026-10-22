@@ -37,6 +37,13 @@ test('symptômes et parties : pas de détection sur un mot voisin ou deux mots r
   assert.deepEqual(analyserSignalement(lexique, communes, 'un ɖò fí ɔ́').symptomes, []);
 });
 
+test('striga reconnu seulement quand il est nommé', () => {
+  const ids = (t) => analyserSignalement(lexique, communes, t).symptomes.map((s) => s.id);
+  assert.deepEqual(ids('Mon maïs a le striga'), ['striga']);
+  assert.deepEqual(ids('une plante parasite dans le sorgho'), ['striga']);
+  assert.deepEqual(ids('Gbàdé ce ama jaunissent'), ['jaunissement']);
+});
+
 test('rien de reconnu', () => {
   const a = analyserSignalement(lexique, communes, 'xxx yyy');
   assert.equal(a.culture, null);
