@@ -1,11 +1,13 @@
-// Génère les extraits audio de public/voix avec l'API de synthèse fon FongLab.
-// Voix par défaut : A1 (lecture de la Bible), la plus intelligible des voix de
-// l'API (29,8 % de mots mal reconnus, contre 54 à 81 % pour les voix M3).
+// Génère les extraits audio de public/voix avec l'API de synthèse fon FongLab
+// (https://tts.princespecial.me). L'API sert une seule voix, A1, apprise sur une
+// lecture de la Bible, sous licence CC BY-NC 4.0. Quota du compte : 50 000
+// caractères par mois ; la liste complète des extraits en compte environ 12 000.
 //
-//   node scripts/voix/generer.js                      extraits manquants
-//   node scripts/voix/generer.js --tout               tous les extraits
-//   node scripts/voix/generer.js --refaire 1a2b….mp3  ces extraits seulement
-//   node scripts/voix/generer.js --modele m3 --voix 12
+//   node scripts/voix/generer.js                         extraits manquants
+//   node scripts/voix/generer.js --tout                  tous les extraits
+//   node scripts/voix/generer.js --refaire 1a2b….mp3     ces extraits seulement
+//   node scripts/voix/generer.js --graine 2 --refaire …  autre rendu des mêmes textes
+//   node scripts/voix/generer.js --tout --dossier essai  ailleurs que dans public/voix
 //
 // Adresse et clé de l'API dans .env : FONGLAB_TTS_URL, FONGLAB_TTS_API_KEY. À
 // lancer sur un poste où ffmpeg est installé (conversion du WAV en MP3). Sans
@@ -20,7 +22,6 @@ import { fileURLToPath } from 'node:url';
 import { fichierVoix, listerMorceaux } from '../../server/voix.js';
 
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-const DOSSIER = path.join(RACINE, 'public', 'voix');
 
 function options() {
   const args = process.argv.slice(2);
@@ -28,24 +29,32 @@ function options() {
   const i = args.indexOf('--refaire');
   const refaire = i < 0 ? [] : args.slice(i + 1).filter((a) => !a.startsWith('--'))
     .map((a) => path.basename(a).replace(/(\.mp3)?$/, '.mp3'));
-  return { tout: args.includes('--tout'), refaire, modele: valeur('--modele', 'a1'), voix: Number(valeur('--voix', 0)) };
+  const graine = Number(valeur('--graine', 0));
+  if (!Number.isInteger(graine)) throw new Error('--graine attend un nombre entier');
+  return {
+    tout: args.includes('--tout'),
+    refaire,
+    graine,
+    dossier: path.resolve(RACINE, valeur('--dossier', path.join('public', 'voix'))),
+  };
 }
 
 // Le modèle n'a pas de « r » : on le dit « l », comme en fon (« lǐtli » pour litre).
 const aDire = (texte) => texte.replace(/r/g, 'l').replace(/R/g, 'L');
 
-async function synthetiser(url, cle, texte, { modele, voix }) {
+async function synthetiser(url, cle, texte, graine) {
   for (let essai = 1; ; essai++) {
     try {
       const reponse = await fetch(`${url}/tts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-API-Key': cle },
-        body: JSON.stringify({ texte: aDire(texte), modele, voix, verbalize: false }),
+        body: JSON.stringify({ text: aDire(texte), seed: graine }),
         signal: AbortSignal.timeout(120_000),
       });
       if (!reponse.ok) {
         const erreur = new Error(`HTTP ${reponse.status} : ${(await reponse.text()).slice(0, 200)}`);
-        erreur.definitive = reponse.status < 500; // clé refusée, texte rejeté : inutile de réessayer
+        // Clé refusée, texte rejeté, quota épuisé : inutile de réessayer.
+        erreur.definitive = reponse.status < 500 && reponse.status !== 429;
         throw erreur;
       }
       return Buffer.from(await reponse.arrayBuffer());
@@ -75,13 +84,14 @@ async function principal() {
   const inconnus = opts.refaire.filter((f) => !liste.some((x) => x.fichier === f));
   if (inconnus.length) throw new Error(`Absents de la liste des extraits : ${inconnus.join(', ')}`);
   const aFaire = liste.filter((x) => opts.tout || opts.refaire.includes(x.fichier)
-    || (!opts.refaire.length && !existsSync(path.join(DOSSIER, x.fichier))));
-  console.log(`${aFaire.length} extraits à générer sur ${liste.length} (modèle ${opts.modele}, voix ${opts.voix}).`);
+    || (!opts.refaire.length && !existsSync(path.join(opts.dossier, x.fichier))));
+  const caracteres = aFaire.reduce((n, x) => n + [...aDire(x.texte)].length, 0);
+  console.log(`${aFaire.length} extraits à générer sur ${liste.length} (graine ${opts.graine}, ${caracteres} caractères).`);
 
-  await mkdir(DOSSIER, { recursive: true });
+  await mkdir(opts.dossier, { recursive: true });
   for (const [i, x] of aFaire.entries()) {
-    const wav = await synthetiser(url, cle, x.texte, opts);
-    execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', 'pipe:0', '-ac', '1', '-b:a', '40k', path.join(DOSSIER, x.fichier)], { input: wav });
+    const wav = await synthetiser(url, cle, x.texte, opts.graine);
+    execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', 'pipe:0', '-ac', '1', '-b:a', '40k', path.join(opts.dossier, x.fichier)], { input: wav });
     console.log(`${i + 1}/${aFaire.length}  ${x.fichier}  ${x.texte}`);
   }
 }
