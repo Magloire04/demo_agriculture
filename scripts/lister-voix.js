@@ -4,7 +4,7 @@
 //   node scripts/lister-voix.js                  résumé : extraits présents et manquants
 //   node scripts/lister-voix.js --json liste.json écrit la liste complète [{ fichier, texte }]
 //
-// La liste sert à générer les extraits manquants (scripts/voix/generer.py) ou à
+// La liste sert à générer les extraits manquants (scripts/voix/generer.js) ou à
 // préparer une séance d'enregistrement avec un locuteur.
 
 import { existsSync } from 'node:fs';

@@ -1,7 +1,7 @@
 // Service worker : garde l'interface en cache pour qu'elle s'ouvre même sans réseau.
 // Les appels à l'API (/api/...) passent toujours par le réseau.
 
-const CACHE = 'agrifon-v4';
+const CACHE = 'agrifon-v5';
 const FICHIERS = [
   './',
   'index.html',

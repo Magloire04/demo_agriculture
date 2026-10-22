@@ -159,18 +159,23 @@ npm run importer-prix
 
 ### Réponse à voix haute
 
-Le bouton « Écouter en fongbé » dit la réponse avec des extraits audio préparés à l'avance (`public/voix`, 460 fichiers MP3, 6 Mo). Le champ `voix` de `data/reponses.json` reprend chaque phrase fon, coupée en morceaux par `|` : « È nɔ sa gbadé kilo ɖokpó yí | 90 | ɖo Glazoué axi mɛ. ». Le serveur rend la liste des fichiers à enchaîner, et le téléphone les lit l'un après l'autre (`public/js/voix.js`). S'il manque un seul extrait, le bouton n'apparaît pas. Le serveur regarde le dossier à chaque réponse : un extrait ajouté, remplacé ou retiré compte tout de suite, sans redémarrage.
+Le bouton « Écouter en fongbé » dit la réponse avec des extraits audio préparés à l'avance (`public/voix`, 460 fichiers MP3, 7,7 Mo). Le champ `voix` de `data/reponses.json` reprend chaque phrase fon, coupée en morceaux par `|` : « È nɔ sa gbadé kilo ɖokpó yí | 90 | ɖo Glazoué axi mɛ. ». Le serveur rend la liste des fichiers à enchaîner, et le téléphone les lit l'un après l'autre (`public/js/voix.js`). S'il manque un seul extrait, le bouton n'apparaît pas. Le serveur regarde le dossier à chaque réponse : un extrait ajouté, remplacé ou retiré compte tout de suite, sans redémarrage.
 
 Les prix sont dits comme au marché, en kpɔ́nwun (25 F), ɖɔ̌la (5 F) et caki (1 000 F) : 90 F se dit « kpɔ́nwun atɔ̀n ɖɔ̌la atɔ̀n », 1 500 F « caki ɖokpó adaɖé » (`server/nombres-fon.js`, règles du guide de fon du Corps de la Paix, des dictionnaires fongbebenin.com et edutechbenin.com et de la presse traduite en fon). Le prix est arrondi à 5 F à l'oral, suivi de « mɔ̌ » (environ) quand on arrondit ; l'écran garde le prix exact.
 
-Les extraits actuels sont produits par la voix de synthèse fon de Meta, [MMS-TTS](https://huggingface.co/facebook/mms-tts-fon), sous licence CC BY-NC 4.0 (usage non commercial, attribution). L'application le signale sous le bouton. Chaque extrait a été relu par la reconnaissance vocale JaimeMaLangue : 14 % d'écart moyen sur les montants, 17 % sur les phrases. Les 34 extraits les plus mal relus ont été regénérés avec d'autres graines, et la version la mieux comprise a été gardée. « ɖɔ̌la ɛnɛ̀ » (20 F) reste mal rendu. La voix reste à faire valider par des locuteurs.
+Les extraits actuels sont produits par la voix de synthèse fon FongLab (API `https://tts.princespecial.me`, voix A1 apprise sur une lecture de la Bible), dont le modèle est sous licence CC BY-NC 4.0 (usage non commercial). L'application le signale sous le bouton. Ils remplacent ceux de [MMS-TTS](https://huggingface.co/facebook/mms-tts-fon), la voix de Meta, sous la même licence.
 
-Pour remplacer la voix de synthèse par une voix humaine, faire enregistrer chaque texte de la liste et déposer le fichier sous le même nom : le nom d'un extrait se déduit du texte qu'il dit, aucun code n'est à modifier. La voix de synthèse ne connaît pas le « r » : le générateur le fait dire « l » (Palakou, kalotte), comme on le prononce en fon, et signale tout autre caractère qu'elle ne sait pas dire.
+Chaque extrait a été relu par la reconnaissance vocale JaimeMaLangue (`scripts/voix/evaluer.js` : distance d'édition entre le texte attendu et le texte entendu, sans tons ni accents). La version la mieux comprise a été gardée parmi celles produites avec la graine 0, avec un point final pour les 286 extraits qui n'ont pas de ponctuation, puis avec les graines 1 et 2 pour les 121 extraits encore mal compris. Sans point final, la voix avale souvent les textes courts. Écart moyen obtenu : 7,0 % sur les montants et 13,0 % sur les phrases, contre 8,8 % et 15,0 % pour les extraits MMS-TTS relus de la même façon (ceux-ci n'avaient eu d'autres graines que pour les 34 plus mal relus). « ɖɔ̌la wè » et « ɖɔ̌la tɛ́nnɛ » restent les montants les plus mal rendus. La voix reste à faire valider par des locuteurs.
+
+Pour remplacer la voix de synthèse par une voix humaine, faire enregistrer chaque texte de la liste et déposer le fichier sous le même nom : le nom d'un extrait se déduit du texte qu'il dit, aucun code n'est à modifier. La voix de synthèse ne connaît pas le « r » : le générateur le fait dire « l » (Palakou, kalotte), comme on le prononce en fon.
 
 ```bash
-node scripts/lister-voix.js --json liste.json         # textes à dire et noms de fichier, extraits manquants
-python3 scripts/voix/generer.py liste.json public/voix # génère les manquants (sur un poste : torch, transformers, scipy, ffmpeg)
+node scripts/lister-voix.js --json liste.json   # textes à dire et noms de fichier, extraits manquants
+node scripts/voix/generer.js --point            # génère les manquants avec l'API de synthèse FongLab (sur un poste avec ffmpeg)
+node scripts/voix/evaluer.js                    # fait relire les extraits par JaimeMaLangue, liste les plus mal compris
 ```
+
+Un extrait mal compris se regénère avec une autre graine, par exemple `node scripts/voix/generer.js --point --graine 1 --refaire <fichier>.mp3`. La clé de l'API FongLab (`FONGLAB_TTS_API_KEY`) et les identifiants de JaimeMaLangue se renseignent dans le `.env` du poste. Le compte FongLab dispose de 50 000 caractères par mois : la liste complète en compte environ 12 000.
 
 Après une modification de `data/reponses.json` ou l'ajout d'un produit, d'un marché ou d'une commune, relancer ces deux commandes.
 
@@ -208,7 +213,8 @@ scripts/
   importer-prix.js  import des prix du PAM
   importer-prix.sh  le même import, pour une tâche planifiée cPanel
   lister-voix.js    extraits audio que les réponses peuvent dire, et ceux qui manquent
-  voix/generer.py   génération des extraits manquants avec la voix de synthèse (sur un poste)
+  voix/generer.js   génération des extraits avec l'API de synthèse fon FongLab (sur un poste)
+  voix/evaluer.js   relecture des extraits par la reconnaissance vocale, écart avec le texte attendu
 server/
   index.js          serveur HTTP : fichiers de la PWA et routes /api
   asr.js            client de l'API de reconnaissance vocale (et mode simulation)
@@ -248,7 +254,7 @@ Les 62 tests couvrent la comparaison de texte, les prix dits en fon, les extrait
 
 - Le vocabulaire fongbé des symptômes vient de textes publiés et n'a pas encore été validé par des agriculteurs ou des conseillers (voir « Préparer le vocabulaire en fongbé »).
 - Les réponses en fongbé n'ont pas encore été relues par un locuteur natif.
-- La voix de synthèse fon est apprise sur une lecture de la Bible : certains tons sonnent faux et des mots courts (ɛnɛ̀, wɛ̌nɛ̀) sont parfois déformés. Sa licence interdit l'usage commercial. Une voix enregistrée par un locuteur est prévue pour la remplacer.
+- La voix de synthèse fon FongLab est apprise sur une lecture de la Bible : certains tons sonnent faux et des montants courts (ɖɔ̌la wè, ɖɔ̌la tɛ́nnɛ) sont parfois déformés. Sa licence interdit l'usage commercial. Une voix enregistrée par un locuteur est prévue pour la remplacer.
 - Les prix sont mensuels : entre deux relevés du PAM, ils ne suivent pas les variations d'un jour à l'autre.
 - Au dernier import, 31 couples produit × marché n'avaient pas de relevé récent, surtout à Pobè (riz local, manioc frais, banane plantain, pois d'Angole…). Pour ces cas, l'application le dit et donne les prix des autres marchés. `npm run importer-prix` affiche la liste à jour.
 - Les signalements sont enregistrés dans un fichier JSON. Cela suffit pour une démo, pas pour un service en production.
@@ -256,4 +262,4 @@ Les 62 tests couvrent la comparaison de texte, les prix dits en fon, les extrait
 
 ## Licence
 
-Le code est sous licence MIT (voir [LICENSE](LICENSE)). Les prix sont ceux du PAM, sous licence [CC BY-IGO](https://creativecommons.org/licenses/by/3.0/igo/), cités comme source dans l'application. La police Montserrat est distribuée sous licence SIL Open Font License ([public/fonts/OFL.txt](public/fonts/OFL.txt)). Les extraits audio de `public/voix` sont produits avec MMS-TTS de Meta et suivent sa licence [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
+Le code est sous licence MIT (voir [LICENSE](LICENSE)). Les prix sont ceux du PAM, sous licence [CC BY-IGO](https://creativecommons.org/licenses/by/3.0/igo/), cités comme source dans l'application. La police Montserrat est distribuée sous licence SIL Open Font License ([public/fonts/OFL.txt](public/fonts/OFL.txt)). Les extraits audio de `public/voix` sont produits avec la voix de synthèse fon FongLab et suivent la licence de son modèle, [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
