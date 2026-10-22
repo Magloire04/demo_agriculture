@@ -7,6 +7,7 @@
 //   node scripts/voix/generer.js --tout                  tous les extraits
 //   node scripts/voix/generer.js --refaire 1a2b….mp3     ces extraits seulement
 //   node scripts/voix/generer.js --graine 2 --refaire …  autre rendu des mêmes textes
+//   node scripts/voix/generer.js --point --refaire …     point final ajouté aux textes qui n'en ont pas
 //   node scripts/voix/generer.js --tout --dossier essai  ailleurs que dans public/voix
 //
 // Adresse et clé de l'API dans .env : FONGLAB_TTS_URL, FONGLAB_TTS_API_KEY. À
@@ -35,20 +36,26 @@ function options() {
     tout: args.includes('--tout'),
     refaire,
     graine,
+    point: args.includes('--point'),
     dossier: path.resolve(RACINE, valeur('--dossier', path.join('public', 'voix'))),
   };
 }
 
 // Le modèle n'a pas de « r » : on le dit « l », comme en fon (« lǐtli » pour litre).
-const aDire = (texte) => texte.replace(/r/g, 'l').replace(/R/g, 'L');
+// Avec --point, un texte sans ponctuation finale en reçoit une : sans elle, le
+// modèle avale souvent les textes courts (« ɖɔ̌la tántɔn » réduit à une syllabe).
+function aDire(texte, point = false) {
+  const t = texte.replace(/r/g, 'l').replace(/R/g, 'L');
+  return point && !/[.?!]$/.test(t) ? `${t}.` : t;
+}
 
-async function synthetiser(url, cle, texte, graine) {
+async function synthetiser(url, cle, texte, { graine, point }) {
   for (let essai = 1; ; essai++) {
     try {
       const reponse = await fetch(`${url}/tts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-API-Key': cle },
-        body: JSON.stringify({ text: aDire(texte), seed: graine }),
+        body: JSON.stringify({ text: aDire(texte, point), seed: graine }),
         signal: AbortSignal.timeout(120_000),
       });
       if (!reponse.ok) {
@@ -86,12 +93,12 @@ async function principal() {
   if (inconnus.length) throw new Error(`Absents de la liste des extraits : ${inconnus.join(', ')}`);
   const aFaire = liste.filter((x) => opts.tout || opts.refaire.includes(x.fichier)
     || (!opts.refaire.length && !existsSync(path.join(opts.dossier, x.fichier))));
-  const caracteres = aFaire.reduce((n, x) => n + [...aDire(x.texte)].length, 0);
-  console.log(`${aFaire.length} extraits à générer sur ${liste.length} (graine ${opts.graine}, ${caracteres} caractères).`);
+  const caracteres = aFaire.reduce((n, x) => n + [...aDire(x.texte, opts.point)].length, 0);
+  console.log(`${aFaire.length} extraits à générer sur ${liste.length} (graine ${opts.graine}${opts.point ? ', point final' : ''}, ${caracteres} caractères).`);
 
   await mkdir(opts.dossier, { recursive: true });
   for (const [i, x] of aFaire.entries()) {
-    const wav = await synthetiser(url, cle, x.texte, opts.graine);
+    const wav = await synthetiser(url, cle, x.texte, opts);
     execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', 'pipe:0', '-ac', '1', '-b:a', '40k', path.join(opts.dossier, x.fichier)], { input: wav });
     console.log(`${i + 1}/${aFaire.length}  ${x.fichier}  ${x.texte}`);
   }
