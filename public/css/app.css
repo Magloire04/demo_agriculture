@@ -667,6 +667,36 @@ select {
   color: var(--vert-fonce);
 }
 
+.solutions-conseiller {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.solutions-conseiller h3 {
+  margin: 0;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--texte-doux);
+}
+
+.solutions-conseiller p {
+  margin: 0;
+}
+
+.texte-fon-second {
+  font-size: 0.875rem;
+  color: var(--texte-doux);
+}
+
+.solution-reserves {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.8125rem;
+  color: var(--texte-doux);
+}
+
 .solutions-mention {
   padding-top: 8px;
   border-top: 1px solid var(--bordure);
