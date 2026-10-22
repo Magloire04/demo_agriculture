@@ -77,6 +77,13 @@ const CAS_ATTENDUS = [
   { id: 'plantain-cercosporiose', culture: 'plantain', certitude: 'possible', traitement: null },
   { id: 'anacarde-anthracnose', culture: 'anacarde', certitude: 'possible', traitement: null },
   { id: 'palmier-fusariose', culture: 'palmier', certitude: 'possible', traitement: null },
+  { id: 'tomate-helicoverpa', culture: 'tomate', certitude: 'nette', traitement: 'produit' },
+  { id: 'tomate-enroulement', culture: 'tomate', certitude: 'possible', traitement: null },
+  { id: 'tomate-fletrissement-bacterien', culture: 'tomate', certitude: 'possible', traitement: null },
+  { id: 'amarante-chenilles', culture: 'amarante', certitude: 'nette', traitement: 'preparation' },
+  { id: 'gboma-chenilles', culture: 'gboma', certitude: 'nette', traitement: 'preparation' },
+  { id: 'piment-anthracnose', culture: 'piment', certitude: 'possible', traitement: null },
+  { id: 'oignon-anthracnose', culture: 'oignon', certitude: 'possible', traitement: null },
 ];
 
 test('cas attendus présents, avec leur certitude et leur type de traitement', () => {
@@ -116,6 +123,21 @@ test('tubercules et cultures pérennes : scénarios types', () => {
     assert.equal(s.problemes[0]?.certitude, 'possible', `${culture} × ${symptome}`);
     assert.equal(s.elements.some((e) => e.type === 'traitement'), false, `${culture} × ${symptome}`);
   }
+});
+
+test('cultures maraîchères : scénarios types', () => {
+  const tomate = signaler('tomate', ['feuilles_mangees'], { parties: ['fruits'] });
+  assert.equal(tomate.elements[0].id, 'tomate-helicoverpa.traitement');
+  assert.ok(tomate.elements[0].fr.includes('96 g de matière active par hectare'));
+  assert.ok(tomate.elements[0].reserves.length >= 1);
+  assert.equal(signaler('tomate', ['feuilles_mangees']).elements.some((e) => e.type === 'traitement'), false);
+  for (const culture of ['amarante', 'gboma']) {
+    const s = signaler(culture, ['feuilles_mangees']);
+    assert.equal(s.elements[0].id, `${culture}-chenilles.traitement`);
+    assert.ok(s.elements[0].fr.includes('0,76 à 1,2 kg'));
+  }
+  assert.equal(signaler('piment', ['taches']).elements.some((e) => e.type === 'traitement'), false);
+  assert.equal(signaler('oignon', ['taches']).problemes[0].id, 'oignon-anthracnose');
 });
 
 test('références croisées', () => {

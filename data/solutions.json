@@ -233,6 +233,30 @@
       "url": "https://assets.accessagriculture.org/s3fs-public/Cashew_by_infonet_biovision.pdf",
       "licence": null,
       "pour_le_benin": false
+    },
+    "aa-tylcv": {
+      "editeur": "Access Agriculture",
+      "titre": "Managing tomato leaf curl virus",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/managing-tomato-leaf-curl-virus",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-maladies-oignon-fon": {
+      "editeur": "Access Agriculture",
+      "titre": "Managing onion diseases (version fon)",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/fon/managing-onion-diseases",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-champ-oignon": {
+      "editeur": "Access Agriculture",
+      "titre": "Installing an onion field",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/installing-onion-field",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
     }
   },
   "phrases": {
@@ -763,6 +787,132 @@
           "id": "inrab-brab-2021-palmier"
         }
       ]
+    },
+    "tomate-filet-pepiniere": {
+      "fr": "À la prochaine saison, protéger la pépinière avec un filet anti-insectes.",
+      "fon": "Xwè e ja é ɔ, mi xá timati vǔ lɛ́ kpo avɔ̌ e nùvíɖogbɛ̀ ma nɔ gbɔn mɛ ǎ é kpo.",
+      "voix": "Xwè e ja é ɔ, mi xá timati vǔ lɛ́ kpo avɔ̌ e nùvíɖogbɛ̀ ma nɔ gbɔn mɛ ǎ é kpo.",
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 70"
+        }
+      ]
+    },
+    "pieges-jaunes": {
+      "fr": "Poser des pièges jaunes englués pour attraper les mouches blanches.",
+      "fon": "Mi tɛ́ nǔ jɛ̀wě e nɔ lé nùvíɖogbɛ̀ wewe lɛ́ é ɖo gle ɔ mɛ.",
+      "voix": "Mi tɛ́ nǔ jɛ̀wě e nɔ lé nùvíɖogbɛ̀ wewe lɛ́ é ɖo gle ɔ mɛ.",
+      "sources": [
+        {
+          "id": "aa-tylcv"
+        },
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 58"
+        }
+      ]
+    },
+    "tomate-arracher-viroses": {
+      "fr": "Arracher les plants à feuilles petites, jaunes et en cuillère, et les sortir du champ.",
+      "fon": "Mi ɖe timati e sín ama lɛ́ cí kpɛví bo jɛ̀ wě lɛ́, bo zé yě tɔ́n sín gle ɔ mɛ.",
+      "voix": "Mi ɖe timati e sín ama lɛ́ cí kpɛví bo jɛ̀ wě lɛ́, | bo zé yě tɔ́n sín gle ɔ mɛ.",
+      "sources": [
+        {
+          "id": "aa-tylcv"
+        }
+      ]
+    },
+    "tomate-varietes-tylcv": {
+      "fr": "À la prochaine saison, planter BENTO 02 (tolérante) ou BENTO 04 (résistante au virus).",
+      "fon": "Xwè e ja é ɔ, mi dó timati BENTO 02 alǒ BENTO 04 : àzɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
+      "voix": "Xwè e ja é ɔ, mi dó timati bɛ́ntó wè alǒ bɛ́ntó ɛnɛ̀. | Àzɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiches C-2 et C-4"
+        }
+      ]
+    },
+    "tomate-arracher-sortir": {
+      "fr": "Arracher les plants fanés et les sortir du champ : l'eau, les outils et les chaussures transportent la maladie.",
+      "fon": "Mi ɖe timati e fyɔ́ lɛ́, bo zé yě tɔ́n sín gle ɔ mɛ : sìn, azɔ̌wanu kpo afɔkpa kpo nɔ hɛn àzɔn ɔ yì fí ɖevo.",
+      "voix": "Mi ɖe timati e fyɔ́ lɛ́, bo zé yě tɔ́n sín gle ɔ mɛ. | Sìn, azɔ̌wanu kpo afɔkpa kpo nɔ hɛn àzɔn ɔ yì fí ɖevo.",
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 45"
+        }
+      ]
+    },
+    "tomate-hybrides-fletrissement": {
+      "fr": "À la prochaine saison, planter un hybride résistant au flétrissement bactérien : BENTO 06 (Padma) ou BENTO 08 (Thorgal).",
+      "fon": "Xwè e ja é ɔ, mi dó timati BENTO 06 alǒ BENTO 08 : fyɔ́ azɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
+      "voix": "Xwè e ja é ɔ, mi dó timati bɛ́ntó ayizɛ́n alǒ bɛ́ntó tántɔn. | Fyɔ́ azɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiches C-6 et C-7"
+        }
+      ]
+    },
+    "piment-benpim": {
+      "fr": "À la prochaine saison, planter la variété BENPIM-01, tolérante à l'anthracnose.",
+      "fon": "Xwè e ja é ɔ, mi dó takin BENPIM-01 : wuntun azɔn ɔ ma nɔ wa nǔ ɖé ɛ ǎ.",
+      "voix": "Xwè e ja é ɔ, mi dó takin bɛnpím ɖokpó. | Wuntun azɔn ɔ ma nɔ wa nǔ ɖé ɛ ǎ.",
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche C-10"
+        }
+      ]
+    },
+    "oignon-planches-surelevees": {
+      "fr": "En saison des pluies, cultiver l'oignon sur des planches surélevées.",
+      "fon": "Ðo jɔhɔn xwe mɛ ɔ, mi dó ayoma ɖo ayǐ e mi kplá bɔ é jɛ jǐ é jí.",
+      "voix": "Ðo jɔhɔn xwe mɛ ɔ, mi dó ayoma ɖo ayǐ e mi kplá bɔ é jɛ jǐ é jí.",
+      "sources": [
+        {
+          "id": "aa-maladies-oignon-fon"
+        },
+        {
+          "id": "aa-pepiniere-oignon"
+        }
+      ]
+    },
+    "oignon-rotation-3-ans": {
+      "fr": "Ne cultiver l'oignon qu'une fois tous les 3 ans sur la même parcelle.",
+      "fon": "Mi ma dó ayoma ɖo fí ɖokpó ɔ hú azɔ̌n ɖokpó ɖo xwè 3 mɛ ǎ.",
+      "voix": "Mi ma dó ayoma ɖo fí ɖokpó ɔ hú azɔ̌n ɖokpó ɖo xwè atɔ̀n mɛ ǎ.",
+      "sources": [
+        {
+          "id": "aa-champ-oignon"
+        },
+        {
+          "id": "aa-maladies-oignon-fon"
+        }
+      ]
+    },
+    "gombo-compost-pied": {
+      "fr": "Mettre de temps en temps un peu de compost, de fumier décomposé ou de litière au pied des plants.",
+      "fon": "Mi nɔ kɔn kɔ́mpɔ́si, fúmyé e ko ɖi é alǒ gbe xú kpɛ́ɖé dó feví lɛ́ sín afɔ kpá hwebǐnu.",
+      "voix": "Mi nɔ kɔn kɔ́mpɔ́si, fúmyé e ko ɖi é alǒ gbe xú kpɛ́ɖé dó feví lɛ́ sín afɔ kpá hwebǐnu.",
+      "sources": [
+        {
+          "id": "aa-gombo"
+        }
+      ]
+    },
+    "maraichage-fumure-dose": {
+      "fr": "Apporter 10 à 20 tonnes de fientes de volaille par hectare, au labour ou une semaine après le repiquage.",
+      "fon": "Mi kɔn kokló sín mɛ̀ tɔ́n 10 jɛ 20 dó hɛkta 1 jí, hwenu e mi ɖo ayǐ kplá wɛ é alǒ azǎn 7 ɖo atín lɛ́ dódó gúdo.",
+      "voix": "Mi kɔn kokló sín mɛ̀ dó ayǐ ɔ mɛ, hwenu e mi ɖo ayǐ kplá wɛ é alǒ azǎn tɛ́nwe ɖo atín lɛ́ dódó gúdo. | Mi kpɔ́n wema ɔ jí nú kpɛ́n ɔ.",
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche S-2"
+        }
+      ]
     }
   },
   "par_symptome": {
@@ -887,6 +1037,38 @@
       ],
       "fletrissement": [
         "anacarde-tailler"
+      ]
+    },
+    "tomate": {
+      "deformation": [
+        "pieges-jaunes"
+      ],
+      "feuilles_mangees": [
+        "detruire-attaques"
+      ]
+    },
+    "gombo": {
+      "croissance": [
+        "gombo-compost-pied"
+      ],
+      "jaunissement": [
+        "gombo-compost-pied"
+      ]
+    },
+    "oignon": {
+      "croissance": [
+        "maraichage-fumure-dose"
+      ],
+      "jaunissement": [
+        "maraichage-fumure-dose"
+      ]
+    },
+    "piment": {
+      "croissance": [
+        "maraichage-fumure-dose"
+      ],
+      "jaunissement": [
+        "maraichage-fumure-dose"
       ]
     }
   },
@@ -1223,6 +1405,247 @@
           "id": "inrab-brab-2021-palmier"
         }
       ]
+    },
+    {
+      "id": "tomate-helicoverpa",
+      "culture": "tomate",
+      "symptomes": [
+        "feuilles_mangees"
+      ],
+      "parties": [
+        "fruits"
+      ],
+      "certitude": "nette",
+      "probleme": {
+        "fr": "la chenille Helicoverpa armigera, qui troue les fruits",
+        "fon": "wànvú e nɔ ɖù timati sín sínsɛ́n lɛ́ é"
+      },
+      "gestes": [
+        "detruire-attaques",
+        "tomate-filet-pepiniere"
+      ],
+      "traitement": {
+        "type": "produit",
+        "fr": "Spinosad 480 g/l (SC) : 96 g de matière active par hectare, 4 applications à 15 jours d'intervalle, de la floraison à la récolte.",
+        "fon": "Spinosad 480 g/l : matière active g 96 nú hɛkta 1. Mi fún azɔ̌n 4, azǎn 15 ɖebǔ, sín hwenu e fló lɛ́ jɛ tɛ́nmɛ é jɛ hwenu e mi ná ɖe timati lɛ́ é.",
+        "voix": "Spinosad. | Mi kpɔ́n wema ɔ jí nú kpɛ́n ɔ. | Mi fún azɔ̌n ɛnɛ̀, azǎn afɔ́tɔn ɖebǔ, sín hwenu e fló lɛ́ jɛ tɛ́nmɛ é.",
+        "matieres": [
+          {
+            "nom": "spinosad",
+            "concentration": "480 g/l"
+          }
+        ],
+        "cible": "Helicoverpa armigera",
+        "reserves": [
+          "La fiche INRAB date de 2006 et ne donne ni précautions d'emploi ni délai avant récolte.",
+          "La fiche indique aussi « à partir du repiquage » : le début des traitements est ambigu."
+        ],
+        "sources": [
+          {
+            "id": "inrab-recueil-2020",
+            "detail": "fiche C-8, p. 48"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche C-8"
+        },
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 70"
+        }
+      ]
+    },
+    {
+      "id": "tomate-enroulement",
+      "culture": "tomate",
+      "symptomes": [
+        "deformation",
+        "jaunissement"
+      ],
+      "certitude": "possible",
+      "probleme": {
+        "fr": "le virus de l'enroulement jaune des feuilles, transmis par les mouches blanches",
+        "fon": "timati sín ama wunwun azɔn"
+      },
+      "gestes": [
+        "tomate-arracher-viroses",
+        "pieges-jaunes",
+        "tomate-varietes-tylcv"
+      ],
+      "sources": [
+        {
+          "id": "aa-tylcv"
+        },
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiches C-2 et C-4"
+        }
+      ]
+    },
+    {
+      "id": "tomate-fletrissement-bacterien",
+      "culture": "tomate",
+      "symptomes": [
+        "fletrissement"
+      ],
+      "certitude": "possible",
+      "probleme": {
+        "fr": "le flétrissement bactérien",
+        "fon": "timati sín fyɔ́ azɔn"
+      },
+      "gestes": [
+        "tomate-arracher-sortir",
+        "tomate-hybrides-fletrissement"
+      ],
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 45"
+        },
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiches C-6 et C-7"
+        }
+      ]
+    },
+    {
+      "id": "amarante-chenilles",
+      "culture": "amarante",
+      "symptomes": [
+        "feuilles_mangees"
+      ],
+      "certitude": "nette",
+      "probleme": {
+        "fr": "les chenilles des feuilles (Psara, Spoladea)",
+        "fon": "wànvú e nɔ ɖù fɔtɛtɛ sín ama lɛ́ é"
+      },
+      "gestes": [
+        "retirer-feuilles-roulees"
+      ],
+      "traitement": {
+        "type": "preparation",
+        "fr": "Jus d'ail : pour un kanti (400 m²), décortiquer 0,76 à 1,2 kg d'ail, écraser les bulbes en pâte, diluer la pâte dans 15 litres d'eau, filtrer avec un tamis ou un filet à petites mailles, puis pulvériser sur les plants 2 heures après la filtration. Refaire la préparation à chaque pulvérisation.",
+        "fon": "Ayo sín sìn : nú kanti 1 (m² 400) ɔ, mi ɖe ayo kg 0,76 jɛ 1,2 sín wú, mi gbà yě, bo zé dó sìn litli 15 mɛ. Mi sɛ́n, bo fún dó atín lɛ́ jí gàn 2 gúdo. Mi nɔ lɛ́ blo yɔ̌yɔ́ hwenu e mi ná fún é bǐ.",
+        "voix": "Ayo sín sìn. | Nú kanti ɖokpó ɔ, mi gbà ayo kilo ɖokpó mɔ̌, bo zé dó sìn lǐtli afɔ́tɔn mɛ. | Mi sɛ́n, bo fún dó atín lɛ́ jí gàn wè gúdo. | Mi nɔ lɛ́ blo yɔ̌yɔ́ hwenu e mi ná fún é bǐ.",
+        "matieres": [],
+        "cible": null,
+        "reserves": [
+          "La fiche ne donne ni intervalle entre pulvérisations ni délai avant récolte."
+        ],
+        "sources": [
+          {
+            "id": "inrab-recueil-2020",
+            "detail": "fiche C-23, p. 63"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche C-23"
+        },
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 50 et 53"
+        }
+      ]
+    },
+    {
+      "id": "gboma-chenilles",
+      "culture": "gboma",
+      "symptomes": [
+        "feuilles_mangees"
+      ],
+      "certitude": "nette",
+      "probleme": {
+        "fr": "les chenilles des feuilles (Selepa, Phycita)",
+        "fon": "wànvú e nɔ ɖù gbɔma sín ama lɛ́ é"
+      },
+      "gestes": [
+        "retirer-feuilles-roulees"
+      ],
+      "traitement": {
+        "type": "preparation",
+        "fr": "Jus d'ail : pour un kanti (400 m²), décortiquer 0,76 à 1,2 kg d'ail, écraser les bulbes en pâte, diluer la pâte dans 15 litres d'eau, filtrer avec un tamis ou un filet à petites mailles, puis pulvériser sur les plants 2 heures après la filtration. Refaire la préparation à chaque pulvérisation.",
+        "fon": "Ayo sín sìn : nú kanti 1 (m² 400) ɔ, mi ɖe ayo kg 0,76 jɛ 1,2 sín wú, mi gbà yě, bo zé dó sìn litli 15 mɛ. Mi sɛ́n, bo fún dó atín lɛ́ jí gàn 2 gúdo. Mi nɔ lɛ́ blo yɔ̌yɔ́ hwenu e mi ná fún é bǐ.",
+        "voix": "Ayo sín sìn. | Nú kanti ɖokpó ɔ, mi gbà ayo kilo ɖokpó mɔ̌, bo zé dó sìn lǐtli afɔ́tɔn mɛ. | Mi sɛ́n, bo fún dó atín lɛ́ jí gàn wè gúdo. | Mi nɔ lɛ́ blo yɔ̌yɔ́ hwenu e mi ná fún é bǐ.",
+        "matieres": [],
+        "cible": null,
+        "reserves": [
+          "La fiche ne donne ni intervalle entre pulvérisations ni délai avant récolte."
+        ],
+        "sources": [
+          {
+            "id": "inrab-recueil-2020",
+            "detail": "fiche C-23, p. 63"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche C-23"
+        },
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 51-52"
+        }
+      ]
+    },
+    {
+      "id": "piment-anthracnose",
+      "culture": "piment",
+      "symptomes": [
+        "taches"
+      ],
+      "certitude": "possible",
+      "probleme": {
+        "fr": "l'anthracnose du piment",
+        "fon": "takin sín wuntun azɔn"
+      },
+      "gestes": [
+        "pas-compost-malade",
+        "piment-benpim"
+      ],
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche C-10"
+        }
+      ]
+    },
+    {
+      "id": "oignon-anthracnose",
+      "culture": "oignon",
+      "symptomes": [
+        "taches",
+        "deformation"
+      ],
+      "certitude": "possible",
+      "probleme": {
+        "fr": "l'anthracnose de l'oignon",
+        "fon": "ayoma sín ama azɔn"
+      },
+      "gestes": [
+        "oignon-planches-surelevees",
+        "oignon-rotation-3-ans"
+      ],
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiches C-14 et C-16"
+        },
+        {
+          "id": "aa-maladies-oignon-fon"
+        }
+      ],
+      "video": {
+        "url": "https://www.accessagriculture.org/fon/managing-onion-diseases",
+        "titre": "Les maladies de l'oignon"
+      }
     }
   ]
 }
