@@ -59,8 +59,9 @@ async function synthetiser(url, cle, texte, graine) {
       }
       return Buffer.from(await reponse.arrayBuffer());
     } catch (e) {
-      if (e.definitive || essai === 3) throw e;
-      await new Promise((ok) => setTimeout(ok, 5000 * essai));
+      // Le moteur peut mettre une minute à redémarrer (503) : on attend de plus en plus.
+      if (e.definitive || essai === 5) throw e;
+      await new Promise((ok) => setTimeout(ok, 15_000 * essai));
     }
   }
 }
