@@ -6,6 +6,7 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { repondrePrix } from '../server/prix.js';
 import { creerTextes } from '../server/reponses.js';
+import { choisirSolutions } from '../server/solutions.js';
 import { creerVoix, fichierVoix, listerMorceaux, texteVoix } from '../server/voix.js';
 
 const lire = (f) => JSON.parse(readFileSync(new URL(f, import.meta.url), 'utf8'));
@@ -67,4 +68,27 @@ test('chaque morceau que disent les réponses figure dans la liste des extraits 
   for (const c of communes) {
     for (const morceau of textes.phrase('signalement_recu_commune', { commune: c.nom }).voix) assert.ok(liste.has(texteVoix(morceau)), morceau);
   }
+});
+
+test('chaque morceau que disent les solutions figure dans la liste des extraits', () => {
+  const solutions = lire('../data/solutions.json');
+  const lexique = lire('../data/lexique.json');
+  const liste = new Set(listerMorceaux(reponses, base, communes, solutions));
+  const dates = [new Date('2026-08-15T12:00:00Z'), new Date('2026-05-15T12:00:00Z')];
+  let verifies = 0;
+  for (const culture of lexique.cultures) {
+    for (const symptome of lexique.symptomes) {
+      for (const parties of [[], ['fruits']]) {
+        for (const [departement, date] of [[null, dates[0]], ['Atlantique', dates[0]], ['Atlantique', dates[1]]]) {
+          const s = choisirSolutions(solutions, {
+            culture: { id: culture.id, nom: culture.nom }, parties: parties.map((id) => ({ id, libelle: id })),
+            symptomes: [{ id: symptome.id, libelle: symptome.libelle }], commune: null,
+          }, { departement, date, transcription: 'des pucerons' });
+          for (const morceau of s.morceaux) assert.ok(liste.has(texteVoix(morceau)), `${culture.id} × ${symptome.id} : ${morceau}`);
+          verifies++;
+        }
+      }
+    }
+  }
+  assert.equal(verifies, 19 * 9 * 2 * 3);
 });

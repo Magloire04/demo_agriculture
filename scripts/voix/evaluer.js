@@ -56,11 +56,11 @@ async function principal() {
   const opts = options();
 
   const lire = async (relatif) => JSON.parse(await readFile(path.join(RACINE, relatif), 'utf8'));
-  const [reponses, base, { communes }] = await Promise.all([
-    lire('data/reponses.json'), lire('data/referentiel.json'), lire('data/communes.json'),
+  const [reponses, base, { communes }, solutions] = await Promise.all([
+    lire('data/reponses.json'), lire('data/referentiel.json'), lire('data/communes.json'), lire('data/solutions.json'),
   ]);
   const montants = new Set(morceauxDeMontants().map(texteVoix));
-  const liste = listerMorceaux(reponses, base, communes)
+  const liste = listerMorceaux(reponses, base, communes, solutions)
     .map((texte) => ({ texte, fichier: fichierVoix(texte), montant: montants.has(texte) }))
     .filter((x) => (opts.fichiers.length ? opts.fichiers.includes(x.fichier) : true))
     .filter((x) => existsSync(path.join(opts.dossier, x.fichier)));
