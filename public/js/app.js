@@ -227,7 +227,7 @@ function lecture(extraits) {
   if (!voix || !extraits) return null;
   return el('div', { class: 'lecture' },
     boutonLecture('Écouter en fongbé', () => voix.lireExtraits(extraits)),
-    el('p', { class: 'lecture-mention' }, 'Voix de synthèse MMS-TTS (Meta, licence CC BY-NC 4.0), en attente de relecture par un locuteur.'));
+    el('p', { class: 'lecture-mention' }, 'Voix de synthèse FongLab (licence CC BY-NC 4.0), en attente de relecture par un locuteur.'));
 }
 
 function erreurDans(zone) {
