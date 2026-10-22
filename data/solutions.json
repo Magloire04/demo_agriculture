@@ -97,6 +97,54 @@
       "url": "https://www.accessagriculture.org/crop-rotation-legumes",
       "licence": "Tous droits réservés (lien seulement)",
       "pour_le_benin": false
+    },
+    "fao-coton": {
+      "editeur": "FAO",
+      "titre": "Gestion intégrée de la production et des déprédateurs du coton : guide du facilitateur pour les champs-écoles des producteurs",
+      "annee": null,
+      "url": "https://www.fao.org/3/a-i3722f.pdf",
+      "licence": "CC BY-NC-SA 3.0 IGO",
+      "pour_le_benin": true
+    },
+    "aa-cla-fon": {
+      "editeur": "Access Agriculture",
+      "titre": "Killing fall armyworms naturally (version fon)",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/fon/e-ni-hu-ahwangonu-wanvu-fifame-ton-le-yovogletinken-ma-zan",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-striga-fon": {
+      "editeur": "Access Agriculture",
+      "titre": "Integrated approach against striga (version fon)",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/fon/nuwalo-gege-xokple-do-fun-ahwan-xa-do",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-striga-ensemble": {
+      "editeur": "Access Agriculture",
+      "titre": "Joining hands against striga",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/joining-hands-against-striga",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-tri-semences": {
+      "editeur": "Access Agriculture",
+      "titre": "Seed sorting by flotation",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/seed-sorting-flotation",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-semences-riz": {
+      "editeur": "Access Agriculture",
+      "titre": "Rice seed preservation",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/rice-seed-preservation",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
     }
   },
   "phrases": {
@@ -126,136 +174,585 @@
       "fr": "Mettre du compost ou du fumier bien décomposé au pied des plants.",
       "fon": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko ɖi é dó atín lɛ́ sín afɔ kpá.",
       "voix": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko ɖi é dó atín lɛ́ sín afɔ kpá.",
-      "sources": [{ "id": "inrab-recueil-2020", "detail": "fiche S-2" }, { "id": "aa-compost-striga" }]
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche S-2"
+        },
+        {
+          "id": "aa-compost-striga"
+        }
+      ]
     },
     "desherber": {
       "fr": "Désherber autour des plants.",
       "fon": "Mi sá gbe lɛ́ ɖo atín lɛ́ kpá.",
       "voix": "Mi sá gbe lɛ́ ɖo atín lɛ́ kpá.",
-      "sources": [{ "id": "aa-gombo" }]
+      "sources": [
+        {
+          "id": "aa-gombo"
+        }
+      ]
     },
     "arroser": {
       "fr": "Arroser régulièrement, tôt le matin ou le soir.",
       "fon": "Mi nɔ kɔn sìn dó atín lɛ́ jí, zǎnzǎn alǒ gbadanu.",
       "voix": "Mi nɔ kɔn sìn dó atín lɛ́ jí, zǎnzǎn alǒ gbadanu.",
       "saison": "seche",
-      "sources": [{ "id": "aa-gombo" }, { "id": "iita-inrab-maraichage-2010", "detail": "p. 65" }]
+      "sources": [
+        {
+          "id": "aa-gombo"
+        },
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 65"
+        }
+      ]
     },
     "drainer": {
       "fr": "Creuser des rigoles pour que l'eau ne reste pas au pied des plants.",
       "fon": "Mi kún ali kpɛví lɛ́ bɔ sìn ma nɔ te ɖo atín lɛ́ sín afɔ kpá ǎ.",
       "voix": "Mi kún ali kpɛví lɛ́ bɔ sìn ma nɔ te ɖo atín lɛ́ sín afɔ kpá ǎ.",
       "saison": "pluies",
-      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 48" }, { "id": "aa-pepiniere-oignon" }]
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 48"
+        },
+        {
+          "id": "aa-pepiniere-oignon"
+        }
+      ]
     },
     "retirer-bruler": {
       "fr": "Couper les feuilles malades et les brûler loin du champ.",
       "fon": "Mi sɛ́n ama e jɛ àzɔn lɛ́, bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
       "voix": "Mi sɛ́n ama e jɛ àzɔn lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
-      "sources": [{ "id": "aa-mildiou-tomate" }, { "id": "iita-inrab-maraichage-2010", "detail": "p. 77" }]
+      "sources": [
+        {
+          "id": "aa-mildiou-tomate"
+        },
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 77"
+        }
+      ]
     },
     "pas-compost-malade": {
       "fr": "Ne pas mettre les plants malades au compost.",
       "fon": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǎ.",
       "voix": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǎ.",
-      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 77" }]
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 77"
+        }
+      ]
     },
     "aerer": {
       "fr": "Garder de l'espace entre les plants pour que l'air circule.",
       "fon": "Mi jo fí ɖo atín lɛ́ tɛntin bɔ jɔhɔn ni nɔ gbɔn.",
       "voix": "Mi jo fí ɖo atín lɛ́ tɛntin bɔ jɔhɔn ni nɔ gbɔn.",
-      "sources": [{ "id": "aa-tuteurage-tomate" }]
+      "sources": [
+        {
+          "id": "aa-tuteurage-tomate"
+        }
+      ]
     },
     "observer-collet": {
       "fr": "Regarder le pied des plants fanés : s'il y a un feutrage blanc, le montrer au conseiller.",
       "fon": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. Nǔ wewe ɖé ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
       "voix": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. | Nǔ wewe ɖé ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
-      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 45 et 49" }]
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 45 et 49"
+        }
+      ]
     },
     "pailler": {
       "fr": "Couvrir le sol d'herbe sèche pour garder l'humidité.",
       "fon": "Mi zé gbe xú lɛ́ xá ayǐ ɔ bɔ ayǐ ɔ ni nɔ fá.",
       "voix": "Mi zé gbe xú lɛ́ xá ayǐ ɔ bɔ ayǐ ɔ ni nɔ fá.",
-      "sources": [{ "id": "aa-paillage" }]
+      "sources": [
+        {
+          "id": "aa-paillage"
+        }
+      ]
     },
     "visiter": {
       "fr": "Visiter le champ deux fois par semaine et bien regarder les feuilles.",
       "fon": "Mi nɔ yì gle mitɔn mɛ azɔ̌n wè ɖo azǎn tɛ́nwe mɛ, bo nɔ kpɔ́n ama lɛ́ ganji.",
       "voix": "Mi nɔ yì gle mitɔn mɛ azɔ̌n wè ɖo azǎn tɛ́nwe mɛ, | bo nɔ kpɔ́n ama lɛ́ ganji.",
-      "sources": [{ "id": "fao-cla-2018" }]
+      "sources": [
+        {
+          "id": "fao-cla-2018"
+        }
+      ]
     },
     "ecraser-oeufs": {
       "fr": "Écraser à la main les œufs et les jeunes insectes.",
       "fon": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo yě sín azin lɛ́ kpo bɔ yě ni kú.",
       "voix": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo yě sín azin lɛ́ kpo bɔ yě ni kú.",
-      "sources": [{ "id": "fao-cla-2018" }]
+      "sources": [
+        {
+          "id": "fao-cla-2018"
+        }
+      ]
     },
     "detruire-attaques": {
       "fr": "Ramasser et détruire les fruits et les feuilles attaqués.",
       "fon": "Mi bɛ́ sínsɛ́n kpo ama kpo e nùvíɖogbɛ̀ lɛ́ ɖù é lɛ́, bo hu yě.",
       "voix": "Mi bɛ́ sínsɛ́n kpo ama kpo e nùvíɖogbɛ̀ lɛ́ ɖù é lɛ́, bo hu yě.",
-      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 70" }]
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 70"
+        }
+      ]
     },
     "ramasser-chenilles": {
       "fr": "Ramasser les chenilles à la main et les tuer.",
       "fon": "Mi bɛ́ wànvú lɛ́ ɖo alɔ mɛ, bo hu yě.",
       "voix": "Mi bɛ́ wànvú lɛ́ ɖo alɔ mɛ, bo hu yě.",
-      "sources": [{ "id": "fao-cla-2018" }, { "id": "aa-chenille-legionnaire" }]
+      "sources": [
+        {
+          "id": "fao-cla-2018"
+        },
+        {
+          "id": "aa-chenille-legionnaire"
+        }
+      ]
     },
     "retirer-feuilles-roulees": {
       "fr": "Retirer les feuilles roulées : les chenilles s'y cachent.",
       "fon": "Mi ɖe ama e ko wlí lɛ́ : wànvú lɛ́ nɔ ɖo yě mɛ.",
       "voix": "Mi ɖe ama e ko wlí lɛ́. | Wànvú lɛ́ nɔ ɖo yě mɛ.",
-      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 51 et 81" }]
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 51 et 81"
+        }
+      ]
     },
     "retirer-pourri": {
       "fr": "Retirer les parties pourries et les brûler loin du champ.",
       "fon": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
       "voix": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
-      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 49 et 71" }]
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 49 et 71"
+        }
+      ]
     },
     "recolter-secher": {
       "fr": "Récolter sans blesser les produits, puis bien les sécher au soleil.",
       "fon": "Hwenu e mi ɖo nǔ ɖe wɛ ɔ, mi ma gbá yě ǎ. Énɛ́ gúdo ɔ, mi sá yě dó hwe mɛ ganji.",
       "voix": "Hwenu e mi ɖo nǔ ɖe wɛ ɔ, mi ma gbá yě ǎ. | Énɛ́ gúdo ɔ, mi sá yě dó hwe mɛ ganji.",
-      "sources": [{ "id": "fao-pertes-apres-recolte", "detail": "section 11.1" }]
+      "sources": [
+        {
+          "id": "fao-pertes-apres-recolte",
+          "detail": "section 11.1"
+        }
+      ]
     },
     "observer-dessous": {
       "fr": "Regarder le dessous des feuilles : s'il y a de petits insectes, les montrer au conseiller.",
       "fon": "Mi kpɔ́n ama lɛ́ sín glɔ́. Nùvíɖogbɛ̀ kpɛví lɛ́ ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
       "voix": "Mi kpɔ́n ama lɛ́ sín glɔ́. | Nùvíɖogbɛ̀ kpɛví lɛ́ ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
-      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 58 et 64" }]
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 58 et 64"
+        }
+      ]
     },
     "semences-saines": {
       "fr": "À la prochaine saison, semer des graines prises sur des plants sains.",
       "fon": "Xwè e ja é ɔ, mi ná dó kwín sín atín e ma jɛ àzɔn ǎ lɛ́ jí.",
       "voix": "Xwè e ja é ɔ, mi ná dó kwín sín atín e ma jɛ àzɔn ǎ lɛ́ jí.",
-      "sources": [{ "id": "iita-inrab-maraichage-2010", "detail": "p. 77" }]
+      "sources": [
+        {
+          "id": "iita-inrab-maraichage-2010",
+          "detail": "p. 77"
+        }
+      ]
     },
     "rotation-legumineuse": {
       "fr": "À la prochaine saison, cultiver du niébé, de l'arachide ou du soja à cet endroit.",
       "fon": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ sɔja ɖo fí ɔ.",
       "voix": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ sɔja ɖo fí ɔ.",
-      "sources": [{ "id": "aa-rotation-legumineuses" }, { "id": "inrab-recueil-2020", "detail": "fiche D-20" }]
+      "sources": [
+        {
+          "id": "aa-rotation-legumineuses"
+        },
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche D-20"
+        }
+      ]
     },
     "arracher-striga": {
       "fr": "Arracher le striga avant qu'il fleurisse, pour qu'il ne fasse pas de graines.",
       "fon": "Mi ɖe striga ɔ cóbɔ é ná jɛ fló.",
       "voix": "Mi ɖe striga ɔ cóbɔ é ná jɛ fló.",
-      "sources": [{ "id": "inrab-recueil-2020", "detail": "fiche D-20" }]
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche D-20"
+        }
+      ]
+    },
+    "mais-cla-cornet": {
+      "fr": "Écraser avec les doigts les pontes et les jeunes chenilles dans le cornet du maïs, plutôt que de traiter.",
+      "fon": "Mi zìn ahwangɔnu wánvú kpɛví lɛ́ kpo yě sín azin lɛ́ kpo ɖo gbadé ɔ sín ta mɛ kpo alɔvi mitɔn kpo.",
+      "voix": "Mi zìn ahwangɔnu wánvú kpɛví lɛ́ kpo yě sín azin lɛ́ kpo | ɖo gbadé ɔ sín ta mɛ kpo alɔvi mitɔn kpo.",
+      "sources": [
+        {
+          "id": "fao-cla-2018"
+        }
+      ]
+    },
+    "striga-arrachage-collectif": {
+      "fr": "S'organiser avec les voisins pour arracher le striga dans tous les champs avant qu'il fasse ses graines.",
+      "fon": "Mi kpo hwedotɔ́ mitɔn lɛ́ kpo ni ɖe striga ɔ ɖo gle lɛ́ bǐ mɛ cóbɔ é ná jɛ kwín.",
+      "voix": "Mi kpo hwedotɔ́ mitɔn lɛ́ kpo ni ɖe striga ɔ ɖo gle lɛ́ bǐ mɛ cóbɔ é ná jɛ kwín.",
+      "sources": [
+        {
+          "id": "aa-striga-ensemble"
+        }
+      ]
+    },
+    "varietes-tolerantes-striga": {
+      "fr": "À la prochaine saison, semer une variété tolérante au striga : le conseiller indique laquelle.",
+      "fon": "Xwè e ja é ɔ, mi ná dó kwín e striga ma nɔ wa nǔ ɖé é. Glegán ɔ ná xlɛ́ mi.",
+      "voix": "Xwè e ja é ɔ, mi ná dó kwín e striga ma nɔ wa nǔ ɖé é. | Glegán ɔ ná xlɛ́ mi.",
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche D-20"
+        }
+      ]
+    },
+    "coton-ecraser-chenilles-cornet": {
+      "fr": "Écraser les chenilles cachées dans les feuilles enroulées en cornet.",
+      "fon": "Mi zìn wànvú e ɖo ama e wlí lɛ́ mɛ é lɛ́.",
+      "voix": "Mi zìn wànvú e ɖo ama e wlí lɛ́ mɛ é lɛ́.",
+      "sources": [
+        {
+          "id": "fao-coton",
+          "detail": "p. 34"
+        }
+      ]
+    },
+    "coton-detruire-tiges": {
+      "fr": "Après la récolte, arracher et détruire les tiges de cotonnier.",
+      "fon": "Ðo nǔ ɖe gúdo ɔ, mi ɖe kanfun sín atínkàn lɛ́ bo zé yě dó myɔ̌ mɛ.",
+      "voix": "Ðo nǔ ɖe gúdo ɔ, mi ɖe kanfun sín atínkàn lɛ́ bo zé yě dó myɔ̌ mɛ.",
+      "sources": [
+        {
+          "id": "fao-coton",
+          "detail": "p. 46"
+        }
+      ]
+    },
+    "riz-tri-semences": {
+      "fr": "À la prochaine saison, trier les semences dans l'eau et retirer celles qui flottent ou sont tachées.",
+      "fon": "Xwè e ja é ɔ, mi zé mɔ̌likún kwín lɛ́ dó sìn mɛ, bo ɖe é e nɔ sìn jí lɛ́ kpo é e ɖo wuntun lɛ́ kpo.",
+      "voix": "Xwè e ja é ɔ, mi zé mɔ̌likún kwín lɛ́ dó sìn mɛ, | bo ɖe é e nɔ sìn jí lɛ́ kpo é e ɖo wuntun lɛ́ kpo.",
+      "sources": [
+        {
+          "id": "aa-tri-semences"
+        }
+      ]
+    },
+    "riz-conserver-semences": {
+      "fr": "Bien sécher les semences de riz au soleil avant de les conserver dans un récipient fermé.",
+      "fon": "Mi sá mɔ̌likún kwín lɛ́ dó hwe mɛ ganji cóbɔ mi ná bɛ́ yě dó nǔ e è sú nu tɔn é mɛ.",
+      "voix": "Mi sá mɔ̌likún kwín lɛ́ dó hwe mɛ ganji | cóbɔ mi ná bɛ́ yě dó nǔ e è sú nu tɔn é mɛ.",
+      "sources": [
+        {
+          "id": "aa-semences-riz"
+        }
+      ]
+    },
+    "rotation-cereale": {
+      "fr": "À la prochaine saison, cultiver une céréale (maïs, sorgho) à cet endroit.",
+      "fon": "Xwè e ja é ɔ, mi ná dó gbadé alǒ abɔ̀ ɖo fí ɔ.",
+      "voix": "Xwè e ja é ɔ, mi ná dó gbadé alǒ abɔ̀ ɖo fí ɔ.",
+      "sources": [
+        {
+          "id": "aa-rotation-legumineuses"
+        }
+      ]
     }
   },
   "par_symptome": {
-    "jaunissement": ["fumure-organique", "desherber", "arroser", "drainer"],
-    "taches": ["retirer-bruler", "pas-compost-malade", "aerer"],
-    "fletrissement": ["observer-collet", "pailler", "arroser", "drainer"],
-    "ravageurs": ["visiter", "ecraser-oeufs", "detruire-attaques"],
-    "feuilles_mangees": ["ramasser-chenilles", "retirer-feuilles-roulees", "visiter"],
-    "pourriture": ["retirer-pourri", "recolter-secher", "drainer"],
-    "deformation": ["observer-dessous", "semences-saines", "arroser"],
-    "croissance": ["fumure-organique", "desherber", "rotation-legumineuse", "arroser"],
-    "striga": ["arracher-striga", "fumure-organique", "rotation-legumineuse"]
+    "jaunissement": [
+      "fumure-organique",
+      "desherber",
+      "arroser",
+      "drainer"
+    ],
+    "taches": [
+      "retirer-bruler",
+      "pas-compost-malade",
+      "aerer"
+    ],
+    "fletrissement": [
+      "observer-collet",
+      "pailler",
+      "arroser",
+      "drainer"
+    ],
+    "ravageurs": [
+      "visiter",
+      "ecraser-oeufs",
+      "detruire-attaques"
+    ],
+    "feuilles_mangees": [
+      "ramasser-chenilles",
+      "retirer-feuilles-roulees",
+      "visiter"
+    ],
+    "pourriture": [
+      "retirer-pourri",
+      "recolter-secher",
+      "drainer"
+    ],
+    "deformation": [
+      "observer-dessous",
+      "semences-saines",
+      "arroser"
+    ],
+    "croissance": [
+      "fumure-organique",
+      "desherber",
+      "rotation-legumineuse",
+      "arroser"
+    ],
+    "striga": [
+      "arracher-striga",
+      "fumure-organique",
+      "rotation-legumineuse"
+    ]
   },
-  "par_culture": {},
-  "cas": []
+  "par_culture": {
+    "riz": {
+      "taches": [
+        "riz-tri-semences"
+      ],
+      "pourriture": [
+        "riz-conserver-semences"
+      ]
+    },
+    "arachide": {
+      "taches": [
+        "rotation-cereale"
+      ],
+      "fletrissement": [
+        "rotation-cereale"
+      ],
+      "pourriture": [
+        "rotation-cereale"
+      ]
+    },
+    "soja": {
+      "taches": [
+        "rotation-cereale"
+      ],
+      "fletrissement": [
+        "rotation-cereale"
+      ],
+      "pourriture": [
+        "rotation-cereale"
+      ]
+    },
+    "coton": {
+      "feuilles_mangees": [
+        "coton-ecraser-chenilles-cornet"
+      ],
+      "ravageurs": [
+        "coton-detruire-tiges"
+      ],
+      "pourriture": [
+        "coton-detruire-tiges"
+      ]
+    },
+    "sorgho": {
+      "striga": [
+        "striga-arrachage-collectif"
+      ]
+    }
+  },
+  "cas": [
+    {
+      "id": "mais-chenille-legionnaire",
+      "culture": "mais",
+      "symptomes": [
+        "ravageurs",
+        "feuilles_mangees"
+      ],
+      "certitude": "possible",
+      "probleme": {
+        "fr": "la chenille légionnaire d'automne",
+        "fon": "ahwangɔnu wánvú"
+      },
+      "gestes": [
+        "mais-cla-cornet",
+        "visiter"
+      ],
+      "sources": [
+        {
+          "id": "fao-cla-2018"
+        }
+      ],
+      "video": {
+        "url": "https://www.accessagriculture.org/fon/e-ni-hu-ahwangonu-wanvu-fifame-ton-le-yovogletinken-ma-zan",
+        "titre": "Tuer les chenilles légionnaires sans produits chimiques"
+      }
+    },
+    {
+      "id": "mais-striga",
+      "culture": "mais",
+      "symptomes": [
+        "striga"
+      ],
+      "certitude": "nette",
+      "probleme": {
+        "fr": "le striga, une plante parasite",
+        "fon": "striga"
+      },
+      "gestes": [
+        "arracher-striga",
+        "varietes-tolerantes-striga"
+      ],
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche D-20"
+        }
+      ],
+      "video": {
+        "url": "https://www.accessagriculture.org/fon/nuwalo-gege-xokple-do-fun-ahwan-xa-do",
+        "titre": "Lutter contre le striga"
+      }
+    },
+    {
+      "id": "sorgho-striga",
+      "culture": "sorgho",
+      "symptomes": [
+        "striga"
+      ],
+      "certitude": "nette",
+      "probleme": {
+        "fr": "le striga, une plante parasite",
+        "fon": "striga"
+      },
+      "gestes": [
+        "arracher-striga",
+        "striga-arrachage-collectif",
+        "varietes-tolerantes-striga"
+      ],
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche D-20"
+        }
+      ],
+      "video": {
+        "url": "https://www.accessagriculture.org/fon/nuwalo-gege-xokple-do-fun-ahwan-xa-do",
+        "titre": "Lutter contre le striga"
+      }
+    },
+    {
+      "id": "niebe-foreurs-gousses",
+      "culture": "haricot",
+      "symptomes": [
+        "ravageurs",
+        "feuilles_mangees"
+      ],
+      "parties": [
+        "fruits"
+      ],
+      "certitude": "nette",
+      "probleme": {
+        "fr": "les foreurs des gousses (Maruca) et les insectes des fleurs",
+        "fon": "wànvú e nɔ ɖù ayikun sín kwín lɛ́ é"
+      },
+      "gestes": [
+        "visiter",
+        "detruire-attaques"
+      ],
+      "traitement": {
+        "type": "preparation",
+        "fr": "Extrait de feuilles de neem ou de papayer : pour 1 hectare, piler 15 kg de feuilles ni trop jeunes ni trop âgées, les mettre dans 10 litres d'eau avec ½ pain de savon ordinaire, laisser reposer au moins 12 heures, puis filtrer. Pulvériser dès l'apparition des boutons floraux, puis tous les 5 jours : 6 traitements jusqu'à la récolte.",
+        "fon": "Nim alǒ kpɛ́nkpɛ́n sín ama sìn : nú hɛkta 1 ɔ, mi gbà ama kg 15, bo zé yě dó sìn litli 10 mɛ kpo kpɛ́ adaɖé kpo. Mi jo é gàn 12, bo sɛ́n. Hwenu e fló lɛ́ ko jɛ tɛ́nmɛ é ɔ, mi fún, bo nɔ fún azǎn 5 ɖebǔ : azɔ̌n 6.",
+        "voix": "Nim alǒ kpɛ́nkpɛ́n sín ama sìn. | Nú hɛkta ɖokpó ɔ, mi gbà ama kilo afɔ́tɔn, bo zé yě dó sìn lǐtli wǒ mɛ kpo kpɛ́ adaɖé kpo. | Mi jo é gàn wěwè, bo sɛ́n. | Hwenu e fló lɛ́ ko jɛ tɛ́nmɛ é ɔ, mi fún, bo nɔ fún azǎn atɔ́ɔ́n ɖebǔ, azɔ̌n ayizɛ́n.",
+        "matieres": [],
+        "cible": null,
+        "reserves": [
+          "La fiche prévoit un pulvérisateur à très bas volume : 5 litres pour un demi-hectare."
+        ],
+        "sources": [
+          {
+            "id": "inrab-recueil-2020",
+            "detail": "fiche M-11, p. 221"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "id": "inrab-recueil-2020",
+          "detail": "fiche M-11"
+        }
+      ]
+    },
+    {
+      "id": "coton-pucerons",
+      "culture": "coton",
+      "symptomes": [
+        "deformation",
+        "ravageurs"
+      ],
+      "termes": {
+        "fr": [
+          "puceron",
+          "pucerons"
+        ],
+        "fon": []
+      },
+      "certitude": "nette",
+      "probleme": {
+        "fr": "les pucerons",
+        "fon": "nùvíɖogbɛ̀ kpɛví e nɔ nɔ ama lɛ́ glɔ́ é"
+      },
+      "gestes": [
+        "observer-dessous"
+      ],
+      "traitement": {
+        "type": "preparation",
+        "fr": "Extrait d'amande de neem : 500 g de poudre de graines de neem décortiquées, 10 litres d'eau, 200 g de savon et 100 ml d'huile de koby. Appliquer 10 litres par hectare tous les 7 jours, tant que les pucerons sont présents.",
+        "fon": "Nim kwín sín sìn : nim kwín e è ɖe gbá yětɔn é sín wún g 500, sìn litli 10, kpɛ́ g 200 kpo kobí sín amí ml 100 kpo. Mi fún litli 10 ɖo hɛkta 1 jí azǎn 7 ɖebǔ, hwenu e nùvíɖogbɛ̀ lɛ́ kpó ɖo fínɛ́ é.",
+        "voix": "Nim kwín sín sìn. | Mi kpɔ́n wema ɔ jí nú nǔ e mi ná zé lɛ́ sín kpɛ́n. | Mi nɔ fún azǎn tɛ́nwe ɖebǔ, hwenu e nùvíɖogbɛ̀ lɛ́ kpó ɖo fínɛ́ é.",
+        "matieres": [],
+        "cible": null,
+        "reserves": [
+          "Le guide prévoit un appareil à ultra bas volume (ULV), 3 lignes traitées par passage."
+        ],
+        "sources": [
+          {
+            "id": "fao-coton",
+            "detail": "tableau des substances naturelles, p. 36 du PDF"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "id": "fao-coton"
+        }
+      ]
+    }
+  ]
 }

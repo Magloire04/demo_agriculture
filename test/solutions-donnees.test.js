@@ -63,6 +63,42 @@ test('chaque produit nommé passe la règle d’autorisation', () => {
   }
 });
 
+// Cas tirés des recherches du 22 octobre 2026 (spécification, « Ce que les recherches ont trouvé »).
+const CAS_ATTENDUS = [
+  { id: 'mais-chenille-legionnaire', culture: 'mais', certitude: 'possible', traitement: null },
+  { id: 'mais-striga', culture: 'mais', certitude: 'nette', traitement: null },
+  { id: 'sorgho-striga', culture: 'sorgho', certitude: 'nette', traitement: null },
+  { id: 'niebe-foreurs-gousses', culture: 'haricot', certitude: 'nette', traitement: 'preparation' },
+  { id: 'coton-pucerons', culture: 'coton', certitude: 'nette', traitement: 'preparation' },
+];
+
+test('cas attendus présents, avec leur certitude et leur type de traitement', () => {
+  for (const attendu of CAS_ATTENDUS) {
+    const c = donnees.cas.find((x) => x.id === attendu.id);
+    assert.ok(c, `cas absent : ${attendu.id}`);
+    assert.equal(c.culture, attendu.culture, attendu.id);
+    assert.equal(c.certitude, attendu.certitude, attendu.id);
+    assert.equal(c.traitement?.type ?? null, attendu.traitement, attendu.id);
+  }
+});
+
+const signaler = (culture, symptomes, { parties = [], transcription = '', departement = null } = {}) => choisirSolutions(donnees, {
+  culture: { id: culture, nom: culture }, parties: parties.map((id) => ({ id, libelle: id })), symptomes: symptomes.map((id) => ({ id, libelle: id })), commune: null,
+}, { departement, date: new Date('2026-08-15T12:00:00Z'), transcription });
+
+test('céréales, légumineuses et coton : scénarios types', () => {
+  const striga = signaler('mais', ['striga']);
+  assert.equal(striga.problemes[0].id, 'mais-striga');
+  assert.ok(striga.elements.some((e) => e.id === 'arracher-striga'));
+  const niebe = signaler('haricot', ['ravageurs'], { parties: ['fruits'] });
+  assert.equal(niebe.elements[0].id, 'niebe-foreurs-gousses.traitement');
+  assert.ok(niebe.elements[0].fr.includes('15 kg'));
+  assert.equal(signaler('haricot', ['ravageurs']).elements.some((e) => e.type === 'traitement'), false);
+  assert.equal(signaler('coton', ['deformation'], { transcription: 'des pucerons partout' }).elements[0].id, 'coton-pucerons.traitement');
+  assert.equal(signaler('coton', ['deformation']).elements.some((e) => e.type === 'traitement'), false);
+  assert.equal(signaler('mais', ['feuilles_mangees']).problemes[0].certitude, 'possible');
+});
+
 test('références croisées', () => {
   const cultures = new Set(lexique.cultures.map((c) => c.id));
   const symptomes = new Set(lexique.symptomes.map((s) => s.id));
