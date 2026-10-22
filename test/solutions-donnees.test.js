@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
+import { verifierTraitement } from '../server/pesticides.js';
 import { choisirSolutions } from '../server/solutions.js';
 
 const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 const donnees = lire('solutions.json');
 const lexique = lire('lexique.json');
+const pesticides = lire('pesticides.json');
 
 const complet = (t, ou) => {
   for (const champ of ['fr', 'fon', 'voix']) assert.ok(t?.[champ]?.trim(), `${ou} : ${champ} manquant`);
@@ -50,6 +52,14 @@ test('un traitement vient d’une source faite pour le Bénin et d’un cas nett
     assert.equal(c.certitude, 'nette', `cas ${c.id}`);
     for (const { id } of c.traitement.sources) assert.equal(donnees.sources[id].pour_le_benin, true, `cas ${c.id} : source ${id}`);
     assert.ok(['preparation', 'produit'].includes(c.traitement.type), `cas ${c.id} : type ${c.traitement.type}`);
+  }
+});
+
+test('chaque produit nommé passe la règle d’autorisation', () => {
+  for (const c of donnees.cas.filter((x) => x.traitement?.type === 'produit')) {
+    assert.ok(c.traitement.matieres?.length && c.traitement.cible, `cas ${c.id} : matières et cible exigées`);
+    const r = verifierTraitement(c.traitement, c.culture, pesticides);
+    assert.ok(r.autorise, `cas ${c.id} : ${r.raisons.join(' ; ')}`);
   }
 });
 
