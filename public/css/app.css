@@ -610,6 +610,72 @@ select {
   outline: none;
 }
 
+.solutions {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+}
+
+.solutions-titre .texte-fon {
+  font-size: 1.05rem;
+}
+
+.solutions-probleme {
+  padding: 10px 12px;
+  border-radius: var(--rayon);
+  background: var(--gris);
+}
+
+.solution {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+}
+
+.solution-traitement {
+  border-left: 4px solid var(--vert);
+  background: var(--vert-pale);
+}
+
+.solution-etiquette {
+  justify-self: start;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--vert);
+  color: var(--blanc);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.solution-securite {
+  font-size: 0.875rem;
+}
+
+.solution-source,
+.solution-video {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--texte-doux);
+  overflow-wrap: anywhere;
+}
+
+.solution-video {
+  color: var(--vert-fonce);
+}
+
+.solutions-mention {
+  padding-top: 8px;
+  border-top: 1px solid var(--bordure);
+}
+
+.solutions-mention .texte-fon {
+  font-weight: 700;
+}
+
 .vous-avez-dit {
   margin: 0;
   font-size: 0.875rem;
