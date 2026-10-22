@@ -70,6 +70,13 @@ const CAS_ATTENDUS = [
   { id: 'sorgho-striga', culture: 'sorgho', certitude: 'nette', traitement: null },
   { id: 'niebe-foreurs-gousses', culture: 'haricot', certitude: 'nette', traitement: 'preparation' },
   { id: 'coton-pucerons', culture: 'coton', certitude: 'nette', traitement: 'preparation' },
+  { id: 'manioc-mosaique', culture: 'manioc', certitude: 'nette', traitement: null },
+  { id: 'manioc-pourridie', culture: 'manioc', certitude: 'nette', traitement: null },
+  { id: 'igname-pourriture-stockage', culture: 'igname', certitude: 'possible', traitement: null },
+  { id: 'plantain-bunchy-top', culture: 'plantain', certitude: 'possible', traitement: null },
+  { id: 'plantain-cercosporiose', culture: 'plantain', certitude: 'possible', traitement: null },
+  { id: 'anacarde-anthracnose', culture: 'anacarde', certitude: 'possible', traitement: null },
+  { id: 'palmier-fusariose', culture: 'palmier', certitude: 'possible', traitement: null },
 ];
 
 test('cas attendus présents, avec leur certitude et leur type de traitement', () => {
@@ -97,6 +104,18 @@ test('céréales, légumineuses et coton : scénarios types', () => {
   assert.equal(signaler('coton', ['deformation'], { transcription: 'des pucerons partout' }).elements[0].id, 'coton-pucerons.traitement');
   assert.equal(signaler('coton', ['deformation']).elements.some((e) => e.type === 'traitement'), false);
   assert.equal(signaler('mais', ['feuilles_mangees']).problemes[0].certitude, 'possible');
+});
+
+test('tubercules et cultures pérennes : scénarios types', () => {
+  const mosaique = signaler('manioc', ['deformation']);
+  assert.equal(mosaique.problemes[0].id, 'manioc-mosaique');
+  assert.ok(mosaique.problemes[0].fr.startsWith("C'est probablement"));
+  assert.ok(mosaique.elements[0].video?.url.includes('/fon/'));
+  for (const [culture, symptome] of [['plantain', 'taches'], ['anacarde', 'taches'], ['palmier', 'fletrissement'], ['igname', 'pourriture']]) {
+    const s = signaler(culture, [symptome]);
+    assert.equal(s.problemes[0]?.certitude, 'possible', `${culture} × ${symptome}`);
+    assert.equal(s.elements.some((e) => e.type === 'traitement'), false, `${culture} × ${symptome}`);
+  }
 });
 
 test('références croisées', () => {

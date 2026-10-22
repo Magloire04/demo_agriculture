@@ -145,6 +145,94 @@
       "url": "https://www.accessagriculture.org/rice-seed-preservation",
       "licence": "Tous droits réservés (lien seulement)",
       "pour_le_benin": false
+    },
+    "fao-manioc-2013": {
+      "editeur": "FAO",
+      "titre": "Produire plus avec moins : le manioc",
+      "annee": 2013,
+      "url": "https://www.fao.org/4/i3278f/i3278f.pdf",
+      "licence": "CC BY-NC-SA 3.0 IGO",
+      "pour_le_benin": true
+    },
+    "pw-mosaique-manioc": {
+      "editeur": "CABI Plantwise",
+      "titre": "Mosaïque africaine du manioc : liste verte (Pest Management Decision Guide)",
+      "annee": 2016,
+      "url": "https://doi.org/10.1079/PWKB.20167801156",
+      "licence": "CC BY-SA 4.0 (non vérifiée)",
+      "pour_le_benin": false
+    },
+    "pw-pourridie-manioc": {
+      "editeur": "CABI Plantwise",
+      "titre": "Pourriture des racines du manioc, Ghana (Pest Management Decision Guide)",
+      "annee": 2016,
+      "url": "https://doi.org/10.1079/PWKB.20177800656",
+      "licence": "CC BY-SA 4.0 (non vérifiée)",
+      "pour_le_benin": false
+    },
+    "pw-cercosporiose-ghana": {
+      "editeur": "CABI Plantwise",
+      "titre": "Cercosporiose noire du bananier, Ghana (Pest Management Decision Guide)",
+      "annee": 2014,
+      "url": "https://doi.org/10.1079/PWKB.20167800253",
+      "licence": "CC BY-SA 4.0 (non vérifiée)",
+      "pour_le_benin": false
+    },
+    "pw-cercosporiose-rdc": {
+      "editeur": "CABI Plantwise",
+      "titre": "Cercosporiose noire du bananier, RDC (fiche en français)",
+      "annee": 2014,
+      "url": "https://doi.org/10.1079/PWKB.20147801231",
+      "licence": "CC BY-SA 4.0 (non vérifiée)",
+      "pour_le_benin": false
+    },
+    "inrab-brab-2022-bananier": {
+      "editeur": "INRAB",
+      "titre": "Vodounou et al., bunchy top du bananier au Sud-Bénin, BRAB vol. 32 n° 1",
+      "annee": 2022,
+      "url": "https://publications-chercheurs.inrab.bj/uploads/fichiers/recents/214c0b8ce0fcb3ce389d88f240be3edd.pdf",
+      "licence": null,
+      "pour_le_benin": true
+    },
+    "inrab-brab-2021-palmier": {
+      "editeur": "INRAB",
+      "titre": "Koussinou et al., fusariose du palmier à huile, BRAB vol. 31 n° 1",
+      "annee": 2021,
+      "url": "https://publications-chercheurs.inrab.bj/uploads/fichiers/recents/e4ed8e90541493b70abeea75d0b41baa.pdf",
+      "licence": null,
+      "pour_le_benin": true
+    },
+    "aa-mosaique-manioc-fon": {
+      "editeur": "Access Agriculture",
+      "titre": "La mosaïque du manioc (version fon)",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/fon/ama-wunwun-fennye-ton-sin-azon",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-rejets-sains-fon": {
+      "editeur": "Access Agriculture",
+      "titre": "Rejets de bananier sains (version fon)",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/fon/kokwevi-dagbe-bloblo",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "aa-fourmis-tisserandes-fon": {
+      "editeur": "Access Agriculture",
+      "titre": "Fourmis tisserandes dans les vergers (version fon)",
+      "annee": null,
+      "url": "https://www.accessagriculture.org/fon/alo-do-ze-le-do-atinsinsengbo-miton-me",
+      "licence": "Tous droits réservés (lien seulement)",
+      "pour_le_benin": false
+    },
+    "infonet-anacarde": {
+      "editeur": "Infonet-Biovision (hébergé par Access Agriculture)",
+      "titre": "Cashew",
+      "annee": null,
+      "url": "https://assets.accessagriculture.org/s3fs-public/Cashew_by_infonet_biovision.pdf",
+      "licence": null,
+      "pour_le_benin": false
     }
   },
   "phrases": {
@@ -486,6 +574,195 @@
           "id": "aa-rotation-legumineuses"
         }
       ]
+    },
+    "manioc-arracher-bruler-tot": {
+      "fr": "Arracher tôt les plants à feuilles déformées en mosaïque, puis les brûler ou les enterrer.",
+      "fon": "Mi ɖe fɛnnyɛ e sín ama wunwun lɛ́ zǎn, bo zé yě dó myɔ̌ mɛ alǒ ɖi yě.",
+      "voix": "Mi ɖe fɛnnyɛ e sín ama wunwun lɛ́ zǎn, | bo zé yě dó myɔ̌ mɛ alǒ ɖi yě.",
+      "sources": [
+        {
+          "id": "pw-mosaique-manioc"
+        },
+        {
+          "id": "fao-manioc-2013",
+          "detail": "p. 78"
+        }
+      ]
+    },
+    "manioc-boutures-saines": {
+      "fr": "Planter des boutures prises sur des plants sans symptômes.",
+      "fon": "Mi dó fɛnnyɛ́ntín e mi sɛ́n ɖo fɛnnyɛ e ma jɛ àzɔn ǎ lɛ́ jí é.",
+      "voix": "Mi dó fɛnnyɛ́ntín e mi sɛ́n ɖo fɛnnyɛ e ma jɛ àzɔn ǎ lɛ́ jí é.",
+      "sources": [
+        {
+          "id": "pw-mosaique-manioc"
+        },
+        {
+          "id": "fao-manioc-2013",
+          "detail": "p. 78"
+        }
+      ]
+    },
+    "manioc-rotation": {
+      "fr": "À la prochaine saison, cultiver du sorgho ou du niébé à cet endroit.",
+      "fon": "Xwè e ja é ɔ, mi ná dó abɔ̀ alǒ ayikun ɖo fí ɔ.",
+      "voix": "Xwè e ja é ɔ, mi ná dó abɔ̀ alǒ ayikun ɖo fí ɔ.",
+      "sources": [
+        {
+          "id": "pw-mosaique-manioc"
+        }
+      ]
+    },
+    "manioc-terrain-sain": {
+      "fr": "Planter sur un terrain qui ne garde pas l'eau, et ne pas prendre de boutures dans un champ atteint.",
+      "fon": "Mi dó fɛnnyɛ ɖo ayǐ e ma nɔ hɛn sìn ǎ é jí, bo ma sɛ́n fɛnnyɛ́ntín ɖo gle e àzɔn ɔ ɖe é mɛ ǎ.",
+      "voix": "Mi dó fɛnnyɛ ɖo ayǐ e ma nɔ hɛn sìn ǎ é jí, | bo ma sɛ́n fɛnnyɛ́ntín ɖo gle e àzɔn ɔ ɖe é mɛ ǎ.",
+      "sources": [
+        {
+          "id": "pw-pourridie-manioc"
+        },
+        {
+          "id": "fao-manioc-2013",
+          "detail": "p. 79"
+        }
+      ]
+    },
+    "manioc-outils-javel": {
+      "fr": "Laver les outils à l'eau de Javel diluée à 10 % après chaque plant malade.",
+      "fon": "Mi klɔ́ azɔ̌wanu lɛ́ kpo javɛ́li sìn kpo ɖo fɛnnyɛ e jɛ àzɔn é ɖokpo ɖokpo gúdo.",
+      "voix": "Mi klɔ́ azɔ̌wanu lɛ́ kpo javɛ́li sìn kpo ɖo fɛnnyɛ e jɛ àzɔn é ɖokpo ɖokpo gúdo.",
+      "sources": [
+        {
+          "id": "pw-pourridie-manioc"
+        }
+      ]
+    },
+    "manioc-rotation-cereales": {
+      "fr": "Pendant au moins 3 saisons, cultiver du maïs, du mil ou du sorgho à cet endroit.",
+      "fon": "Xwè 3 ɔ, mi ná dó gbadé, likún alǒ abɔ̀ ɖo fí ɔ.",
+      "voix": "Xwè atɔ̀n ɔ, mi ná dó gbadé, likún alǒ abɔ̀ ɖo fí ɔ.",
+      "sources": [
+        {
+          "id": "pw-pourridie-manioc"
+        }
+      ]
+    },
+    "manioc-couper-bruler-infestes": {
+      "fr": "Couper et brûler les parties couvertes de cochenilles, sans pulvériser d'insecticide sur les feuilles.",
+      "fon": "Mi sɛ́n fí e wànvú wewe lɛ́ ɖe é bo zé dó myɔ̌ mɛ. Mi ma fún nǔ ɖé dó ama lɛ́ jí ǎ.",
+      "voix": "Mi sɛ́n fí e wànvú wewe lɛ́ ɖe é bo zé dó myɔ̌ mɛ. | Mi ma fún nǔ ɖé dó ama lɛ́ jí ǎ.",
+      "sources": [
+        {
+          "id": "fao-manioc-2013",
+          "detail": "p. 76 et 81-82"
+        }
+      ]
+    },
+    "igname-cure": {
+      "fr": "Après la récolte, garder les tubercules sans blessure 1 à 4 jours sous une bâche, à l'abri, pour qu'ils cicatrisent.",
+      "fon": "Ðo tɛvi ɖe gúdo ɔ, mi bɛ́ tɛvi e ma gbá ǎ lɛ́ dó bàshi glɔ́ azǎn 1 jɛ 4.",
+      "voix": "Ðo tɛvi ɖe gúdo ɔ, mi bɛ́ tɛvi e ma gbá ǎ lɛ́ dó bàshi glɔ́ azǎn ɖokpó jɛ ɛnɛ̀.",
+      "sources": [
+        {
+          "id": "fao-pertes-apres-recolte",
+          "detail": "section 11.1"
+        }
+      ]
+    },
+    "igname-trier": {
+      "fr": "Trier souvent les tubercules stockés et retirer ceux qui pourrissent.",
+      "fon": "Mi nɔ kpɔ́n tɛvi e mi bɛ́ lɛ́ hwenu bǐ, bo ɖe é e jɛ̀ vǎ lɛ́.",
+      "voix": "Mi nɔ kpɔ́n tɛvi e mi bɛ́ lɛ́ hwenu bǐ, bo ɖe é e jɛ̀ vǎ lɛ́.",
+      "sources": [
+        {
+          "id": "fao-pertes-apres-recolte",
+          "detail": "section 11.1"
+        }
+      ]
+    },
+    "igname-magasin-propre": {
+      "fr": "Nettoyer le magasin et retirer les vieux tubercules avant d'y ranger la récolte.",
+      "fon": "Mi klɔ́ xɔ e mi nɔ bɛ́ tɛvi dó é, bo ɖe tɛvi xóxó lɛ́ cóbɔ mi ná bɛ́ yɔ̌yɔ́ lɛ́ dó.",
+      "voix": "Mi klɔ́ xɔ e mi nɔ bɛ́ tɛvi dó é, | bo ɖe tɛvi xóxó lɛ́ cóbɔ mi ná bɛ́ yɔ̌yɔ́ lɛ́ dó.",
+      "sources": [
+        {
+          "id": "fao-pertes-apres-recolte",
+          "detail": "section 11.1"
+        }
+      ]
+    },
+    "plantain-arracher-enfouir": {
+      "fr": "Arracher, couper et enfouir les plants malades, puis replanter des rejets sains.",
+      "fon": "Mi ɖe kókwé e jɛ àzɔn lɛ́, bo sɛ́n yě, bo ɖi yě. Énɛ́ gúdo ɔ, mi dó kókwévi e ma jɛ àzɔn ǎ lɛ́.",
+      "voix": "Mi ɖe kókwé e jɛ àzɔn lɛ́, bo sɛ́n yě, bo ɖi yě. | Énɛ́ gúdo ɔ, mi dó kókwévi e ma jɛ àzɔn ǎ lɛ́.",
+      "sources": [
+        {
+          "id": "inrab-brab-2022-bananier"
+        }
+      ]
+    },
+    "plantain-rejets-sains": {
+      "fr": "À la prochaine plantation, utiliser des rejets sains.",
+      "fon": "Hwenu e mi ná lɛ́ dó kókwé ɔ, mi zé kókwévi e ma jɛ àzɔn ǎ lɛ́.",
+      "voix": "Hwenu e mi ná lɛ́ dó kókwé ɔ, mi zé kókwévi e ma jɛ àzɔn ǎ lɛ́.",
+      "sources": [
+        {
+          "id": "aa-rejets-sains-fon"
+        }
+      ]
+    },
+    "plantain-ecartement": {
+      "fr": "À la prochaine plantation, laisser 3 mètres entre les lignes et 2 mètres entre les plants.",
+      "fon": "Hwenu e mi ná lɛ́ dó kókwé ɔ, mi jo mɛ́tlu 3 ɖo ali lɛ́ tɛntin, bo jo mɛ́tlu 2 ɖo kókwé lɛ́ tɛntin.",
+      "voix": "Hwenu e mi ná lɛ́ dó kókwé ɔ, mi jo mɛ́tlu atɔ̀n ɖo ali lɛ́ tɛntin, | bo jo mɛ́tlu wè ɖo kókwé lɛ́ tɛntin.",
+      "sources": [
+        {
+          "id": "pw-cercosporiose-ghana"
+        }
+      ]
+    },
+    "plantain-effeuiller": {
+      "fr": "Couper les feuilles très tachées avec un outil propre et les brûler.",
+      "fon": "Mi sɛ́n ama e wuntun ganji lɛ́ kpo azɔ̌wanu e klɔ́ é kpo, bo zé yě dó myɔ̌ mɛ.",
+      "voix": "Mi sɛ́n ama e wuntun ganji lɛ́ kpo azɔ̌wanu e klɔ́ é kpo, | bo zé yě dó myɔ̌ mɛ.",
+      "sources": [
+        {
+          "id": "pw-cercosporiose-rdc"
+        },
+        {
+          "id": "pw-cercosporiose-ghana"
+        }
+      ]
+    },
+    "anacarde-tailler": {
+      "fr": "Tailler les branches mortes et les sortir du champ.",
+      "fon": "Mi sɛ́n alɔ e kú lɛ́, bo zé yě tɔ́n sín gle ɔ mɛ.",
+      "voix": "Mi sɛ́n alɔ e kú lɛ́, bo zé yě tɔ́n sín gle ɔ mɛ.",
+      "sources": [
+        {
+          "id": "infonet-anacarde"
+        }
+      ]
+    },
+    "anacarde-fourmis-tisserandes": {
+      "fr": "Protéger les fourmis tisserandes dans les arbres : elles chassent les punaises.",
+      "fon": "Mi ma hu zǐn e nɔ tá ama lɛ́ dó ɖokpo ɖo atín lɛ́ jí lɛ́ ǎ : yě nɔ nya nùvíɖogbɛ̀ lɛ́.",
+      "voix": "Mi ma hu zǐn e nɔ tá ama lɛ́ dó ɖokpo ɖo atín lɛ́ jí lɛ́ ǎ. | Yě nɔ nya nùvíɖogbɛ̀ lɛ́.",
+      "sources": [
+        {
+          "id": "aa-fourmis-tisserandes-fon"
+        }
+      ]
+    },
+    "palmier-replanter-tolerants": {
+      "fr": "Remplacer les palmiers morts par des plants tolérants, produits par la station de recherche de Pobè.",
+      "fon": "Mi ɖe dɛtin e kú lɛ́, bo dó dɛtin yɔ̌yɔ́ e àzɔn ɔ ma nɔ wa nǔ ɖé é, e è nɔ wlí ɖo Pobè é.",
+      "voix": "Mi ɖe dɛtin e kú lɛ́, | bo dó dɛtin yɔ̌yɔ́ e àzɔn ɔ ma nɔ wa nǔ ɖé é, e è nɔ wlí ɖo Pobè é.",
+      "sources": [
+        {
+          "id": "inrab-brab-2021-palmier"
+        }
+      ]
     }
   },
   "par_symptome": {
@@ -583,6 +860,33 @@
     "sorgho": {
       "striga": [
         "striga-arrachage-collectif"
+      ]
+    },
+    "manioc": {
+      "ravageurs": [
+        "manioc-couper-bruler-infestes"
+      ],
+      "deformation": [
+        "manioc-boutures-saines"
+      ]
+    },
+    "plantain": {
+      "ravageurs": [
+        "plantain-rejets-sains"
+      ],
+      "fletrissement": [
+        "plantain-rejets-sains"
+      ],
+      "taches": [
+        "plantain-effeuiller"
+      ]
+    },
+    "anacarde": {
+      "ravageurs": [
+        "anacarde-fourmis-tisserandes"
+      ],
+      "fletrissement": [
+        "anacarde-tailler"
       ]
     }
   },
@@ -751,6 +1055,172 @@
       "sources": [
         {
           "id": "fao-coton"
+        }
+      ]
+    },
+    {
+      "id": "manioc-mosaique",
+      "culture": "manioc",
+      "symptomes": [
+        "deformation"
+      ],
+      "certitude": "nette",
+      "probleme": {
+        "fr": "la mosaïque africaine du manioc",
+        "fon": "fɛnnyɛ sín ama wunwun azɔn"
+      },
+      "gestes": [
+        "manioc-arracher-bruler-tot",
+        "manioc-boutures-saines",
+        "manioc-rotation"
+      ],
+      "sources": [
+        {
+          "id": "pw-mosaique-manioc"
+        },
+        {
+          "id": "fao-manioc-2013",
+          "detail": "p. 78"
+        }
+      ],
+      "video": {
+        "url": "https://www.accessagriculture.org/fon/ama-wunwun-fennye-ton-sin-azon",
+        "titre": "La mosaïque du manioc"
+      }
+    },
+    {
+      "id": "manioc-pourridie",
+      "culture": "manioc",
+      "symptomes": [
+        "pourriture"
+      ],
+      "certitude": "nette",
+      "probleme": {
+        "fr": "la pourriture des racines (pourridié)",
+        "fon": "fɛnnyɛ sín atínɖɔ̀ jɛ̀ vǎ azɔn"
+      },
+      "gestes": [
+        "manioc-terrain-sain",
+        "manioc-outils-javel",
+        "manioc-rotation-cereales"
+      ],
+      "sources": [
+        {
+          "id": "pw-pourridie-manioc"
+        },
+        {
+          "id": "fao-manioc-2013",
+          "detail": "p. 79"
+        }
+      ]
+    },
+    {
+      "id": "igname-pourriture-stockage",
+      "culture": "igname",
+      "symptomes": [
+        "pourriture"
+      ],
+      "certitude": "possible",
+      "probleme": {
+        "fr": "une pourriture des tubercules en stockage",
+        "fon": "tɛvi e nɔ jɛ̀ vǎ ɖo xɔ mɛ é"
+      },
+      "gestes": [
+        "igname-cure",
+        "igname-trier",
+        "igname-magasin-propre"
+      ],
+      "sources": [
+        {
+          "id": "fao-pertes-apres-recolte",
+          "detail": "section 11.1"
+        }
+      ]
+    },
+    {
+      "id": "plantain-bunchy-top",
+      "culture": "plantain",
+      "symptomes": [
+        "croissance",
+        "deformation"
+      ],
+      "certitude": "possible",
+      "probleme": {
+        "fr": "le bunchy top du bananier",
+        "fon": "kókwé sín bunchy top azɔn"
+      },
+      "gestes": [
+        "plantain-arracher-enfouir",
+        "plantain-rejets-sains"
+      ],
+      "sources": [
+        {
+          "id": "inrab-brab-2022-bananier"
+        }
+      ]
+    },
+    {
+      "id": "plantain-cercosporiose",
+      "culture": "plantain",
+      "symptomes": [
+        "taches"
+      ],
+      "certitude": "possible",
+      "probleme": {
+        "fr": "la cercosporiose noire",
+        "fon": "kókwé sín ama wuntun azɔn"
+      },
+      "gestes": [
+        "plantain-effeuiller",
+        "plantain-ecartement"
+      ],
+      "sources": [
+        {
+          "id": "pw-cercosporiose-ghana"
+        },
+        {
+          "id": "pw-cercosporiose-rdc"
+        }
+      ]
+    },
+    {
+      "id": "anacarde-anthracnose",
+      "culture": "anacarde",
+      "symptomes": [
+        "taches"
+      ],
+      "certitude": "possible",
+      "probleme": {
+        "fr": "l'anthracnose de l'anacardier",
+        "fon": "anacardier sín ama wuntun azɔn"
+      },
+      "gestes": [
+        "anacarde-tailler"
+      ],
+      "sources": [
+        {
+          "id": "infonet-anacarde"
+        }
+      ]
+    },
+    {
+      "id": "palmier-fusariose",
+      "culture": "palmier",
+      "symptomes": [
+        "fletrissement",
+        "jaunissement"
+      ],
+      "certitude": "possible",
+      "probleme": {
+        "fr": "la fusariose du palmier à huile",
+        "fon": "dɛtin sín fusariose azɔn"
+      },
+      "gestes": [
+        "palmier-replanter-tolerants"
+      ],
+      "sources": [
+        {
+          "id": "inrab-brab-2021-palmier"
         }
       ]
     }
