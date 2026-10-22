@@ -12,6 +12,7 @@ import { repondrePrix, resumerBase } from './prix.js';
 import { creerReleves } from './releves.js';
 import { creerTextes } from './reponses.js';
 import { analyserSignalement, creerRegistre, destinataire } from './signalement.js';
+import { choisirSolutions } from './solutions.js';
 import { creerVoix } from './voix.js';
 
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -95,7 +96,7 @@ const PHRASES_ERREUR = {
 
 export function creerApplication({
   asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierPublic = path.join(RACINE, 'public'),
-  voix = creerVoix(path.join(dossierPublic, 'voix')),
+  voix = creerVoix(path.join(dossierPublic, 'voix')), solutions = null,
 }) {
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
   const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
@@ -150,6 +151,9 @@ export function creerApplication({
       const commune = communeChoisie
         ? { nom: communeChoisie.nom, departement: communeChoisie.departement, source: 'choisie' }
         : analyse.commune ? { ...analyse.commune, source: 'entendue' } : null;
+      // Le registre garde les solutions telles qu'elles ont été proposées, sans la voix.
+      const choisies = choisirSolutions(solutions, analyse, { departement: commune?.departement ?? null, date: new Date(), transcription: texte });
+      const { morceaux = [], ...proposees } = choisies ?? {};
 
       const signalement = await registre.ajouter({
         audio,
@@ -162,6 +166,7 @@ export function creerApplication({
         destinataire: destinataire(commune),
         id_requete: reponseApi.id ?? null,
         simulation: asr.simulation,
+        solutions: choisies ? proposees : null,
       });
       const titre = textes.phrase('signalement_transmis');
       const recu = commune
@@ -177,6 +182,7 @@ export function creerApplication({
           pris: sansVoix(textes.phrase('signalement_pris')),
         },
         voix: voix.fichiers(textes.joindre([titre, recu]).voix),
+        solutions: choisies ? { ...proposees, voix: voix.fichiers(morceaux) } : null,
       });
     }
 
@@ -295,18 +301,19 @@ export async function demarrer() {
     motDePasse: env.ASR_MDP,
     simulation: env.ASR_SIMULATION === '1' || process.argv.includes('--simulation'),
   });
-  const [base, lexique, { communes }, reponses] = await Promise.all([
+  const [base, lexique, { communes }, reponses, solutions] = await Promise.all([
     lireJson('data/referentiel.json'),
     lireJson('data/lexique.json'),
     lireJson('data/communes.json'),
     lireJson('data/reponses.json'),
+    lireJson('data/solutions.json'),
   ]);
   const dossierDonnees = path.resolve(RACINE, env.DOSSIER_DONNEES || 'stockage');
   const registre = await creerRegistre(dossierDonnees);
   // Prix importés par scripts/importer-prix.js, sinon l'instantané livré avec le code.
   const releves = creerReleves([path.join(dossierDonnees, 'releves-prix.json'), path.join(RACINE, 'data', 'releves-prix.json')]);
   const gerer = creerApplication({
-    asr, base, releves, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '',
+    asr, base, releves, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '', solutions,
   });
 
   // Un hébergeur peut fournir un socket (chemin) au lieu d'un numéro de port.
