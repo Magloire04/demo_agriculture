@@ -28,6 +28,7 @@ async function demarrer(t, { asr, codeConseiller = '', voix = creerVoix('/inexis
     codeConseiller,
     voix,
     solutions: lire('solutions.json'),
+    protection: null, // la protection contre les robots est testée à part (protection.test.js)
   });
   const serveur = createServer(gerer);
   await new Promise((r) => serveur.listen(0, '127.0.0.1', r));
