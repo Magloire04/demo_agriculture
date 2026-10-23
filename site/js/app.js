@@ -46,10 +46,43 @@ $('.evitement').addEventListener('click', (e) => {
 
 /* ---------- État du serveur ---------- */
 
+// Identifiant anonyme tiré au hasard et gardé sur le téléphone. Il ne dit rien
+// de la personne : il sert seulement à compter les personnes et leurs retours.
+function nouvelIdentifiant() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  const o = crypto.getRandomValues(new Uint8Array(16));
+  o[6] = (o[6] & 0x0f) | 0x40; // version 4
+  o[8] = (o[8] & 0x3f) | 0x80; // variante RFC 4122
+  const h = [...o].map((x) => x.toString(16).padStart(2, '0')).join('');
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+}
+
+function identifiantVisiteur() {
+  // localStorage d'abord ; à défaut, la session ; à défaut, la page seulement.
+  for (const stockage of ['localStorage', 'sessionStorage']) {
+    try {
+      const memoire = window[stockage];
+      const connu = memoire.getItem('agrifon.visiteur');
+      if (connu) return connu;
+      const id = nouvelIdentifiant();
+      memoire.setItem('agrifon.visiteur', id);
+      return id;
+    } catch {
+      // stockage indisponible (navigation privée...) : on essaie le suivant
+    }
+  }
+  return nouvelIdentifiant();
+}
+
 async function verifierServeur() {
   const bandeau = $('[data-bandeau]');
   try {
-    const { asr } = await appelerApi('api/etat');
+    const { asr, hors_service: horsService } = await appelerApi('api/etat', { headers: { 'X-Visiteur': identifiantVisiteur() } });
+    // Site coupé depuis le back office : le serveur sert la page d'attente à la place de l'accueil.
+    if (horsService) {
+      location.reload();
+      return;
+    }
     if (asr.simulation) {
       bandeau.textContent = 'Mode simulation : les réponses sont factices, aucune requête n’est envoyée à la reconnaissance vocale.';
       bandeau.hidden = false;

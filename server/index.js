@@ -7,10 +7,14 @@ import { createServer } from 'node:http';
 import { timingSafeEqual } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { creerAdmin, creerSessions, lancerImportPrix, lireVersion } from './admin.js';
 import { creerClientAsr, ErreurAsr, extensionAudio } from './asr.js';
+import { ENTETES_SECURITE, ErreurHttp, envoyerJson } from './http.js';
 import { repondrePrix, resumerBase } from './prix.js';
-import { adresseClient, creerProtection } from './protection.js';
+import { adresseClient, creerCompteur, creerProtection, estRobot } from './protection.js';
+import { creerMesures } from './mesures.js';
 import { creerReleves } from './releves.js';
+import { creerReglages } from './reglages.js';
 import { creerTextes } from './reponses.js';
 import { analyserSignalement, creerRegistre, destinataire } from './signalement.js';
 import { choisirSolutions, solutionsPubliables } from './solutions.js';
@@ -39,37 +43,6 @@ const TYPES = {
   '.wav': 'audio/wav',
   '.flac': 'audio/flac',
 };
-
-const ENTETES_SECURITE = {
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'same-origin',
-  'Permissions-Policy': 'microphone=(self), geolocation=(self), camera=()',
-  'Content-Security-Policy': "default-src 'self'; img-src 'self' data:; media-src 'self' blob:; style-src 'self'; script-src 'self'; connect-src 'self'; font-src 'self'; manifest-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
-  // Ni indexation, ni archivage, ni extrait dans un moteur ; aucun fichier repris par un autre site.
-  'X-Robots-Tag': 'noindex, nofollow, noarchive, nosnippet, noimageindex',
-  'Cross-Origin-Resource-Policy': 'same-origin',
-  'Cross-Origin-Opener-Policy': 'same-origin',
-};
-
-class ErreurHttp extends Error {
-  constructor(statut, message, code = 'requete_invalide', attente = 0) {
-    super(message);
-    this.statut = statut;
-    this.code = code;
-    this.attente = attente; // secondes, pour l'en-tête Retry-After
-  }
-}
-
-function envoyerJson(res, statut, donnees, attente = 0) {
-  const corps = JSON.stringify(donnees);
-  res.writeHead(statut, {
-    ...ENTETES_SECURITE,
-    'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-store',
-    ...(attente > 0 && { 'Retry-After': String(attente) }),
-  });
-  res.end(corps);
-}
 
 async function lireAudio(req) {
   const type = String(req.headers['content-type'] ?? '').toLowerCase();
@@ -106,28 +79,59 @@ const PHRASES_ERREUR = {
   audio_trop_court: 'erreur_trop_court',
   trop_de_demandes: 'erreur_reessayer',
   service_sature: 'erreur_reessayer',
+  hors_service: 'hors_service',
 };
+
+const PRIX_COMPRIS = new Set(['ok', 'sans_prix', 'marche_seul']);
 
 // `protection` : null la désactive (tests qui ne portent pas sur elle).
 // `maxEnAttente` : demandes vocales en attente de l'API au-delà desquelles on refuse,
 // dont `maxEnAttenteParVisiteur` au plus pour un même visiteur.
+// `mesures` : visites, journal des demandes vocales et refus (server/mesures.js).
+// `reglages` : site hors service, solutions en brouillon (server/reglages.js) ; sans
+// eux, le site est toujours en service et `solutions` est servi tel quel.
 export function creerApplication({
   asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierSite = path.join(RACINE, 'site'),
   voix = creerVoix(path.join(dossierSite, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
-  maxEnAttenteParVisiteur = 4,
+  maxEnAttenteParVisiteur = 4, mesures = null, reglages = null, maxVisitesParAdresse = 200, admin = null,
 }) {
+  // Nouveaux visiteurs comptés par adresse sur 24 heures : de faux identifiants
+  // envoyés en masse depuis une adresse ne gonflent pas les chiffres.
+  const visitesParAdresse = creerCompteur({ fenetreMs: 86_400_000, maximum: maxVisitesParAdresse });
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
   const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
+
+  // Le réglage du back office l'emporte sur SOLUTIONS_BROUILLON, relu à chaque signalement.
+  const solutionsActives = () => (reglages
+    ? solutionsPubliables(solutions, { SOLUTIONS_BROUILLON: reglages.lire().solutions_brouillon ? '1' : '0' })
+    : solutions);
+
+  // Site coupé : la page d'attente remplace l'accueil, les demandes vocales sont
+  // refusées ; le reste (conseiller, administration, fichiers) répond normalement.
+  let pageAttente = null;
+  async function envoyerPageAttente(res) {
+    pageAttente ??= await readFile(path.join(dossierSite, 'hors-service.html'));
+    res.writeHead(503, {
+      ...ENTETES_SECURITE,
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'Retry-After': '300',
+    });
+    res.end(pageAttente);
+  }
 
   function verifierConseiller(req, url) {
     if (!codeConseiller) return;
     const bloque = protection?.codeBloque(req) ?? 0;
     if (bloque) {
+      mesures?.refus('trop_de_demandes');
       throw new ErreurHttp(429, 'Trop d’essais du code conseiller. Réessayez dans un quart d’heure.', 'trop_de_demandes', Math.ceil(bloque / 1000));
     }
     const fourni = req.headers['x-code-conseiller'] ?? url.searchParams.get('code');
     if (!memeCode(fourni, codeConseiller)) {
       protection?.echecCode(req);
+      // Une page conseiller ouverte sans code demande d'abord la liste : ce n'est pas un essai faux.
+      if (fourni !== undefined && fourni !== null) mesures?.refus('code_conseiller');
       throw new ErreurHttp(401, 'Code conseiller requis.', 'code_conseiller');
     }
   }
@@ -141,6 +145,7 @@ export function creerApplication({
     const client = adresseClient(req);
     const siens = client ? enAttenteDe.get(client) ?? 0 : 0;
     if (enAttente >= maxEnAttente || siens >= maxEnAttenteParVisiteur) {
+      mesures?.refus('service_sature');
       throw new ErreurHttp(503, 'Le service reçoit trop de demandes en même temps. Réessayez dans une minute.', 'service_sature', 60);
     }
     enAttente++;
@@ -162,16 +167,55 @@ export function creerApplication({
     return { ...reste, audio_disponible: Boolean(audio) };
   }
 
+  // Une entrée de journal par demande vocale, en succès comme en erreur. Le
+  // traitement remplit `note` (durée de l'API, transcription, ce qui a été
+  // reconnu) ; la mesure ne fait jamais échouer la demande.
+  async function journaliser(service, traitement) {
+    const debut = Date.now();
+    const note = { duree_api_ms: null, duree_audio_s: null, transcription: '', reconnu: null, resultat: 'erreur', reference: null };
+    let code = null;
+    try {
+      return await traitement(note);
+    } catch (e) {
+      note.resultat = 'erreur';
+      code = e?.code ?? 'erreur_interne';
+      throw e;
+    } finally {
+      mesures?.appel({ date: new Date(debut).toISOString(), service, ...note, code, duree_ms: Date.now() - debut });
+    }
+  }
+
+  // Appel à l'API, chronométré pour le journal.
+  async function appelChronometre(req, note, tache) {
+    const debut = Date.now();
+    try {
+      const reponse = await avecPlace(req, tache);
+      note.duree_audio_s = Number.isFinite(reponse?.duree_audio_s) ? reponse.duree_audio_s : null;
+      return reponse;
+    } finally {
+      note.duree_api_ms = Date.now() - debut;
+    }
+  }
+
   async function api(req, res, url) {
     const p = url.pathname;
     const m = req.method;
 
     if (m === 'GET' && p === '/api/etat') {
+      // L'application du téléphone envoie son identifiant anonyme à l'ouverture.
+      // Cette route reste ouverte aux outils (déploiement) : un robot n'est pas compté.
+      const visiteur = req.headers['x-visiteur'];
+      if (mesures && visiteur && !estRobot(req.headers['user-agent'])) {
+        // Sans adresse connue, tous partagent une même limite.
+        const adresse = adresseClient(req) ?? 'inconnue';
+        if (!visitesParAdresse.attente(adresse) && mesures.visite(String(visiteur))) visitesParAdresse.passer(adresse);
+      }
       return envoyerJson(res, 200, {
         asr: { configure: asr.configure, simulation: asr.simulation },
         conseiller_protege: Boolean(codeConseiller),
         // Le serveur connaît-il l'adresse du visiteur (limites par visiteur actives) ?
         client_identifie: Boolean(adresseClient(req)),
+        hors_service: Boolean(reglages?.horsService()),
       });
     }
     if (m === 'GET' && p === '/api/prix/base') return envoyerJson(res, 200, resumerBase(base, releves.lire()));
@@ -179,14 +223,19 @@ export function creerApplication({
       return envoyerJson(res, 200, { communes: communes.map(({ nom, departement }) => ({ nom, departement })) });
     }
 
-    if (m === 'POST' && p === '/api/prix') {
+    if (m === 'POST' && p === '/api/prix') return journaliser('prix', async (note) => {
       const { audio, type } = await lireAudio(req);
-      const reponseApi = await avecPlace(req, () => asr.marche(audio, type, { noms: nomsMarches }));
+      const reponseApi = await appelChronometre(req, note, () => asr.marche(audio, type, { noms: nomsMarches }));
       const reponse = repondrePrix(base, releves.lire(), textes, reponseApi);
+      Object.assign(note, {
+        transcription: reponse.transcription,
+        reconnu: { produits: reponse.reponses.map((r) => r.produit.nom), marche: reponse.marche?.nom ?? null },
+        resultat: PRIX_COMPRIS.has(reponse.statut) ? 'compris' : 'non_compris',
+      });
       return envoyerJson(res, 200, { ...reponse, voix: voix.fichiers(reponse.voix), simulation: asr.simulation });
-    }
+    });
 
-    if (m === 'POST' && p === '/api/signalements') {
+    if (m === 'POST' && p === '/api/signalements') return journaliser('signalement', async (note) => {
       const { audio, type } = await lireAudio(req);
       const lat = nombre(url.searchParams.get('lat'), -90, 90);
       const lon = nombre(url.searchParams.get('lon'), -180, 180);
@@ -197,14 +246,24 @@ export function creerApplication({
       // Les communes du département aident l'API à reconnaître un nom de lieu.
       const noms = communeChoisie ? communes.filter((c) => c.departement === communeChoisie.departement).map((c) => c.nom) : [];
 
-      const reponseApi = await avecPlace(req, () => asr.transcrire(audio, type, { noms }));
+      const reponseApi = await appelChronometre(req, note, () => asr.transcrire(audio, type, { noms }));
       const texte = reponseApi.texte_ponctue ?? reponseApi.texte ?? '';
       const analyse = analyserSignalement(lexique, communes, texte);
       const commune = communeChoisie
         ? { nom: communeChoisie.nom, departement: communeChoisie.departement, source: 'choisie' }
         : analyse.commune ? { ...analyse.commune, source: 'entendue' } : null;
+      Object.assign(note, {
+        transcription: texte,
+        reconnu: {
+          culture: analyse.culture?.nom ?? null,
+          parties: analyse.parties.map((x) => x.libelle),
+          symptomes: analyse.symptomes.map((x) => x.libelle),
+          commune: commune?.nom ?? null,
+        },
+        resultat: analyse.culture && analyse.symptomes.length ? 'compris' : 'non_compris',
+      });
       // Le registre garde les solutions telles qu'elles ont été proposées, sans la voix.
-      const choisies = choisirSolutions(solutions, analyse, { departement: commune?.departement ?? null, date: new Date(), transcription: texte });
+      const choisies = choisirSolutions(solutionsActives(), analyse, { departement: commune?.departement ?? null, date: new Date(), transcription: texte });
       const { morceaux = [], ...proposees } = choisies ?? {};
 
       const signalement = await registre.ajouter({
@@ -221,6 +280,7 @@ export function creerApplication({
         solutions: choisies ? proposees : null,
       });
       protection?.signalementAccepte(req);
+      note.reference = signalement.reference;
       const titre = textes.phrase('signalement_transmis');
       const recu = commune
         ? textes.phrase('signalement_recu_commune', { commune: commune.nom })
@@ -237,7 +297,7 @@ export function creerApplication({
         voix: voix.fichiers(textes.joindre([titre, recu]).voix),
         solutions: choisies ? { ...proposees, voix: voix.fichiers(morceaux) } : null,
       });
-    }
+    });
 
     if (m === 'GET' && p === '/api/signalements') {
       verifierConseiller(req, url);
@@ -307,6 +367,7 @@ export function creerApplication({
     }
     if (relatif === '/') relatif = '/index.html';
     if (relatif === '/conseiller') relatif = '/conseiller.html';
+    if (relatif === '/admin') relatif = '/admin.html';
     const chemin = path.join(dossierSite, path.normalize(relatif));
     if (!chemin.startsWith(dossierSite + path.sep)) throw new ErreurHttp(404, 'Fichier introuvable.', 'introuvable');
     const ext = path.extname(chemin);
@@ -322,7 +383,19 @@ export function creerApplication({
     }
     try {
       const refus = protection?.verifier(req, url);
-      if (refus) throw new ErreurHttp(refus.statut, refus.message, refus.code, refus.attente);
+      if (refus) {
+        mesures?.refus(refus.code);
+        throw new ErreurHttp(refus.statut, refus.message, refus.code, refus.attente);
+      }
+      // L'administration passe avant le mode hors service, pour pouvoir le lever.
+      if (admin && url.pathname.startsWith('/api/admin/') && await admin.gerer(req, res, url)) return;
+      if (reglages?.horsService()) {
+        const p = url.pathname;
+        if ((req.method === 'GET' || req.method === 'HEAD') && (p === '/' || p === '/index.html')) return await envoyerPageAttente(res);
+        if (req.method === 'POST' && (p === '/api/prix' || p === '/api/signalements')) {
+          throw new ErreurHttp(503, textes.phrase('hors_service').fr, 'hors_service', 300);
+        }
+      }
       if (url.pathname.startsWith('/api/')) await api(req, res, url);
       else await statique(req, res, url);
     } catch (e) {
@@ -367,9 +440,20 @@ export async function demarrer() {
   const registre = await creerRegistre(dossierDonnees);
   // Prix importés par scripts/importer-prix.js, sinon l'instantané livré avec le code.
   const releves = creerReleves([path.join(dossierDonnees, 'releves-prix.json'), path.join(RACINE, 'data', 'releves-prix.json')]);
+  // Réglages du back office : SOLUTIONS_BROUILLON n'en est que la valeur de départ.
+  const reglages = await creerReglages(path.join(dossierDonnees, 'reglages.json'), { solutionsBrouillon: env.SOLUTIONS_BROUILLON === '1' });
+  const mesures = creerMesures(path.join(dossierDonnees, 'mesures'));
+  const admin = creerAdmin({
+    empreinte: env.ADMIN_MDP_EMPREINTE || '',
+    sessions: creerSessions(),
+    mesures, reglages, registre, releves, asr,
+    version: lireVersion(RACINE),
+    dossierAudio: path.join(dossierDonnees, 'audio'),
+    importerPrix: () => lancerImportPrix(RACINE),
+  });
   const gerer = creerApplication({
     asr, base, releves, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '',
-    solutions: solutionsPubliables(solutions, env),
+    solutions, mesures, reglages, admin,
   });
 
   // Un hébergeur peut fournir un socket (chemin) au lieu d'un numéro de port.
@@ -381,9 +465,10 @@ export async function demarrer() {
     console.log(`AgriFon : à l'écoute sur ${typeof port === 'number' ? `http://localhost:${port}` : port}`);
     if (asr.simulation) console.log('Mode SIMULATION : aucune requête envoyée à l’API, réponses factices.');
     else if (!asr.configure) console.warn('ASR_ID / ASR_MDP absents : la reconnaissance vocale renverra une erreur (voir .env.example).');
-    if (!solutionsPubliables(solutions, env)) {
-      console.warn('Solutions après signalement non proposées : leur fon attend la relecture d’un locuteur (data/solutions.json, fon_a_relire). Pour une démonstration, définir SOLUTIONS_BROUILLON=1.');
+    if (!solutionsPubliables(solutions, { SOLUTIONS_BROUILLON: reglages.lire().solutions_brouillon ? '1' : '0' })) {
+      console.warn('Solutions après signalement non proposées : leur fon attend la relecture d’un locuteur (data/solutions.json, fon_a_relire). Pour une démonstration, activer les solutions en brouillon dans le back office.');
     }
+    if (!env.ADMIN_MDP_EMPREINTE) console.warn('ADMIN_MDP_EMPREINTE absent : le back office restera fermé (node scripts/admin-mot-de-passe.js).');
   };
   if (typeof port === 'number') serveur.listen(port, hote, pret);
   else serveur.listen(port, pret);

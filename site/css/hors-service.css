@@ -1,0 +1,32 @@
+/* Page d'attente, quand AgriFon est mis hors service depuis le back office :
+   l'onde de la voix, aux couleurs du drapeau, ondule lentement. */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: #fff; color: #1a1a1a; font-family: Montserrat, 'Segoe UI', Roboto, sans-serif; }
+
+.attente { position: relative; min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 48px 20px 64px; text-align: center; }
+.attente-marque { position: absolute; top: 18px; left: 20px; margin: 0; font-weight: 700; font-size: 18px; color: #006828; }
+
+.attente-onde { display: flex; align-items: center; gap: 9px; height: 96px; }
+.attente-onde span { width: 12px; height: 16px; border-radius: 8px; background: #006828; animation: onde 2.4s ease-in-out infinite; }
+.attente-onde span:nth-child(2) { animation-delay: .15s; }
+.attente-onde span:nth-child(3) { background: #FFBE00; animation-delay: .3s; }
+.attente-onde span:nth-child(4) { background: #EB0000; animation-delay: .45s; }
+.attente-onde span:nth-child(5) { animation-delay: .6s; }
+.attente-onde span:nth-child(6) { animation-delay: .75s; }
+@keyframes onde { 0%, 100% { height: 16px; } 40% { height: 80px; } 70% { height: 30px; } }
+
+.attente-fon { margin: 0; max-width: 26ch; font-size: clamp(22px, 5.5vw, 34px); font-weight: 600; line-height: 1.3; text-wrap: balance; }
+.attente-fr { margin: 0; max-width: 34ch; font-size: clamp(15px, 3.6vw, 18px); color: #555; line-height: 1.5; text-wrap: balance; }
+
+.attente-bande { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 33%; height: 6px; display: flex; }
+.attente-bande i { flex: 1; }
+.attente-bande i:nth-child(1) { background: #006828; }
+.attente-bande i:nth-child(2) { background: #FFBE00; }
+.attente-bande i:nth-child(3) { background: #EB0000; }
+
+@media (prefers-reduced-motion: reduce) {
+  .attente-onde span { animation: none; }
+  .attente-onde span:nth-child(odd) { height: 44px; }
+  .attente-onde span:nth-child(even) { height: 26px; }
+}
