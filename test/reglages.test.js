@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
@@ -67,6 +67,26 @@ test('lire() rend une copie : la modifier ne change pas les réglages', async (t
   copie.coupures.push({ debut: 'x', fin: null });
   assert.equal(r.horsService(), false);
   assert.deepEqual(r.lire().coupures, []);
+});
+
+test('écriture impossible : le réglage reste tel qu’il était', async (t) => {
+  const fichier = await dossier(t);
+  const r = await creerReglages(fichier, { solutionsBrouillon: false });
+  await mkdir(`${fichier}.tmp`); // le fichier temporaire ne peut plus être écrit
+  await assert.rejects(r.mettreHorsService());
+  assert.equal(r.horsService(), false);
+  assert.deepEqual(r.lire().coupures, []);
+});
+
+test('après une écriture impossible, les suivantes reprennent', async (t) => {
+  const fichier = await dossier(t);
+  const r = await creerReglages(fichier, { solutionsBrouillon: false });
+  await mkdir(`${fichier}.tmp`);
+  await assert.rejects(r.definirSolutionsBrouillon(true));
+  await rm(`${fichier}.tmp`, { recursive: true });
+  await r.definirSolutionsBrouillon(true);
+  assert.equal(r.lire().solutions_brouillon, true);
+  assert.equal((await creerReglages(fichier, { solutionsBrouillon: false })).lire().solutions_brouillon, true);
 });
 
 test('fichier abîmé : valeurs par défaut, sans erreur', async (t) => {
