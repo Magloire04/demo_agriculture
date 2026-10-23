@@ -64,3 +64,20 @@ test('cellule fon vide : une alerte, valeur précédente gardée', () => {
   assert.equal(r.donnees.gestes.visiter.voix, 'visiter fon');
   assert.ok(r.alertes.some((a) => a.includes('gestes.visiter')));
 });
+
+test('fichier mal encodé (ANSI) : import refusé, rien n’est modifié', () => {
+  const donnees = fixture();
+  const csv = exporterCsv(donnees);
+  // Excel en « CSV (point-virgule) » : lettres fon devenues « ? », accents devenus U+FFFD.
+  const ansi = csv.replace(/[ɔɛɖ]/g, '?').replace(/é/g, '�');
+  assert.throws(() => importerCsv(ansi, donnees), /UTF-8/);
+  const lettresFonPerdues = modifier(modifier(csv, 'gestes.fumure', 'fon', 'fumure ?on'), 'gestes.fumure', 'voix', 'fumure ?on');
+  assert.throws(() => importerCsv(lettresFonPerdues, donnees), /UTF-8/);
+  assert.deepEqual(donnees, fixture());
+});
+
+test('colonnes manquantes : message clair', () => {
+  const donnees = fixture();
+  const sansCle = exporterCsv(donnees).replace('"cle";', '"clef";');
+  assert.throws(() => importerCsv(sansCle, donnees), /colonnes manquantes : cle/i);
+});

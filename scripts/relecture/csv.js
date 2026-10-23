@@ -73,11 +73,25 @@ function cible(donnees, cle) {
   return undefined;
 }
 
+const ERREUR_ENCODAGE = "Le fichier n'est pas en UTF-8 : des lettres sont devenues illisibles. "
+  + 'Dans le tableur, enregistrer au format « CSV UTF-8 » puis relancer l’import. Rien n’a été modifié.';
+
 export function importerCsv(texte, donnees) {
+  // Un CSV réenregistré en ANSI perd les lettres fon (« ? ») et les accents (U+FFFD).
+  if (texte.includes('�')) throw new Error(ERREUR_ENCODAGE);
   const copie = structuredClone(donnees);
   const alertes = [];
-  const [entete, ...rangees] = lireCsv(texte);
+  const [entete = [], ...rangees] = lireCsv(texte);
+  const manquantes = ['cle', 'fon', 'voix'].filter((nom) => !entete.includes(nom));
+  if (manquantes.length) throw new Error(`Colonnes manquantes : ${manquantes.join(', ')} (attendu : ${COLONNES.join(';')})`);
   const col = Object.fromEntries(COLONNES.map((nom) => [nom, entete.indexOf(nom)]));
+  for (const r of rangees) {
+    const t = cible(copie, r[col.cle]);
+    const nouveauPointInterrogation = (avant, apres) => (apres ?? '').includes('?') && !(avant ?? '').includes('?');
+    if (t && (nouveauPointInterrogation(t.fon, r[col.fon]) || nouveauPointInterrogation(t.voix, r[col.voix]))) {
+      throw new Error(ERREUR_ENCODAGE);
+    }
+  }
   for (const r of rangees) {
     const cle = r[col.cle];
     const t = cible(copie, cle);

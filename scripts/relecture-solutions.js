@@ -27,7 +27,14 @@ if (action === 'exporter') {
   await writeFile(fichier, exporterCsv(donnees));
   console.log(`Fiche de relecture écrite : ${fichier}`);
 } else {
-  const { donnees: corrigees, alertes } = importerCsv(await readFile(fichier, 'utf8'), donnees);
+  let resultat;
+  try {
+    resultat = importerCsv(await readFile(fichier, 'utf8'), donnees);
+  } catch (e) {
+    console.error(`Import refusé : ${e.message}`);
+    process.exit(1);
+  }
+  const { donnees: corrigees, alertes } = resultat;
   await writeFile(DONNEES, `${JSON.stringify(corrigees, null, 2)}\n`);
   console.log(`Corrections reprises dans ${path.relative(RACINE, DONNEES)}.`);
   for (const a of alertes) console.log(`  attention : ${a}`);
