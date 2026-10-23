@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { choisirSolutions, morceauxSolutions } from '../server/solutions.js';
+import { choisirSolutions, morceauxSolutions, solutionsPubliables } from '../server/solutions.js';
 import { texteVoix } from '../server/voix.js';
 
 const donnees = JSON.parse(readFileSync(new URL('./fixtures/solutions.json', import.meta.url), 'utf8'));
@@ -97,6 +97,15 @@ test('un geste exclu pour une culture ne lui est jamais proposé', () => {
   const s = choisirSolutions(avecExclusion, analyse('coton', ['jaunissement']), { departement: null, date: AOUT, transcription: '' });
   assert.ok(!ids(s).includes('fumure'), ids(s).join(', '));
   assert.ok(ids(s).includes('desherber'));
+});
+
+test('fon en brouillon : solutions masquées sauf demande explicite', () => {
+  const brouillon = { ...donnees, fon_a_relire: true };
+  assert.equal(solutionsPubliables(brouillon, {}), null);
+  assert.equal(solutionsPubliables(brouillon, { SOLUTIONS_BROUILLON: '1' }), brouillon);
+  const relu = { ...donnees, fon_a_relire: false };
+  assert.equal(solutionsPubliables(relu, {}), relu);
+  assert.equal(solutionsPubliables(null, {}), null);
 });
 
 test('morceaux : du titre à la mention, tous dans la liste des extraits', () => {

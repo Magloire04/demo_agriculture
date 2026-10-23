@@ -12,7 +12,7 @@ import { repondrePrix, resumerBase } from './prix.js';
 import { creerReleves } from './releves.js';
 import { creerTextes } from './reponses.js';
 import { analyserSignalement, creerRegistre, destinataire } from './signalement.js';
-import { choisirSolutions } from './solutions.js';
+import { choisirSolutions, solutionsPubliables } from './solutions.js';
 import { creerVoix } from './voix.js';
 
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -313,7 +313,8 @@ export async function demarrer() {
   // Prix importés par scripts/importer-prix.js, sinon l'instantané livré avec le code.
   const releves = creerReleves([path.join(dossierDonnees, 'releves-prix.json'), path.join(RACINE, 'data', 'releves-prix.json')]);
   const gerer = creerApplication({
-    asr, base, releves, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '', solutions,
+    asr, base, releves, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '',
+    solutions: solutionsPubliables(solutions, env),
   });
 
   // Un hébergeur peut fournir un socket (chemin) au lieu d'un numéro de port.
@@ -325,6 +326,9 @@ export async function demarrer() {
     console.log(`AgriFon : à l'écoute sur ${typeof port === 'number' ? `http://localhost:${port}` : port}`);
     if (asr.simulation) console.log('Mode SIMULATION : aucune requête envoyée à l’API, réponses factices.');
     else if (!asr.configure) console.warn('ASR_ID / ASR_MDP absents : la reconnaissance vocale renverra une erreur (voir .env.example).');
+    if (!solutionsPubliables(solutions, env)) {
+      console.warn('Solutions après signalement non proposées : leur fon attend la relecture d’un locuteur (data/solutions.json, fon_a_relire). Pour une démonstration, définir SOLUTIONS_BROUILLON=1.');
+    }
   };
   if (typeof port === 'number') serveur.listen(port, hote, pret);
   else serveur.listen(port, pret);

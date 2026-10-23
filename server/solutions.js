@@ -125,6 +125,14 @@ export function choisirSolutions(donnees, analyse, { departement = null, date = 
   };
 }
 
+// Le fon des solutions doit être relu par un locuteur avant d'être montré : tant que
+// "fon_a_relire" vaut true, le serveur ne propose pas de solutions, sauf demande
+// explicite pour une démonstration (SOLUTIONS_BROUILLON=1).
+export function solutionsPubliables(donnees, env = {}) {
+  if (!donnees) return null;
+  return donnees.fon_a_relire && env.SOLUTIONS_BROUILLON !== '1' ? null : donnees;
+}
+
 // Tous les morceaux de voix que les solutions peuvent dire, pour préparer les extraits.
 export function morceauxSolutions(donnees) {
   const morceaux = [];

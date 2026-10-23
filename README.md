@@ -56,6 +56,7 @@ Le fichier `.env` est lu au démarrage. Il est ignoré par Git : les identifiant
 | `PORT`, `HOST` | port et interface d'écoute | `3000`, `0.0.0.0` |
 | `DOSSIER_DONNEES` | dossier des signalements, de leurs audios et des prix importés | `stockage` |
 | `CODE_CONSEILLER` | si renseigné, l'écran conseiller demande ce code | aucun |
+| `SOLUTIONS_BROUILLON` | `1` pour proposer les solutions après un signalement avant la relecture de leur fon | désactivé |
 
 ### Essayer sans identifiants
 
@@ -190,7 +191,7 @@ Après un signalement où la culture et au moins un symptôme sont reconnus, la 
 - **Produits autorisés.** Un produit chimique n'est nommé que s'il passe `server/pesticides.js` : même matière active à la même concentration qu'un produit de la première liste régionale du COAHP (version 2023, 844 produits), autorisé pour la culture et le ravageur, et absent des interdits nationaux (endosulfan, dichlorvos, polluants organiques persistants). La liste est extraite dans `data/pesticides.json` par `python scripts/pesticides/extraire_coahp.py <liste.pdf> data/pesticides.json` (sur un poste, avec `pypdf`). Un test refuse toute donnée qui ne respecte pas cette règle.
 - **Vidéos.** Quand Access Agriculture publie une vidéo en fon sur le problème, un lien « Voir la vidéo en fon » y renvoie. Leur contenu, tous droits réservés, n'est pas repris.
 
-Le fongbé des solutions est un brouillon (`"fon_a_relire": true` dans `data/solutions.json`) : il doit être relu par un locuteur avant la mise en ligne.
+Le fongbé des solutions est un brouillon (`"fon_a_relire": true` dans `data/solutions.json`) : il doit être relu par un locuteur avant la mise en ligne. Tant que ce drapeau vaut `true`, le serveur ne propose pas de solutions et l'indique au démarrage, sauf si `SOLUTIONS_BROUILLON=1` est défini (pour une démonstration). Après la relecture, mettre le drapeau à `false`.
 
 ```bash
 node scripts/relecture-solutions.js exporter relecture.csv   # fiche à ouvrir dans un tableur : fr, fon, voix, source
