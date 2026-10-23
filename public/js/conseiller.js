@@ -44,6 +44,35 @@ function lieu({ gps, commune }) {
   ];
 }
 
+// Pour le conseiller, le français d'abord, le fon dessous.
+function frPuisFon(fr, fon) {
+  return [el('p', { lang: 'fr' }, fr), fon ? el('p', { class: 'texte-fon-second fon', lang: 'fon' }, fon) : null];
+}
+
+function sourcesSolution(sources) {
+  return sources.map((s, i) => [i ? ' · ' : '', 'Source : ',
+    el('a', { href: s.url, target: '_blank', rel: 'noopener' }, s.nom), s.detail ? `, ${s.detail}` : '']);
+}
+
+// Solutions proposées à l'agriculteur, telles qu'elles ont été enregistrées avec
+// le signalement. Un signalement antérieur à cette fonction n'en a pas.
+function blocSolutions(solutions) {
+  if (!solutions) return null;
+  return el('div', { class: 'solutions-conseiller' },
+    el('h3', {}, 'Solutions proposées'),
+    solutions.problemes.map((p) => el('div', { class: 'solutions-probleme' }, frPuisFon(p.fr, p.fon))),
+    solutions.elements.map((e) => {
+      const traitement = e.type === 'traitement';
+      return el('div', { class: `solution${traitement ? ' solution-traitement' : ''}` },
+        traitement ? el('span', { class: 'solution-etiquette' }, 'Traitement documenté') : null,
+        frPuisFon(e.fr, e.fon),
+        e.securite ? el('div', { class: 'solution-securite' }, frPuisFon(e.securite.fr, e.securite.fon)) : null,
+        e.reserves?.length ? el('ul', { class: 'solution-reserves' }, e.reserves.map((r) => el('li', {}, r))) : null,
+        el('p', { class: 'solution-source' }, sourcesSolution(e.sources)));
+    }),
+    el('p', { class: 'solution-source' }, solutions.mention.fr));
+}
+
 function carte(s) {
   const observe = s.symptomes.length ? s.symptomes.map((x) => x.libelle).join(' · ') : 'Non reconnu : écouter le message';
   const parties = s.parties.length ? ` (${s.parties.map((p) => p.libelle).join(', ')})` : '';
@@ -67,6 +96,7 @@ function carte(s) {
       ligne('Ce qui est observé', observe + parties),
       ligne('Lieu', lieu(s.localisation)),
       ligne('Message (fongbé)', el('span', { class: 'fon', lang: 'fon' }, s.transcription || 'aucune transcription'))),
+    blocSolutions(s.solutions),
     audio,
     el('div', { class: 'actions' }, bouton));
 }

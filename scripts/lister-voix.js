@@ -16,10 +16,10 @@ import { fichierVoix, listerMorceaux } from '../server/voix.js';
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const lire = async (relatif) => JSON.parse(await readFile(path.join(RACINE, relatif), 'utf8'));
 
-const [reponses, base, { communes }] = await Promise.all([
-  lire('data/reponses.json'), lire('data/referentiel.json'), lire('data/communes.json'),
+const [reponses, base, { communes }, solutions] = await Promise.all([
+  lire('data/reponses.json'), lire('data/referentiel.json'), lire('data/communes.json'), lire('data/solutions.json'),
 ]);
-const liste = listerMorceaux(reponses, base, communes).map((texte) => ({ fichier: fichierVoix(texte), texte }));
+const liste = listerMorceaux(reponses, base, communes, solutions).map((texte) => ({ fichier: fichierVoix(texte), texte }));
 const manquants = liste.filter((x) => !existsSync(path.join(RACINE, 'public', 'voix', x.fichier)));
 
 const i = process.argv.indexOf('--json');

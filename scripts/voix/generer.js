@@ -85,10 +85,10 @@ async function principal() {
   const opts = options();
 
   const lire = async (relatif) => JSON.parse(await readFile(path.join(RACINE, relatif), 'utf8'));
-  const [reponses, base, { communes }] = await Promise.all([
-    lire('data/reponses.json'), lire('data/referentiel.json'), lire('data/communes.json'),
+  const [reponses, base, { communes }, solutions] = await Promise.all([
+    lire('data/reponses.json'), lire('data/referentiel.json'), lire('data/communes.json'), lire('data/solutions.json'),
   ]);
-  const liste = listerMorceaux(reponses, base, communes).map((texte) => ({ texte, fichier: fichierVoix(texte) }));
+  const liste = listerMorceaux(reponses, base, communes, solutions).map((texte) => ({ texte, fichier: fichierVoix(texte) }));
   const inconnus = opts.refaire.filter((f) => !liste.some((x) => x.fichier === f));
   if (inconnus.length) throw new Error(`Absents de la liste des extraits : ${inconnus.join(', ')}`);
   const aFaire = liste.filter((x) => opts.tout || opts.refaire.includes(x.fichier)

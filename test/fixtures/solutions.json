@@ -1,0 +1,97 @@
+{
+  "version": "test-1",
+  "sources": {
+    "s-benin": { "editeur": "INRAB", "titre": "Recueil de test", "annee": 2020, "url": "https://exemple.bj/recueil.pdf", "licence": null, "pour_le_benin": true },
+    "s-autre": { "editeur": "CABI", "titre": "Fiche de test", "annee": 2014, "url": "https://exemple.org/fiche", "licence": "CC BY-SA 4.0", "pour_le_benin": false }
+  },
+  "phrases": {
+    "titre": { "fr": "En attendant le conseiller, vous pouvez :", "fon": "titre fon", "voix": "titre fon" },
+    "probablement": { "fr": "C'est probablement {probleme}.", "fon": "probablement fon {probleme}", "voix": "probablement fon | {probleme}" },
+    "possible": { "fr": "Ce peut être {probleme}.", "fon": "possible fon {probleme}", "voix": "possible fon | {probleme}" },
+    "mention": { "fr": "À confirmer avec un conseiller.", "fon": "mention fon", "voix": "mention fon" }
+  },
+  "gestes": {
+    "fumure": { "fr": "Apporter de la fumure organique.", "fon": "fumure fon", "voix": "fumure fon", "sources": [{ "id": "s-benin", "detail": "fiche S-2" }] },
+    "desherber": { "fr": "Désherber autour des plants.", "fon": "desherber fon", "voix": "desherber fon", "sources": [{ "id": "s-autre" }] },
+    "arroser": { "fr": "Arroser tôt le matin.", "fon": "arroser fon", "voix": "arroser fon", "saison": "seche", "sources": [{ "id": "s-autre" }] },
+    "drainer": { "fr": "Ouvrir des rigoles pour l'eau.", "fon": "drainer fon", "voix": "drainer fon", "saison": "pluies", "sources": [{ "id": "s-autre" }] },
+    "retirer-feuilles": { "fr": "Retirer les feuilles malades.", "fon": "retirer fon", "voix": "retirer fon", "sources": [{ "id": "s-autre" }] },
+    "bruler": { "fr": "Brûler les parties malades.", "fon": "bruler fon", "voix": "bruler fon | loin du champ", "sources": [{ "id": "s-autre" }] },
+    "ramasser": { "fr": "Ramasser les chenilles à la main.", "fon": "ramasser fon", "voix": "ramasser fon", "sources": [{ "id": "s-autre" }] },
+    "visiter": { "fr": "Visiter le champ deux fois par semaine.", "fon": "visiter fon", "voix": "visiter fon", "sources": [{ "id": "s-benin", "detail": "fiche M-11" }] },
+    "arracher": { "fr": "Arracher les plants très déformés.", "fon": "arracher fon", "voix": "arracher fon", "sources": [{ "id": "s-autre" }] },
+    "mais-special": { "fr": "Geste propre au maïs.", "fon": "mais fon", "voix": "mais fon", "sources": [{ "id": "s-benin" }] }
+  },
+  "par_symptome": {
+    "jaunissement": ["fumure", "desherber", "arroser", "drainer"],
+    "taches": ["retirer-feuilles", "bruler"],
+    "feuilles_mangees": ["ramasser", "visiter"],
+    "deformation": ["arracher", "desherber"]
+  },
+  "par_culture": {
+    "mais": { "jaunissement": ["mais-special"] }
+  },
+  "cas": [
+    {
+      "id": "haricot-foreurs",
+      "culture": "haricot",
+      "symptomes": ["feuilles_mangees"],
+      "parties": ["fruits"],
+      "certitude": "nette",
+      "probleme": { "fr": "les foreurs des gousses", "fon": "foreurs fon" },
+      "gestes": ["visiter"],
+      "traitement": {
+        "type": "preparation",
+        "fr": "Extrait de neem : 15 kg de feuilles par hectare.",
+        "fon": "neem fon 15 kg",
+        "voix": "neem fon | kilo wo",
+        "securite": { "fr": "Porter des gants.", "fon": "gants fon", "voix": "gants fon" },
+        "matieres": [],
+        "cible": null,
+        "reserves": ["Pulvérisateur à très bas volume."],
+        "sources": [{ "id": "s-benin", "detail": "fiche M-11" }]
+      },
+      "sources": [{ "id": "s-benin", "detail": "fiche M-11" }],
+      "video": { "url": "https://www.accessagriculture.org/exemple", "titre": "Vidéo de test" }
+    },
+    {
+      "id": "coton-pucerons",
+      "culture": "coton",
+      "symptomes": ["deformation"],
+      "termes": { "fr": ["puceron", "pucerons"], "fon": [] },
+      "certitude": "nette",
+      "probleme": { "fr": "les pucerons", "fon": "pucerons fon" },
+      "gestes": [],
+      "traitement": {
+        "type": "preparation",
+        "fr": "Poudre d'amande de neem : 500 g dans 10 l d'eau.",
+        "fon": "amande fon 500 g",
+        "voix": "amande fon",
+        "matieres": [],
+        "cible": null,
+        "reserves": [],
+        "sources": [{ "id": "s-benin" }]
+      },
+      "sources": [{ "id": "s-benin" }]
+    },
+    {
+      "id": "mais-taches",
+      "culture": "mais",
+      "symptomes": ["taches"],
+      "certitude": "possible",
+      "probleme": { "fr": "une maladie des feuilles", "fon": "maladie fon" },
+      "gestes": ["bruler"],
+      "traitement": {
+        "type": "preparation",
+        "fr": "Traitement qui ne doit pas s'afficher.",
+        "fon": "cache fon",
+        "voix": "cache fon",
+        "matieres": [],
+        "cible": null,
+        "reserves": [],
+        "sources": [{ "id": "s-benin" }]
+      },
+      "sources": [{ "id": "s-benin" }]
+    }
+  ]
+}

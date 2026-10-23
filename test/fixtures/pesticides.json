@@ -1,0 +1,31 @@
+{
+  "liste": { "titre": "Liste de test", "url": "https://exemple.org/liste.pdf", "date": "2026-08-13" },
+  "groupes": { "cultures maraîchères": ["tomate", "piment", "gombo", "oignon", "gboma", "amarante"] },
+  "produits": [
+    {
+      "nom": "PRODUIT A",
+      "matieres": [{ "nom": "Spinosad", "concentration": "480 g/L" }],
+      "usages": [{ "texte": "Tomate : Helicoverpa armigera", "cultures": ["tomate"], "cible": "Helicoverpa armigera" }],
+      "autorisation": { "type": "homologation", "fin": null }
+    },
+    {
+      "nom": "PRODUIT B",
+      "matieres": [{ "nom": "Emamectine benzoate", "concentration": "19,2 g/L" }],
+      "usages": [{ "texte": "Tomate : Helicoverpa armigera", "cultures": ["tomate"], "cible": "Helicoverpa armigera" }],
+      "autorisation": { "type": "apv", "fin": "2026-01-31" }
+    },
+    {
+      "nom": "PRODUIT C",
+      "matieres": [{ "nom": "Dichlorvos", "concentration": "1000 g/L" }],
+      "usages": [{ "texte": "Tomate : pucerons (Aphis gossypii)", "cultures": ["tomate"], "cible": "Aphis gossypii" }],
+      "autorisation": { "type": "homologation", "fin": null }
+    },
+    {
+      "nom": "PRODUIT D",
+      "matieres": [{ "nom": "Lambda-cyhalothrine", "concentration": "15 g/L" }],
+      "usages": [{ "texte": "Cultures maraîchères : chenilles (Helicoverpa armigera)", "cultures": [], "groupe": "cultures maraîchères", "cible": "Helicoverpa armigera" }],
+      "autorisation": { "type": "homologation", "fin": null }
+    }
+  ],
+  "interdits": [{ "matiere": "dichlorvos", "texte": "Conseil des ministres du 1er juillet 2026" }]
+}

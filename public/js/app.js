@@ -457,6 +457,31 @@ function suivreStatut(s, messages) {
   }, 5000);
 }
 
+function texteSourceSolution({ nom, detail }) {
+  return `Source : ${nom}${detail ? `, ${detail}` : ''}`;
+}
+
+// Solutions proposées après le signalement : problème probable, traitement
+// documenté éventuel, gestes, puis la mention « À confirmer avec un conseiller ».
+function sectionSolutions(solutions) {
+  if (!solutions) return null;
+  const elements = solutions.elements.map((e) => {
+    const traitement = e.type === 'traitement';
+    return el('div', { class: `solution${traitement ? ' solution-traitement' : ''}` },
+      traitement && el('span', { class: 'solution-etiquette' }, 'Traitement documenté'),
+      bilingue(e),
+      traitement && e.securite && el('div', { class: 'solution-securite' }, bilingue(e.securite)),
+      el('p', { class: 'solution-source' }, e.sources.map(texteSourceSolution).join(' · ')),
+      e.video && el('a', { class: 'solution-video', href: e.video.url, target: '_blank', rel: 'noopener' }, 'Voir la vidéo en fon (Access Agriculture)'));
+  });
+  return el('section', { class: 'solutions', 'aria-label': 'Solutions proposées' },
+    el('div', { class: 'solutions-titre' }, bilingue(solutions.titre)),
+    ...solutions.problemes.map((p) => el('div', { class: 'solutions-probleme' }, bilingue(p))),
+    ...elements,
+    lecture(solutions.voix),
+    el('div', { class: 'solutions-mention' }, bilingue(solutions.mention)));
+}
+
 function afficherSignalement(s) {
   const observe = s.symptomes.length
     ? [s.symptomes.map((x) => x.libelle).join(' · '), s.parties.length ? ` (${s.parties.map((p) => p.libelle).join(', ')})` : '']
@@ -477,6 +502,7 @@ function afficherSignalement(s) {
       ligneRecap('Culture', s.culture ? s.culture.nom : aPreciser('À préciser par le conseiller')),
       ligneRecap('Ce qui est observé', observe),
       ligneRecap('Lieu', texteLieu(s.localisation))),
+    sectionSolutions(s.solutions),
     vousAvezDit(s.transcription),
     boutonRecommencer('Faire un autre signalement', microSignalement));
   suivreStatut(s, s.messages);

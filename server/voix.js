@@ -8,6 +8,7 @@ import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { morceauxDeMontants } from './nombres-fon.js';
+import { morceauxSolutions } from './solutions.js';
 
 export function texteVoix(texte) {
   return texte.normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -30,8 +31,9 @@ export function creerVoix(dossier) {
 }
 
 // Tous les morceaux que les réponses peuvent dire : modèles « voix » remplis avec
-// chaque produit, marché ou commune, plus les morceaux de montants.
-export function listerMorceaux(reponses, base, communes) {
+// chaque produit, marché ou commune, plus les morceaux de montants, et ceux des
+// solutions proposées après un signalement quand leurs données sont fournies.
+export function listerMorceaux(reponses, base, communes, solutions = null) {
   // Une valeur sans traduction fon ne donne pas de phrase fon, donc pas de voix.
   const complet = (valeurs) => Object.values(valeurs).every(Boolean);
   const domaines = {
@@ -53,5 +55,6 @@ export function listerMorceaux(reponses, base, communes) {
       for (const v of valeurs) morceaux.add(texteVoix(morceau.replace(/\{(\w+)\}/g, (_, n) => v[n])));
     }
   }
+  if (solutions) for (const m of morceauxSolutions(solutions)) morceaux.add(texteVoix(m));
   return [...morceaux];
 }

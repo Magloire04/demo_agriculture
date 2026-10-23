@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
@@ -13,8 +13,9 @@ import { creerVoix, fichierVoix } from '../server/voix.js';
 
 const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 
-async function demarrer(t, { asr, codeConseiller = '', voix = creerVoix('/inexistant') }) {
+async function demarrer(t, { asr, codeConseiller = '', voix = creerVoix('/inexistant'), signalements = null }) {
   const dossier = await mkdtemp(path.join(tmpdir(), 'agrifon-'));
+  if (signalements) await writeFile(path.join(dossier, 'signalements.json'), JSON.stringify(signalements));
   const registre = await creerRegistre(dossier);
   const gerer = creerApplication({
     asr,
@@ -26,6 +27,7 @@ async function demarrer(t, { asr, codeConseiller = '', voix = creerVoix('/inexis
     textes: creerTextes(lire('reponses.json')),
     codeConseiller,
     voix,
+    solutions: lire('solutions.json'),
   });
   const serveur = createServer(gerer);
   await new Promise((r) => serveur.listen(0, '127.0.0.1', r));
@@ -52,7 +54,8 @@ function fausseAsr(reponses = {}) {
     transcrire: async (audio, type, options) => {
       appels.push({ point: 'transcrire', type, options });
       if (reponses.erreur) throw reponses.erreur;
-      return { texte: 'gbàdé ama jaunissent', texte_ponctue: 'Gbàdé ama jaunissent.', id: 'r2' };
+      const texte = reponses.texte ?? 'gbàdé ama jaunissent';
+      return { texte, texte_ponctue: reponses.texte ? texte : 'Gbàdé ama jaunissent.', id: 'r2' };
     },
   };
 }
@@ -127,6 +130,59 @@ test('signalement : enregistré, suivi public, réservé au conseiller ensuite',
 
   const pris = await fetch(`${url}/api/signalements/${s.reference}/prise-en-charge`, { method: 'POST', ...avecCode });
   assert.equal((await pris.json()).statut, 'pris_en_charge');
+});
+
+test('signalement : solutions jointes et enregistrées', async (t) => {
+  const url = await demarrer(t, { asr: fausseAsr() });
+  const r = await (await envoyer(`${url}/api/signalements?commune=Glazou%C3%A9`)).json();
+  assert.ok(r.solutions.elements.length >= 2);
+  assert.equal(r.solutions.mention.fr, 'À confirmer avec un conseiller.');
+  assert.equal(r.solutions.titre.fr, 'En attendant le conseiller, vous pouvez :');
+  assert.equal(r.solutions.morceaux, undefined);
+  const liste = await (await fetch(`${url}/api/signalements`)).json();
+  const enregistre = liste.signalements.find((s) => s.reference === r.reference);
+  assert.deepEqual(enregistre.solutions.elements, r.solutions.elements);
+  assert.equal(enregistre.solutions.voix, undefined);
+  assert.equal(enregistre.solutions.morceaux, undefined);
+});
+
+test('signalement : voix des solutions nulle s’il manque un extrait, section présente', async (t) => {
+  const url = await demarrer(t, { asr: fausseAsr(), voix: creerVoix('/inexistant') });
+  const r = await (await envoyer(`${url}/api/signalements`)).json();
+  assert.equal(r.solutions.voix, null);
+  assert.ok(r.solutions.elements.length >= 2);
+
+  const toutes = { fichiers: (morceaux) => morceaux.map(fichierVoix) };
+  const avec = await (await envoyer(`${await demarrer(t, { asr: fausseAsr(), voix: toutes })}/api/signalements`)).json();
+  assert.ok(avec.solutions.voix.length >= 3);
+});
+
+test('signalement localisé par GPS seulement : aucun geste de saison', async (t) => {
+  const url = await demarrer(t, { asr: fausseAsr() });
+  const r = await (await envoyer(`${url}/api/signalements?lat=6.4&lon=2.3`)).json();
+  assert.equal(r.localisation.commune, null);
+  const ids = r.solutions.elements.map((e) => e.id);
+  assert.ok(!ids.includes('arroser') && !ids.includes('drainer'), ids.join(', '));
+});
+
+test('signalement sans symptôme reconnu : solutions nulles', async (t) => {
+  const url = await demarrer(t, { asr: fausseAsr({ texte: 'blabla' }) });
+  const r = await (await envoyer(`${url}/api/signalements`)).json();
+  assert.equal(r.solutions, null);
+});
+
+test('ancien signalement sans solutions : liste conseiller intacte', async (t) => {
+  const ancien = {
+    reference: 'SIG-20261020-001', recu_le: '2026-10-20T20:47:03.549Z', statut: 'transmis', transcription: 'gbàdé',
+    culture: null, parties: [], symptomes: [], localisation: { gps: null, commune: null },
+    destinataire: 'Conseiller agricole le plus proche de votre position', id_requete: null, simulation: false, audio: null,
+  };
+  const url = await demarrer(t, { asr: fausseAsr(), signalements: [ancien] });
+  const rep = await fetch(`${url}/api/signalements`);
+  assert.equal(rep.status, 200);
+  const [s] = (await rep.json()).signalements;
+  assert.equal(s.reference, 'SIG-20261020-001');
+  assert.equal(s.solutions ?? null, null);
 });
 
 test('paramètres de lieu invalides ignorés', async (t) => {

@@ -24,7 +24,7 @@ L'application est une PWA (application web installable sur téléphone). La reco
 | Démo | La personne dit (en fongbé) | Ce qui est extrait | Ce que fait le système |
 | --- | --- | --- | --- |
 | Prix du marché | « Combien coûte le maïs au marché de Glazoué ? » | le produit et le marché | cherche le dernier prix relevé et l'affiche |
-| Signalement d'une maladie des cultures | « Les feuilles de mon maïs jaunissent. » | la culture et le symptôme | transmet le signalement localisé au conseiller agricole et confirme la réception |
+| Signalement d'une maladie des cultures | « Les feuilles de mon maïs jaunissent. » | la culture et le symptôme | transmet le signalement localisé au conseiller agricole, confirme la réception et propose des solutions adaptées à la culture, au symptôme et à la saison |
 
 Un écran conseiller (`/conseiller`) reçoit les signalements en direct. Quand le conseiller prend un signalement en charge, le téléphone de la personne affiche « Pris en charge par le conseiller ».
 
@@ -56,6 +56,7 @@ Le fichier `.env` est lu au démarrage. Il est ignoré par Git : les identifiant
 | `PORT`, `HOST` | port et interface d'écoute | `3000`, `0.0.0.0` |
 | `DOSSIER_DONNEES` | dossier des signalements, de leurs audios et des prix importés | `stockage` |
 | `CODE_CONSEILLER` | si renseigné, l'écran conseiller demande ce code | aucun |
+| `SOLUTIONS_BROUILLON` | `1` pour proposer les solutions après un signalement avant la relecture de leur fon | désactivé |
 
 ### Essayer sans identifiants
 
@@ -98,7 +99,7 @@ Pour importer les prix chaque semaine sans redéployer, ajouter cette tâche dan
 
 1. Ouvrir `/conseiller` sur l'écran de la salle.
 2. Sur le téléphone, ouvrir « Prix du marché ». Appuyer sur le micro, dire la phrase, appuyer de nouveau. La réponse s'affiche, par exemple « Au marché de Glazoué, le maïs coûte 90 F CFA le kilo », avec le prix en grands caractères, le mois du relevé et l'évolution depuis le relevé précédent. « Écouter en fongbé » dit la réponse à voix haute. Toucher « Comparer avec les autres marchés » affiche les prix des autres marchés.
-3. Ouvrir « Signaler », partager la position ou choisir la commune, puis dire la phrase. Le téléphone confirme la réception avec une référence. Le signalement apparaît sur l'écran conseiller avec la transcription et le message vocal.
+3. Ouvrir « Signaler », partager la position ou choisir la commune, puis dire la phrase. Le téléphone confirme la réception avec une référence, puis la section « En attendant le conseiller, vous pouvez : » propose des solutions, qu'« Écouter en fongbé » dit à voix haute. Le signalement apparaît sur l'écran conseiller avec la transcription, le message vocal et les solutions proposées.
 4. Sur l'écran conseiller, cliquer sur « Prendre en charge ». Quelques secondes plus tard, le téléphone affiche « Pris en charge par le conseiller ».
 
 Un enregistrement dure 30 secondes au plus. Le lien « ou envoyer un fichier audio » permet d'envoyer une phrase enregistrée à l'avance si la salle est bruyante.
@@ -109,7 +110,7 @@ L'application retrouve les mots attendus dans la transcription, sans tenir compt
 
 | Liste | Fichier | État |
 | --- | --- | --- |
-| Symptômes | `data/lexique.json`, champ `fon` des `symptomes` | 49 termes pour 8 symptômes (koklojonɔ, fyɔ́, xú, wànvú, gblé…), tirés de textes publiés, à faire valider |
+| Symptômes | `data/lexique.json`, champ `fon` des `symptomes` | 9 symptômes : 49 termes fon pour les 8 premiers (koklojonɔ, fyɔ́, xú, wànvú, gblé…), tirés de textes publiés, à faire valider ; « Plante parasite (striga) » n'a encore que des termes français |
 | Parties de la plante | `data/lexique.json`, champ `fon` des `parties` | ama, atínkàn, atínɖɔ̀, sínsɛ́n… ; racine (« ɖɔ̀ ») écarté car confondu avec « ɖɔ » (dire) |
 | Cultures | `data/lexique.json`, champ `fon` des `cultures` | quelques noms courants (gbadé, mɔlikun, azin…) à vérifier |
 | Produits | `data/referentiel.json`, champ `termes_fon` | 33 produits ; les 20 derniers ajoutés d'après le corpus FFR et le dictionnaire edutechbenin, à vérifier. Carotte, pomme de terre et farine de blé se disent en français, sans mot fon attesté |
@@ -117,6 +118,7 @@ L'application retrouve les mots attendus dans la transcription, sans tenir compt
 | Communes | `data/communes.json`, champ `termes` | noms officiels ; variantes pour 13 communes sur 77 seulement |
 | Réponses affichées | `data/reponses.json`, champ `fon` | 15 phrases et 2 unités, rédigées d'après des sources publiées, à faire relire |
 | Noms des produits | `data/referentiel.json`, champ `nom_fon` | affichés à côté du nom français, à faire relire |
+| Solutions proposées | `data/solutions.json`, champs `fon` et `voix` | 85 textes (phrases, gestes, problèmes, traitements) rédigés en brouillon, **à faire relire avant la mise en ligne** (voir « Solutions proposées ») |
 
 Méthode : dire chaque phrase de démonstration dans l'application, lire la ligne « Vous avez dit : … », ajouter les mots tels qu'ils y sont transcrits dans le fichier concerné, puis redémarrer le serveur.
 
@@ -177,14 +179,33 @@ node scripts/voix/evaluer.js                    # fait relire les extraits par J
 
 Un extrait mal compris se regénère avec une autre graine, par exemple `node scripts/voix/generer.js --point --graine 1 --refaire <fichier>.mp3`. La clé de l'API FongLab (`FONGLAB_TTS_API_KEY`) et les identifiants de JaimeMaLangue se renseignent dans le `.env` du poste. Le compte FongLab dispose de 50 000 caractères par mois : la liste complète en compte environ 12 000.
 
-Après une modification de `data/reponses.json` ou l'ajout d'un produit, d'un marché ou d'une commune, relancer ces deux commandes.
+Après une modification de `data/reponses.json` ou de `data/solutions.json`, ou l'ajout d'un produit, d'un marché ou d'une commune, relancer ces deux commandes.
+
+### Solutions proposées
+
+Après un signalement où la culture et au moins un symptôme sont reconnus, la réponse ajoute une section « En attendant le conseiller, vous pouvez : » (`server/solutions.js`, données dans `data/solutions.json`). Elle contient au plus 4 éléments, en fongbé et en français, chacun avec sa source, et se termine toujours par « À confirmer avec un conseiller ». L'écran conseiller montre les mêmes solutions, enregistrées avec le signalement, et les réserves de chaque traitement.
+
+- **Problème probable.** Quand la culture, le symptôme et, si besoin, la partie de la plante désignent un cas documenté, la section le nomme comme une hypothèse : « C'est probablement … » quand le cas est net, « Ce peut être … » sinon. Un cas peut exiger un mot précis dans la transcription (« puceron » pour le coton).
+- **Traitement documenté (niveau 1).** Seulement pour un cas net, et seulement si la source est un document fait pour le Bénin (fiches et guides de l'INRAB et du ministère de l'Agriculture, guides de la FAO). Les doses sont recopiées telles que la source les écrit. Au lancement : jus d'ail sur l'amarante et le gboma, extrait de neem ou de papayer sur le niébé, extrait d'amande de neem sur le coton quand l'agriculteur parle de pucerons, spinosad sur la tomate contre Helicoverpa.
+- **Gestes sans risque (niveau 2).** Pour chaque culture et chaque symptôme, au moins deux gestes tirés des sources reconnues (INRAB, FAO, CABI Plantwise, Access Agriculture). Les gestes liés à une saison (arroser, drainer) ne s'affichent que si la commune est connue : `server/saison.js` donne la saison du département d'après les normales de Météo-Bénin (deux saisons des pluies au Sud et au Centre, une au Nord). Les mois de transition comptent comme saison inconnue.
+- **Produits autorisés.** Un produit chimique n'est nommé que s'il passe `server/pesticides.js` : même matière active à la même concentration qu'un produit de la première liste régionale du COAHP (version 2023, 844 produits), autorisé pour la culture et le ravageur, et absent des interdits nationaux (endosulfan, dichlorvos, polluants organiques persistants). La liste est extraite dans `data/pesticides.json` par `python scripts/pesticides/extraire_coahp.py <liste.pdf> data/pesticides.json` (sur un poste, avec `pypdf`). Un test refuse toute donnée qui ne respecte pas cette règle.
+- **Vidéos.** Quand Access Agriculture publie une vidéo en fon sur le problème, un lien « Voir la vidéo en fon » y renvoie. Leur contenu, tous droits réservés, n'est pas repris.
+
+Le fongbé des solutions est un brouillon (`"fon_a_relire": true` dans `data/solutions.json`) : il doit être relu par un locuteur avant la mise en ligne. Tant que ce drapeau vaut `true`, le serveur ne propose pas de solutions et l'indique au démarrage, sauf si `SOLUTIONS_BROUILLON=1` est défini (pour une démonstration). Après la relecture, mettre le drapeau à `false`.
+
+```bash
+node scripts/relecture-solutions.js exporter relecture.csv   # fiche à ouvrir dans un tableur : fr, fon, voix, source
+node scripts/relecture-solutions.js importer relecture.csv   # reprend les colonnes fon et voix corrigées
+```
+
+Le locuteur corrige le fon affiché (doses en chiffres) et le texte dit par la voix (nombres en toutes lettres). L'import signale toute ligne dont l'un des deux a changé sans l'autre. Régénérer ensuite les extraits corrigés avec `scripts/voix/generer.js --point`.
 
 ### Routes du serveur
 
 | Méthode | Adresse | Rôle |
 | --- | --- | --- |
 | `POST` | `/api/prix` | corps : l'audio (`Content-Type: audio/…`). Rend le produit, le marché, les prix et la phrase de réponse. |
-| `POST` | `/api/signalements?lat=&lon=&precision=&commune=` | corps : l'audio. Enregistre le signalement et le rend. |
+| `POST` | `/api/signalements?lat=&lon=&precision=&commune=` | corps : l'audio. Enregistre le signalement et le rend, avec les solutions proposées (`solutions`, ou `null`). |
 | `GET` | `/api/signalements/{référence}` | statut d'un signalement (suivi sur le téléphone) |
 | `GET` | `/api/signalements` | liste des signalements (conseiller) |
 | `POST` | `/api/signalements/{référence}/prise-en-charge` | prise en charge (conseiller) |
@@ -215,6 +236,8 @@ scripts/
   lister-voix.js    extraits audio que les réponses peuvent dire, et ceux qui manquent
   voix/generer.js   génération des extraits avec l'API de synthèse fon FongLab (sur un poste)
   voix/evaluer.js   relecture des extraits par la reconnaissance vocale, écart avec le texte attendu
+  relecture-solutions.js  export et réimport CSV des solutions pour le locuteur (relecture/csv.js)
+  pesticides/extraire_coahp.py  extraction de la liste COAHP vers data/pesticides.json (sur un poste)
 server/
   index.js          serveur HTTP : fichiers de la PWA et routes /api
   asr.js            client de l'API de reconnaissance vocale (et mode simulation)
@@ -225,6 +248,9 @@ server/
   nombres-fon.js    prix dits en fon (kpɔ́nwun, ɖɔ̌la, caki)
   voix.js           extraits audio à enchaîner pour dire une réponse
   signalement.js    analyse et registre des signalements
+  solutions.js      solutions proposées après un signalement
+  saison.js         saison des pluies ou saison sèche d'un département
+  pesticides.js     règle d'autorisation d'un produit nommé
   texte.js          comparaison de mots sans tons ni accents
 data/
   referentiel.json  produits et marchés, avec leurs libellés dans le fichier du PAM
@@ -232,6 +258,8 @@ data/
   lexique.json      cultures, parties de la plante, symptômes
   reponses.json     phrases de réponse en français et en fongbé
   communes.json     les 77 communes du Bénin
+  solutions.json    sources, gestes, problèmes et traitements proposés après un signalement
+  pesticides.json   produits de la liste COAHP et interdits nationaux
 public/
   index.html        application (accueil, prix, signalement)
   conseiller.html   écran conseiller
@@ -248,7 +276,7 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 62 tests couvrent la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois).
+Les 114 tests couvrent la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds, apport de chaque symptôme, gestes exclus par culture), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
 
 ## Limites connues
 
@@ -258,6 +286,9 @@ Les 62 tests couvrent la comparaison de texte, les prix dits en fon, les extrait
 - Les prix sont mensuels : entre deux relevés du PAM, ils ne suivent pas les variations d'un jour à l'autre.
 - Au dernier import, 31 couples produit × marché n'avaient pas de relevé récent, surtout à Pobè (riz local, manioc frais, banane plantain, pois d'Angole…). Pour ces cas, l'application le dit et donne les prix des autres marchés. `npm run importer-prix` affiche la liste à jour.
 - Les signalements sont enregistrés dans un fichier JSON. Cela suffit pour une démo, pas pour un service en production.
+- Les solutions proposées n'ont pas été validées par un agronome : elles reprennent les sources telles quelles, et la section rappelle toujours de les confirmer avec un conseiller. Le système reconnaît des symptômes généraux, pas des maladies : un problème n'est jamais présenté que comme une hypothèse.
+- Le 22 octobre 2026, plusieurs sources étaient inaccessibles aux outils automatiques (fiches PlantwisePlus, site du ministère de l'Agriculture en maintenance, serveur des fiches de l'INRAB hors ligne). Le riz, l'arachide, le soja et l'ananas n'ont donc que des gestes sans risque, sans traitement nommé.
+- La liste COAHP ne dit pas si un produit est encore en vente au Bénin, et la liste nationale de mars 2024 n'est pas publiée : chaque traitement chimique reste à confirmer auprès du conseiller.
 - D'après la documentation de l'API, les nombres dits en français et les noms propres rares sont les points faibles de la reconnaissance.
 
 ## Licence

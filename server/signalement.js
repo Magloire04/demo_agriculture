@@ -7,13 +7,32 @@ import path from 'node:path';
 import { mots, normaliser, reperer } from './texte.js';
 
 const termesLexique = (e) => [...e.fon, ...e.fr];
+const LETTRE_FON = /[ɔɛɖŋƒʋɣɑ]/;
+
+// Comme mots(), mais en gardant les lettres fon : « ɖù » reste « ɖu », distinct de « du ».
+function motsAvecLettresFon(texte) {
+  return String(texte ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC')
+    .replace(/[^a-z0-9ɔɛɖŋƒʋɣɑ]+/g, ' ').trim().split(' ').filter(Boolean);
+}
+
+// Un terme fon court qui porte une lettre fon doit être entendu avec cette lettre :
+// sans elle, « ɖù » (manger) se confondrait avec l'article français « du ».
+function termesSurs(texte) {
+  const motsFon = motsAvecLettresFon(texte);
+  const entendu = (terme) => {
+    const cible = motsAvecLettresFon(terme);
+    return motsFon.some((_, i) => cible.every((m, k) => motsFon[i + k] === m));
+  };
+  return (e) => termesLexique(e).filter((t) => !LETTRE_FON.test(t) || mots(t).join('').length > 3 || entendu(t));
+}
 
 export function analyserSignalement(lexique, communes, texte) {
   const motsTexte = mots(texte);
   const culture = reperer(motsTexte, lexique.cultures, termesLexique)[0];
   // Beaucoup de mots de symptômes sont courts ou courants en fon : on les veut exacts.
-  const parties = reperer(motsTexte, lexique.parties, termesLexique, { exact: true });
-  const symptomes = reperer(motsTexte, lexique.symptomes, termesLexique, { exact: true });
+  const termes = termesSurs(texte);
+  const parties = reperer(motsTexte, lexique.parties, termes, { exact: true });
+  const symptomes = reperer(motsTexte, lexique.symptomes, termes, { exact: true });
   // Les noms de commune très courts (« Zè ») se confondraient avec des mots fon.
   const commune = reperer(motsTexte, communes.filter((c) => normaliser(c.nom).replace(/ /g, '').length >= 4), (c) => c.termes)[0];
   return {
