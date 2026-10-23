@@ -116,13 +116,15 @@ export function creerSessions({ dureeMs = 600_000, maintenant = Date.now } = {})
 export function creerAdmin({
   empreinte, sessions, mesures = null, reglages = null, registre = null, releves = null, asr = null, version = null,
   dossierAudio = null, importerPrix = null, attendre = (ms) => new Promise((r) => setTimeout(r, ms)),
+  verifier = verifierSansBloquer,
 }) {
   // 3 essais faux depuis une même adresse (un même /64 en IPv6) la bloquent 10
   // minutes. Jamais de blocage commun, qui enfermerait l'administrateur dehors :
   // sans adresse connue, ou au-delà de 10 échecs en 10 minutes toutes adresses
   // confondues, chaque essai faux attend 2 secondes. Les vérifications passent
-  // l'une après l'autre, pour que des essais simultanés ne contournent pas
-  // l'attente, et la file est bornée.
+  // l'une après l'autre dans une file bornée, et le blocage y est relu : des
+  // essais simultanés d'une même adresse ne dépassent pas les 3 permis. L'attente
+  // de 2 secondes se fait hors de la file, pour ne retarder personne d'autre.
   const echecs = creerCompteur({ fenetreMs: 600_000, maximum: 3 });
   const echecsTous = creerCompteur({ fenetreMs: 600_000, maximum: ECHECS_ALERTE });
   let file = Promise.resolve();
@@ -194,21 +196,28 @@ export function creerAdmin({
     }
     const adresse = adresseClient(req);
     const cle = adresse ? cleAdresse(adresse) : null;
-    const bloque = cle ? echecs.attente(cle) : 0;
-    if (bloque) {
-      throw new ErreurHttp(429, 'Trop d’essais du mot de passe. Réessayez dans 10 minutes.', 'trop_de_demandes', Math.ceil(bloque / 1000));
-    }
+    const refuserSiBloque = () => {
+      const bloque = cle ? echecs.attente(cle) : 0;
+      if (bloque) {
+        throw new ErreurHttp(429, 'Trop d’essais du mot de passe. Réessayez dans 10 minutes.', 'trop_de_demandes', Math.ceil(bloque / 1000));
+      }
+    };
+    refuserSiBloque();
     const { mot_de_passe: mdp } = await lireCorpsJson(req);
+    let ralentir = false;
     const bon = await aSonTour(async () => {
-      if (typeof mdp === 'string' && await verifierSansBloquer(mdp, empreinte)) return true;
+      refuserSiBloque();
+      if (typeof mdp === 'string' && await verifier(mdp, empreinte)) return true;
       mesures?.refus('mot_de_passe_admin');
-      const alerte = echecsTous.attente('tous') > 0;
+      ralentir = !cle || echecsTous.attente('tous') > 0;
       echecsTous.passer('tous');
       if (cle) echecs.passer(cle);
-      if (!cle || alerte) await attendre(2000);
       return false;
     });
-    if (!bon) throw new ErreurHttp(401, 'Mot de passe incorrect.', 'mot_de_passe');
+    if (!bon) {
+      if (ralentir) await attendre(2000);
+      throw new ErreurHttp(401, 'Mot de passe incorrect.', 'mot_de_passe');
+    }
     envoyerJson(res, 200, { connecte: true }, 0, { 'Set-Cookie': `${COOKIE}=${sessions.ouvrir()}; ${ATTRIBUTS_COOKIE}` });
   }
 

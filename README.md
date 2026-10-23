@@ -244,7 +244,7 @@ L'adresse `/admin`, citée nulle part sur le site, ouvre le back office. Il est 
 cd ~/agrifon-app && node scripts/admin-mot-de-passe.js
 ```
 
-Le mot de passe (12 caractères au moins) est demandé deux fois sans être affiché ; seule son empreinte (scrypt) est écrite dans `.env`. La session dure 10 minutes sans activité : les mises à jour automatiques de l'écran ne la prolongent pas, seuls les clics et les frappes. Trois mots de passe faux depuis une même adresse la bloquent 10 minutes ; il n'y a jamais de blocage commun, mais au-delà de 10 échecs en 10 minutes, toutes adresses confondues, chaque essai faux attend 2 secondes. Un redémarrage de l'application lève tout blocage.
+Le mot de passe (12 caractères au moins) est demandé deux fois sans être affiché ; seule son empreinte (scrypt) est écrite dans `.env`. La session dure 10 minutes sans activité : les mises à jour automatiques de l'écran ne la prolongent pas, seuls les clics et les frappes. Trois mots de passe faux depuis une même adresse la bloquent 10 minutes, même envoyés en même temps ; il n'y a jamais de blocage commun, mais au-delà de 10 échecs en 10 minutes, toutes adresses confondues, chaque essai faux attend 2 secondes. Un redémarrage de l'application lève tout blocage.
 
 **Ce qu'il montre** (relevé toutes les 5 secondes) :
 

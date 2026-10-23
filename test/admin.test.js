@@ -93,23 +93,32 @@ test('adresse inconnue : pas de blocage, chaque essai faux attend 2 secondes', a
   assert.equal((await connexion(url, MDP)).status, 200);
 });
 
-test('essais faux simultanés sans adresse : l’attente de 2 secondes vaut aussi pour eux, l’un après l’autre', async (t) => {
-  let enCours = 0;
-  let maximum = 0;
+test('essais faux simultanés sans adresse : chacun attend 2 secondes', async (t) => {
   const attentes = [];
-  const url = await demarrer(t, {
-    attendre: async (ms) => {
-      attentes.push(ms);
-      enCours++;
-      maximum = Math.max(maximum, enCours);
-      await new Promise((r) => setTimeout(r, 20));
-      enCours--;
-    },
-  });
+  const url = await demarrer(t, { attendre: async (ms) => { attentes.push(ms); } });
   const statuts = await Promise.all(Array.from({ length: 5 }, () => connexion(url, 'faux').then((r) => r.status)));
   assert.deepEqual(statuts, [401, 401, 401, 401, 401]);
   assert.deepEqual(attentes, [2000, 2000, 2000, 2000, 2000]);
-  assert.equal(maximum, 1);
+});
+
+test('essais faux simultanés depuis une même adresse : 3 vérifiés, les suivants bloqués', async (t) => {
+  const url = await demarrer(t, { verifier: async (mdp) => { await new Promise((r) => setTimeout(r, 30)); return mdp === MDP; } });
+  const depuis = { 'X-Forwarded-For': '41.85.160.20' };
+  const statuts = await Promise.all(Array.from({ length: 6 }, () => connexion(url, 'faux', depuis).then((r) => r.status)));
+  assert.deepEqual(statuts.toSorted(), [401, 401, 401, 429, 429, 429]);
+  assert.equal((await connexion(url, MDP, depuis)).status, 429);
+});
+
+test('les essais faux qui attendent leurs 2 secondes ne retardent pas le bon mot de passe', async (t) => {
+  let liberer;
+  const retenue = new Promise((r) => { liberer = r; });
+  t.after(() => liberer());
+  const url = await demarrer(t, { attendre: () => retenue, verifier: async (mdp) => mdp === MDP });
+  const faux = Array.from({ length: 25 }, () => connexion(url, 'faux').then((r) => r.status));
+  await new Promise((r) => setTimeout(r, 200));
+  assert.equal((await connexion(url, MDP)).status, 200);
+  liberer();
+  assert.deepEqual([...new Set(await Promise.all(faux))], [401]);
 });
 
 test('au-delà de 10 échecs en 10 minutes, toutes adresses confondues, chaque essai faux attend 2 secondes', async (t) => {
@@ -132,7 +141,7 @@ test('IPv6 : les adresses d’un même /64 partagent le blocage', async (t) => {
 test('file des vérifications pleine : refus immédiat plutôt qu’une attente sans fin', async (t) => {
   let liberer;
   const retenue = new Promise((r) => { liberer = r; });
-  const url = await demarrer(t, { attendre: () => retenue });
+  const url = await demarrer(t, { verifier: () => retenue.then(() => false) });
   const reponses = Array.from({ length: 22 }, () => connexion(url, 'faux').then((r) => r.status));
   await new Promise((r) => setTimeout(r, 300));
   liberer();
