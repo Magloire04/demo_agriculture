@@ -140,6 +140,16 @@ test('cultures maraîchères : scénarios types', () => {
   assert.equal(signaler('oignon', ['taches']).problemes[0].id, 'oignon-anthracnose');
 });
 
+test('phrases réelles avec « du » : aucun traitement pour une pourriture ou des taches', async () => {
+  const { analyserSignalement } = await import('../server/signalement.js');
+  const { communes } = lire('communes.json');
+  for (const phrase of ['Les fruits du plant de tomate pourrissent', 'Les feuilles du gboma ont des taches']) {
+    const analyse = analyserSignalement(lexique, communes, phrase);
+    const s = choisirSolutions(donnees, analyse, { departement: null, date: new Date('2026-08-15T12:00:00Z'), transcription: phrase });
+    assert.equal(s.elements.some((e) => e.type === 'traitement'), false, phrase);
+  }
+});
+
 test('références croisées', () => {
   const cultures = new Set(lexique.cultures.map((c) => c.id));
   const symptomes = new Set(lexique.symptomes.map((s) => s.id));

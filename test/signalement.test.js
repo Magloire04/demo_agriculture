@@ -39,9 +39,17 @@ test('symptômes et parties : pas de détection sur un mot voisin ou deux mots r
 
 test('striga reconnu seulement quand il est nommé', () => {
   const ids = (t) => analyserSignalement(lexique, communes, t).symptomes.map((s) => s.id);
-  assert.deepEqual(ids('Mon maïs a le striga'), ['striga']);
+  assert.deepEqual(ids('Mon maïs a du striga'), ['striga']);
   assert.deepEqual(ids('une plante parasite dans le sorgho'), ['striga']);
   assert.deepEqual(ids('Gbàdé ce ama jaunissent'), ['jaunissement']);
+});
+
+test('un mot fon court ne se confond pas avec un mot français sans lettre fon', () => {
+  const ids = (t) => analyserSignalement(lexique, communes, t).symptomes.map((s) => s.id);
+  // « ɖù » (manger) ne doit pas être trouvé dans l'article « du ».
+  assert.deepEqual(ids('Les fruits du plant de tomate pourrissent'), ['pourriture']);
+  assert.deepEqual(ids('Les feuilles du gboma ont des taches'), ['taches']);
+  assert.deepEqual(ids('wànvú lɛ́ ɖù ama lɛ́'), ['ravageurs', 'feuilles_mangees']);
 });
 
 test('rien de reconnu', () => {
