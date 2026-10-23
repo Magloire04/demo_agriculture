@@ -138,6 +138,20 @@ test('lireJournal : du dernier écrit au premier, et seulement ceux écrits apr�
   assert.deepEqual((await mesures.lireJournal({ limite: 2 })).map((a) => a.transcription), ['trois', 'deux']);
 });
 
+test('lireJournal avant un curseur : la page précédente, jusqu’au premier appel', async (t) => {
+  const { mesures, horloge } = await preparer(t, '2026-08-01T10:00:01Z');
+  mesures.appel(appel('2026-08-01T10:00:00.000Z', 'compris', { transcription: 'un' })); // 83 jours plus tôt
+  horloge.aller('2026-10-22T10:00:01Z');
+  mesures.appel(appel('2026-10-22T10:00:00.000Z', 'compris', { transcription: 'deux' }));
+  horloge.aller('2026-10-23T08:00:01Z');
+  mesures.appel(appel('2026-10-23T08:00:00.000Z', 'compris', { transcription: 'trois' }));
+  const page = await mesures.lireJournal({ limite: 2 });
+  assert.deepEqual(page.map((a) => a.transcription), ['trois', 'deux']);
+  const suite = await mesures.lireJournal({ avant: page.at(-1).ecrit_le, limite: 2 });
+  assert.deepEqual(suite.map((a) => a.transcription), ['un']);
+  assert.deepEqual(await mesures.lireJournal({ avant: suite[0].ecrit_le, limite: 2 }), []);
+});
+
 test('direct : un appel commencé avant le dernier lu, mais fini après, n’est pas manqué', async (t) => {
   const { mesures, horloge } = await preparer(t, '2026-10-23T10:00:06Z');
   mesures.appel(appel('2026-10-23T10:00:05.000Z', 'compris', { transcription: 'court' }));

@@ -286,6 +286,22 @@ test('appels : les derniers, et seulement ceux écrits après le curseur', async
   assert.deepEqual(apres.appels, []);
 });
 
+test('appels : page précédente avec avant, curseurs impossibles ignorés', async (t) => {
+  const { url, avecSession, mesures } = await demarrerApplication(t);
+  await posterAudio(`${url}/api/prix`);
+  await posterAudio(`${url}/api/prix`);
+  await mesures.vider();
+  const { appels } = await (await avecSession('/api/admin/appels')).json();
+  assert.equal(appels.length, 2);
+  const avant = await (await avecSession(`/api/admin/appels?avant=${encodeURIComponent(appels[0].ecrit_le)}`)).json();
+  assert.deepEqual(avant.appels, [appels[1]]);
+  for (const q of ['apres=2026-99-99T00:00:00Z', 'avant=2026-13-45T00:00:00Z']) {
+    const rep = await avecSession(`/api/admin/appels?${q}`);
+    assert.equal(rep.status, 200, q);
+    assert.equal((await rep.json()).appels.length, 2, q);
+  }
+});
+
 test('hors service coupé puis rétabli depuis l’administration', async (t) => {
   const { url, poster, avecSession } = await demarrerApplication(t);
   const coupe = await (await poster('/api/admin/hors-service', { actif: true })).json();

@@ -247,8 +247,11 @@ export function creerAdmin({
         return repondre(res, { site: etatSite(), statistiques });
       }
       if (route === 'GET /api/admin/appels') {
-        const apres = /^\d{4}-\d{2}-\d{2}T[\d:.]+Z$/.test(q.get('apres') ?? '') ? q.get('apres') : null;
-        return repondre(res, { appels: await mesures.lireJournal({ apres, limite: 50 }) });
+        const curseur = (nom) => {
+          const v = q.get(nom) ?? '';
+          return /^\d{4}-\d{2}-\d{2}T[\d:.]+Z$/.test(v) && Number.isFinite(Date.parse(v)) ? v : null;
+        };
+        return repondre(res, { appels: await mesures.lireJournal({ apres: curseur('apres'), avant: curseur('avant'), limite: 50 }) });
       }
       if (route === 'GET /api/admin/refus') return repondre(res, { refus: await mesures.refusParJour(nombreJours(q.get('jours'), 14)) });
       if (route === 'GET /api/admin/services') return repondre(res, await services());

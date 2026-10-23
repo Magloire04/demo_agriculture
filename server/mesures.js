@@ -174,11 +174,13 @@ export function creerMesures(dossier, { maintenant = () => new Date(), maxVisite
       await enFile(ecrireRefus);
     },
 
-    // Du dernier écrit au premier. `apres` est le curseur du direct : la date
-    // d'écriture (ecrit_le) du dernier appel déjà lu, pour ne pas manquer un appel
-    // commencé avant lui mais fini après. Un appel est rangé au jour où il a
-    // commencé : la veille du curseur est relue, pour un appel à cheval sur minuit.
-    async lireJournal({ apres = null, limite = 50 } = {}) {
+    // Du dernier écrit au premier. Les curseurs sont des dates d'écriture
+    // (ecrit_le) : `apres`, celle du dernier appel déjà lu, pour le direct, sans
+    // manquer un appel commencé avant lui mais fini après ; `avant`, celle du plus
+    // ancien affiché, pour la page précédente. Un appel est rangé au jour où il a
+    // commencé : la veille du dernier jour utile est relue, pour un appel à cheval
+    // sur minuit.
+    async lireJournal({ apres = null, avant = null, limite = 50 } = {}) {
       await file;
       let fichiers = [];
       try {
@@ -188,12 +190,16 @@ export function creerMesures(dossier, { maintenant = () => new Date(), maxVisite
       }
       const ecrit = (a) => String(a.ecrit_le ?? a.date ?? '');
       const depuis = apres ? decaler(jourLocal(new Date(apres)), -1) : null;
+      const jusqua = avant ? jourLocal(new Date(avant)) : null;
       const resultat = [];
+      let assez = false;
       for (const f of fichiers) {
         const jour = f.match(FICHIER_DATE)?.[2];
         if (!jour || (depuis && jour < depuis)) break;
-        resultat.push(...(await lireAppels(jour)).filter((a) => !apres || ecrit(a) > apres));
-        if (resultat.length >= limite) break;
+        if (jusqua && jour > jusqua) continue;
+        resultat.push(...(await lireAppels(jour)).filter((a) => (!apres || ecrit(a) > apres) && (!avant || ecrit(a) < avant)));
+        if (assez) break;
+        assez = resultat.length >= limite;
       }
       return resultat.sort((a, b) => ecrit(b).localeCompare(ecrit(a))).slice(0, limite);
     },
