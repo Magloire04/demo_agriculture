@@ -56,7 +56,8 @@ Le fichier `.env` est lu au démarrage. Il est ignoré par Git : les identifiant
 | `PORT`, `HOST` | port et interface d'écoute | `3000`, `0.0.0.0` |
 | `DOSSIER_DONNEES` | dossier des signalements, de leurs audios et des prix importés | `stockage` |
 | `CODE_CONSEILLER` | si renseigné, l'écran conseiller demande ce code | aucun |
-| `SOLUTIONS_BROUILLON` | `1` pour proposer les solutions après un signalement avant la relecture de leur fon | désactivé |
+| `SOLUTIONS_BROUILLON` | `1` pour proposer les solutions après un signalement avant la relecture de leur fon ; valeur de départ seulement, le réglage du back office l'emporte ensuite | désactivé |
+| `ADMIN_MDP_EMPREINTE` | empreinte du mot de passe du back office, écrite par `node scripts/admin-mot-de-passe.js` ; sans elle, le back office reste fermé | aucune |
 
 ### Essayer sans identifiants
 
@@ -191,7 +192,7 @@ Après un signalement où la culture et au moins un symptôme sont reconnus, la 
 - **Produits autorisés.** Un produit chimique n'est nommé que s'il passe `server/pesticides.js` : même matière active à la même concentration qu'un produit de la première liste régionale du COAHP (version 2023, 844 produits), autorisé pour la culture et le ravageur, et absent des interdits nationaux (endosulfan, dichlorvos, polluants organiques persistants). La liste est extraite dans `data/pesticides.json` par `python scripts/pesticides/extraire_coahp.py <liste.pdf> data/pesticides.json` (sur un poste, avec `pypdf`). Un test refuse toute donnée qui ne respecte pas cette règle.
 - **Vidéos.** Quand Access Agriculture publie une vidéo en fon sur le problème, un lien « Voir la vidéo en fon » y renvoie. Leur contenu, tous droits réservés, n'est pas repris.
 
-Le fongbé des solutions est un brouillon (`"fon_a_relire": true` dans `data/solutions.json`) : il doit être relu par un locuteur avant la mise en ligne. Tant que ce drapeau vaut `true`, le serveur ne propose pas de solutions et l'indique au démarrage, sauf si `SOLUTIONS_BROUILLON=1` est défini (pour une démonstration). Après la relecture, mettre le drapeau à `false`.
+Le fongbé des solutions est un brouillon (`"fon_a_relire": true` dans `data/solutions.json`) : il doit être relu par un locuteur avant la mise en ligne. Tant que ce drapeau vaut `true`, le serveur ne propose pas de solutions et l'indique au démarrage, sauf si les solutions en brouillon sont activées dans le back office (Réglages ; `SOLUTIONS_BROUILLON=1` en donne la valeur de départ), pour une démonstration. Après la relecture, mettre le drapeau à `false`.
 
 ```bash
 node scripts/relecture-solutions.js exporter relecture.csv   # fiche à ouvrir dans un tableur : fr, fon, voix, source
@@ -211,6 +212,9 @@ Le locuteur corrige le fon affiché (doses en chiffres) et le texte dit par la v
 | `POST` | `/api/signalements/{référence}/prise-en-charge` | prise en charge (conseiller) |
 | `GET` | `/api/signalements/{référence}/audio` | message vocal (conseiller) |
 | `GET` | `/api/prix/base`, `/api/communes`, `/api/etat` | données de référence et état du service |
+| `POST` | `/api/admin/connexion`, `/api/admin/deconnexion` | connexion au back office (corps `{ "mot_de_passe": "…" }`), déconnexion |
+| `GET` | `/api/admin/session`, `/tableau?jours=7`, `/appels?apres=`, `/refus?jours=14`, `/services`, `/reglages` | données du back office (session exigée) |
+| `POST` | `/api/admin/hors-service`, `/solutions-brouillon` (corps `{ "actif": true }`), `/prix/importer` | actions du back office (session exigée) |
 
 Si `CODE_CONSEILLER` est défini, les routes du conseiller demandent ce code, dans l'en-tête `X-Code-Conseiller` ou le paramètre `code`. La page `/conseiller` le demande à l'ouverture. Après 5 codes faux en 15 minutes, le visiteur est bloqué un quart d'heure.
 
@@ -229,6 +233,32 @@ Les fichiers de l'application sont dans `site/`, et non dans `public/` : Passeng
 Derrière LiteSpeed, Node voit toujours l'adresse 127.0.0.1 : l'adresse du visiteur est la dernière de `X-Forwarded-For`, ajoutée par le proxy. Si elle manque, les limites par visiteur ne s'appliquent pas, pour ne pas bloquer tout le monde ensemble ; seuls les plafonds pour tous restent. `/api/etat` indique `client_identifie: true` quand l'adresse est connue.
 
 Un robot qui imite en tout un navigateur peut encore lire les pages publiques, au rythme limité d'un visiteur : aucune protection d'un site ouvert ne l'empêche entièrement. Les données sensibles (signalements, messages vocaux, positions) restent derrière le code conseiller.
+
+### Back office
+
+L'adresse `/admin`, citée nulle part sur le site, ouvre le back office. Il est réservé à un seul administrateur.
+
+**Définir le mot de passe**, sur le serveur, puis redémarrer l'application :
+
+```bash
+cd ~/agrifon-app && node scripts/admin-mot-de-passe.js
+```
+
+Le mot de passe (12 caractères au moins) est demandé deux fois sans être affiché ; seule son empreinte (scrypt) est écrite dans `.env`. La session dure 10 minutes sans activité : les mises à jour automatiques de l'écran ne la prolongent pas, seuls les clics et les frappes. Trois mots de passe faux depuis une même adresse la bloquent 10 minutes ; il n'y a jamais de blocage commun, mais au-delà de 10 échecs en 10 minutes, toutes adresses confondues, chaque essai faux attend 2 secondes. Un redémarrage de l'application lève tout blocage.
+
+**Ce qu'il montre** (relevé toutes les 5 secondes) :
+
+- les personnes qui utilisent AgriFon et celles qui reviennent un autre jour, les demandes vocales comprises, les signalements pris en charge et leur délai ;
+- les personnes par jour sur 14 jours, les heures d'utilisation, les produits, marchés et communes les plus demandés ;
+- le journal des demandes vocales (heure, service, temps de réponse de l'API, résultat, phrase transcrite) ;
+- les refus par jour et par motif (robots, autre site, demandes en trop, codes et mots de passe faux…) ;
+- l'état de l'API JaimeMaLangue, du dernier import des prix (avec « Importer maintenant »), des messages vocaux et de la version en ligne.
+
+**Ce qu'il permet** : mettre le site hors service et le remettre en service ; activer ou couper les solutions en brouillon. Ces réglages sont gardés dans `stockage/reglages.json`, avec l'historique des coupures.
+
+**Mode hors service.** L'accueil affiche une page d'attente (`site/hors-service.html`, statut 503) : l'onde de la voix, « Mǐ ma sixú yí gbe nú mi din ǎ. » et « AgriFon est momentanément hors service. Revenez un peu plus tard. ». Les demandes vocales reçoivent le même message. L'écran conseiller, le back office et les fichiers du site restent ouverts.
+
+**Les mesures ne gardent aucune donnée qui identifie une personne.** À sa première visite, l'application tire au hasard un identifiant anonyme et le garde sur le téléphone (`localStorage`). Le serveur ne garde, jour par jour, que l'ensemble des identifiants vus (`stockage/mesures/visiteurs-AAAA-MM-JJ.txt`). Le journal des appels (`journal-AAAA-MM-JJ.jsonl`) ne contient ni cet identifiant, ni adresse IP, ni position, ni audio. Les refus sont des compteurs par jour (`refus-AAAA-MM-JJ.json`). Tout est effacé après 90 jours. Un robot n'est jamais compté comme visite ; une même adresse ne peut ajouter que 200 nouveaux visiteurs par jour, et le total est plafonné à 10 000 par jour.
 
 ## Charte graphique
 
@@ -253,6 +283,7 @@ scripts/
   voix/generer.js   génération des extraits avec l'API de synthèse fon FongLab (sur un poste)
   voix/evaluer.js   relecture des extraits par la reconnaissance vocale, écart avec le texte attendu
   relecture-solutions.js  export et réimport CSV des solutions pour le locuteur (relecture/csv.js)
+  admin-mot-de-passe.js   mot de passe du back office (empreinte dans .env, sur le serveur)
   pesticides/extraire_coahp.py  extraction de la liste COAHP vers data/pesticides.json (sur un poste)
 server/
   index.js          serveur HTTP : fichiers de la PWA et routes /api
@@ -268,6 +299,10 @@ server/
   saison.js         saison des pluies ou saison sèche d'un département
   pesticides.js     règle d'autorisation d'un produit nommé
   protection.js     robots refusés, origine des demandes, limites par visiteur
+  http.js           erreurs et réponses HTTP partagées
+  admin.js          back office : mot de passe, sessions, routes /api/admin
+  mesures.js        visiteurs anonymes, journal des appels, refus, statistiques
+  reglages.js       site hors service, solutions en brouillon, coupures
   texte.js          comparaison de mots sans tons ni accents
 data/
   referentiel.json  produits et marchés, avec leurs libellés dans le fichier du PAM
@@ -280,6 +315,8 @@ data/
 site/
   index.html        application (accueil, prix, signalement)
   conseiller.html   écran conseiller
+  admin.html        back office (/admin)
+  hors-service.html page d'attente quand le site est coupé
   css/, js/, fonts/, img/, icons/
   voix/             extraits audio des réponses en fongbé
   manifest.webmanifest, sw.js, robots.txt
@@ -293,7 +330,7 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 130 tests couvrent la protection contre les robots (agents refusés ou admis, adresse du visiteur, limites, origine des demandes, essais du code conseiller, plafonds), la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds, apport de chaque symptôme, gestes exclus par culture), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
+Les 185 tests couvrent le back office (mot de passe, sessions de 10 minutes, blocages, routes, mode hors service, solutions en brouillon), les mesures (visiteurs anonymes, journal sans donnée identifiante, refus, statistiques, purge à 90 jours, limites contre les faux identifiants), la protection contre les robots (agents refusés ou admis, adresse du visiteur, limites, origine des demandes, essais du code conseiller, plafonds), la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds, apport de chaque symptôme, gestes exclus par culture), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
 
 ## Limites connues
 
