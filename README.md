@@ -250,7 +250,7 @@ Le mot de passe (12 caractères au moins) est demandé deux fois sans être affi
 
 - les personnes qui utilisent AgriFon et celles qui reviennent un autre jour, les demandes vocales comprises, les signalements pris en charge et leur délai ;
 - les personnes par jour sur 14 jours, les heures d'utilisation, les produits, marchés et communes les plus demandés ;
-- le journal des demandes vocales (heure, service, temps de réponse de l'API, résultat, phrase transcrite) ;
+- le journal des demandes vocales (heure, service, temps de réponse de l'API, résultat, phrase transcrite), les nouveaux appels en direct, et les 90 derniers jours par pages de 50 ;
 - les refus par jour et par motif (robots, autre site, demandes en trop, codes et mots de passe faux…) ;
 - l'état de l'API JaimeMaLangue, du dernier import des prix (avec « Importer maintenant »), des messages vocaux et de la version en ligne.
 
@@ -330,7 +330,7 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 185 tests couvrent le back office (mot de passe, sessions de 10 minutes, blocages, routes, mode hors service, solutions en brouillon), les mesures (visiteurs anonymes, journal sans donnée identifiante, refus, statistiques, purge à 90 jours, limites contre les faux identifiants), la protection contre les robots (agents refusés ou admis, adresse du visiteur, limites, origine des demandes, essais du code conseiller, plafonds), la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds, apport de chaque symptôme, gestes exclus par culture), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
+Les 195 tests couvrent le back office (mot de passe, sessions de 10 minutes, blocages, routes, mode hors service, solutions en brouillon), les mesures (visiteurs anonymes, journal sans donnée identifiante, refus, statistiques, purge à 90 jours, limites contre les faux identifiants), la protection contre les robots (agents refusés ou admis, adresse du visiteur, limites, origine des demandes, essais du code conseiller, plafonds), la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds, apport de chaque symptôme, gestes exclus par culture), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
 
 ## Limites connues
 
