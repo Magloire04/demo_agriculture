@@ -87,6 +87,54 @@ test('adresse inconnue : pas de blocage, chaque essai faux attend 2 secondes', a
   assert.equal((await connexion(url, MDP)).status, 200);
 });
 
+test('essais faux simultanés sans adresse : l’attente de 2 secondes vaut aussi pour eux, l’un après l’autre', async (t) => {
+  let enCours = 0;
+  let maximum = 0;
+  const attentes = [];
+  const url = await demarrer(t, {
+    attendre: async (ms) => {
+      attentes.push(ms);
+      enCours++;
+      maximum = Math.max(maximum, enCours);
+      await new Promise((r) => setTimeout(r, 20));
+      enCours--;
+    },
+  });
+  const statuts = await Promise.all(Array.from({ length: 5 }, () => connexion(url, 'faux').then((r) => r.status)));
+  assert.deepEqual(statuts, [401, 401, 401, 401, 401]);
+  assert.deepEqual(attentes, [2000, 2000, 2000, 2000, 2000]);
+  assert.equal(maximum, 1);
+});
+
+test('au-delà de 10 échecs en 10 minutes, toutes adresses confondues, chaque essai faux attend 2 secondes', async (t) => {
+  const attentes = [];
+  const url = await demarrer(t, { attendre: async (ms) => { attentes.push(ms); } });
+  for (let i = 1; i <= 10; i++) assert.equal((await connexion(url, 'faux', { 'X-Forwarded-For': `41.85.160.${i}` })).status, 401);
+  assert.deepEqual(attentes, []);
+  assert.equal((await connexion(url, 'faux', { 'X-Forwarded-For': '41.85.161.1' })).status, 401);
+  assert.deepEqual(attentes, [2000]);
+  assert.equal((await connexion(url, MDP, { 'X-Forwarded-For': '41.85.161.2' })).status, 200); // jamais de blocage commun
+});
+
+test('IPv6 : les adresses d’un même /64 partagent le blocage', async (t) => {
+  const url = await demarrer(t);
+  for (const ip of ['2001:db8:1:2::1', '2001:db8:1:2::2', '2001:db8:1:2:aaaa::3']) assert.equal((await connexion(url, 'faux', { 'X-Forwarded-For': ip })).status, 401);
+  assert.equal((await connexion(url, MDP, { 'X-Forwarded-For': '2001:0db8:0001:0002::4' })).status, 429);
+  assert.equal((await connexion(url, MDP, { 'X-Forwarded-For': '2001:db8:1:3::1' })).status, 200);
+});
+
+test('file des vérifications pleine : refus immédiat plutôt qu’une attente sans fin', async (t) => {
+  let liberer;
+  const retenue = new Promise((r) => { liberer = r; });
+  const url = await demarrer(t, { attendre: () => retenue });
+  const reponses = Array.from({ length: 22 }, () => connexion(url, 'faux').then((r) => r.status));
+  await new Promise((r) => setTimeout(r, 300));
+  liberer();
+  const statuts = await Promise.all(reponses);
+  assert.equal(statuts.filter((s) => s === 429).length, 2);
+  assert.equal(statuts.filter((s) => s === 401).length, 20);
+});
+
 test('session : relèves sans activité périmées après 10 minutes, activité qui prolonge', async (t) => {
   let maintenant = Date.parse('2026-10-23T10:00:00Z');
   const url = await demarrer(t, { sessions: creerSessions({ maintenant: () => maintenant }) });
