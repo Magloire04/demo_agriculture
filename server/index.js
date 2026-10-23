@@ -78,13 +78,16 @@ const PHRASES_ERREUR = {
   service_sature: 'erreur_reessayer',
 };
 
+const PRIX_COMPRIS = new Set(['ok', 'sans_prix', 'marche_seul']);
+
 // `protection` : null la désactive (tests qui ne portent pas sur elle).
 // `maxEnAttente` : demandes vocales en attente de l'API au-delà desquelles on refuse,
 // dont `maxEnAttenteParVisiteur` au plus pour un même visiteur.
+// `mesures` : visites, journal des demandes vocales et refus (server/mesures.js).
 export function creerApplication({
   asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierSite = path.join(RACINE, 'site'),
   voix = creerVoix(path.join(dossierSite, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
-  maxEnAttenteParVisiteur = 4,
+  maxEnAttenteParVisiteur = 4, mesures = null,
 }) {
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
   const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
@@ -93,11 +96,14 @@ export function creerApplication({
     if (!codeConseiller) return;
     const bloque = protection?.codeBloque(req) ?? 0;
     if (bloque) {
+      mesures?.refus('trop_de_demandes');
       throw new ErreurHttp(429, 'Trop d’essais du code conseiller. Réessayez dans un quart d’heure.', 'trop_de_demandes', Math.ceil(bloque / 1000));
     }
     const fourni = req.headers['x-code-conseiller'] ?? url.searchParams.get('code');
     if (!memeCode(fourni, codeConseiller)) {
       protection?.echecCode(req);
+      // Une page conseiller ouverte sans code demande d'abord la liste : ce n'est pas un essai faux.
+      if (fourni !== undefined && fourni !== null) mesures?.refus('code_conseiller');
       throw new ErreurHttp(401, 'Code conseiller requis.', 'code_conseiller');
     }
   }
@@ -111,6 +117,7 @@ export function creerApplication({
     const client = adresseClient(req);
     const siens = client ? enAttenteDe.get(client) ?? 0 : 0;
     if (enAttente >= maxEnAttente || siens >= maxEnAttenteParVisiteur) {
+      mesures?.refus('service_sature');
       throw new ErreurHttp(503, 'Le service reçoit trop de demandes en même temps. Réessayez dans une minute.', 'service_sature', 60);
     }
     enAttente++;
@@ -132,11 +139,43 @@ export function creerApplication({
     return { ...reste, audio_disponible: Boolean(audio) };
   }
 
+  // Une entrée de journal par demande vocale, en succès comme en erreur. Le
+  // traitement remplit `note` (durée de l'API, transcription, ce qui a été
+  // reconnu) ; la mesure ne fait jamais échouer la demande.
+  async function journaliser(service, traitement) {
+    const debut = Date.now();
+    const note = { duree_api_ms: null, duree_audio_s: null, transcription: '', reconnu: null, resultat: 'erreur', reference: null };
+    let code = null;
+    try {
+      return await traitement(note);
+    } catch (e) {
+      note.resultat = 'erreur';
+      code = e?.code ?? 'erreur_interne';
+      throw e;
+    } finally {
+      mesures?.appel({ date: new Date(debut).toISOString(), service, ...note, code, duree_ms: Date.now() - debut });
+    }
+  }
+
+  // Appel à l'API, chronométré pour le journal.
+  async function appelChronometre(req, note, tache) {
+    const debut = Date.now();
+    try {
+      const reponse = await avecPlace(req, tache);
+      note.duree_audio_s = Number.isFinite(reponse?.duree_audio_s) ? reponse.duree_audio_s : null;
+      return reponse;
+    } finally {
+      note.duree_api_ms = Date.now() - debut;
+    }
+  }
+
   async function api(req, res, url) {
     const p = url.pathname;
     const m = req.method;
 
     if (m === 'GET' && p === '/api/etat') {
+      // L'application du téléphone envoie son identifiant anonyme à l'ouverture.
+      if (req.headers['x-visiteur']) mesures?.visite(String(req.headers['x-visiteur']));
       return envoyerJson(res, 200, {
         asr: { configure: asr.configure, simulation: asr.simulation },
         conseiller_protege: Boolean(codeConseiller),
@@ -149,14 +188,19 @@ export function creerApplication({
       return envoyerJson(res, 200, { communes: communes.map(({ nom, departement }) => ({ nom, departement })) });
     }
 
-    if (m === 'POST' && p === '/api/prix') {
+    if (m === 'POST' && p === '/api/prix') return journaliser('prix', async (note) => {
       const { audio, type } = await lireAudio(req);
-      const reponseApi = await avecPlace(req, () => asr.marche(audio, type, { noms: nomsMarches }));
+      const reponseApi = await appelChronometre(req, note, () => asr.marche(audio, type, { noms: nomsMarches }));
       const reponse = repondrePrix(base, releves.lire(), textes, reponseApi);
+      Object.assign(note, {
+        transcription: reponse.transcription,
+        reconnu: { produits: reponse.reponses.map((r) => r.produit.nom), marche: reponse.marche?.nom ?? null },
+        resultat: PRIX_COMPRIS.has(reponse.statut) ? 'compris' : 'non_compris',
+      });
       return envoyerJson(res, 200, { ...reponse, voix: voix.fichiers(reponse.voix), simulation: asr.simulation });
-    }
+    });
 
-    if (m === 'POST' && p === '/api/signalements') {
+    if (m === 'POST' && p === '/api/signalements') return journaliser('signalement', async (note) => {
       const { audio, type } = await lireAudio(req);
       const lat = nombre(url.searchParams.get('lat'), -90, 90);
       const lon = nombre(url.searchParams.get('lon'), -180, 180);
@@ -167,12 +211,22 @@ export function creerApplication({
       // Les communes du département aident l'API à reconnaître un nom de lieu.
       const noms = communeChoisie ? communes.filter((c) => c.departement === communeChoisie.departement).map((c) => c.nom) : [];
 
-      const reponseApi = await avecPlace(req, () => asr.transcrire(audio, type, { noms }));
+      const reponseApi = await appelChronometre(req, note, () => asr.transcrire(audio, type, { noms }));
       const texte = reponseApi.texte_ponctue ?? reponseApi.texte ?? '';
       const analyse = analyserSignalement(lexique, communes, texte);
       const commune = communeChoisie
         ? { nom: communeChoisie.nom, departement: communeChoisie.departement, source: 'choisie' }
         : analyse.commune ? { ...analyse.commune, source: 'entendue' } : null;
+      Object.assign(note, {
+        transcription: texte,
+        reconnu: {
+          culture: analyse.culture?.nom ?? null,
+          parties: analyse.parties.map((x) => x.libelle),
+          symptomes: analyse.symptomes.map((x) => x.libelle),
+          commune: commune?.nom ?? null,
+        },
+        resultat: analyse.culture && analyse.symptomes.length ? 'compris' : 'non_compris',
+      });
       // Le registre garde les solutions telles qu'elles ont été proposées, sans la voix.
       const choisies = choisirSolutions(solutions, analyse, { departement: commune?.departement ?? null, date: new Date(), transcription: texte });
       const { morceaux = [], ...proposees } = choisies ?? {};
@@ -191,6 +245,7 @@ export function creerApplication({
         solutions: choisies ? proposees : null,
       });
       protection?.signalementAccepte(req);
+      note.reference = signalement.reference;
       const titre = textes.phrase('signalement_transmis');
       const recu = commune
         ? textes.phrase('signalement_recu_commune', { commune: commune.nom })
@@ -207,7 +262,7 @@ export function creerApplication({
         voix: voix.fichiers(textes.joindre([titre, recu]).voix),
         solutions: choisies ? { ...proposees, voix: voix.fichiers(morceaux) } : null,
       });
-    }
+    });
 
     if (m === 'GET' && p === '/api/signalements') {
       verifierConseiller(req, url);
@@ -292,7 +347,10 @@ export function creerApplication({
     }
     try {
       const refus = protection?.verifier(req, url);
-      if (refus) throw new ErreurHttp(refus.statut, refus.message, refus.code, refus.attente);
+      if (refus) {
+        mesures?.refus(refus.code);
+        throw new ErreurHttp(refus.statut, refus.message, refus.code, refus.attente);
+      }
       if (url.pathname.startsWith('/api/')) await api(req, res, url);
       else await statique(req, res, url);
     } catch (e) {
