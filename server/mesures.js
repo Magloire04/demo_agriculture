@@ -40,6 +40,7 @@ export function creerMesures(dossier, { maintenant = () => new Date(), maxVisite
   const fichier = (type, jour, ext) => path.join(dossier, `${type}-${jour}.${ext}`);
   const preparer = () => mkdir(dossier, { recursive: true });
 
+  let dernierEcrit = 0; // ecrit_le toujours croissant, même dans une même milliseconde
   const vusAujourdhui = { jour: null, ids: new Set() };
   const refusEnAttente = new Map(); // jour -> Map(motif -> n), pas encore écrits
   let minuterie = null;
@@ -134,6 +135,8 @@ export function creerMesures(dossier, { maintenant = () => new Date(), maxVisite
     appel(entree) {
       try {
         const propre = Object.fromEntries(CLES_APPEL.map((c) => [c, entree[c] ?? null]));
+        dernierEcrit = Math.max(maintenant().getTime(), dernierEcrit + 1);
+        propre.ecrit_le = new Date(dernierEcrit).toISOString();
         const jour = jourLocal(new Date(propre.date));
         purgerSiNouveauJour(jourLocal(maintenant()));
         enFile(async () => {
@@ -171,6 +174,10 @@ export function creerMesures(dossier, { maintenant = () => new Date(), maxVisite
       await enFile(ecrireRefus);
     },
 
+    // Du dernier écrit au premier. `apres` est le curseur du direct : la date
+    // d'écriture (ecrit_le) du dernier appel déjà lu, pour ne pas manquer un appel
+    // commencé avant lui mais fini après. Un appel est rangé au jour où il a
+    // commencé : la veille du curseur est relue, pour un appel à cheval sur minuit.
     async lireJournal({ apres = null, limite = 50 } = {}) {
       await file;
       let fichiers = [];
@@ -179,17 +186,16 @@ export function creerMesures(dossier, { maintenant = () => new Date(), maxVisite
       } catch {
         return [];
       }
+      const ecrit = (a) => String(a.ecrit_le ?? a.date ?? '');
+      const depuis = apres ? decaler(jourLocal(new Date(apres)), -1) : null;
       const resultat = [];
       for (const f of fichiers) {
         const jour = f.match(FICHIER_DATE)?.[2];
-        if (!jour || (apres && jour < jourLocal(new Date(apres)))) break;
-        const appels = (await lireAppels(jour))
-          .filter((a) => !apres || a.date > apres)
-          .sort((a, b) => b.date.localeCompare(a.date));
-        resultat.push(...appels);
+        if (!jour || (depuis && jour < depuis)) break;
+        resultat.push(...(await lireAppels(jour)).filter((a) => !apres || ecrit(a) > apres));
         if (resultat.length >= limite) break;
       }
-      return resultat.slice(0, limite);
+      return resultat.sort((a, b) => ecrit(b).localeCompare(ecrit(a))).slice(0, limite);
     },
 
     async statistiques({ jours = 7, signalements = [] } = {}) {

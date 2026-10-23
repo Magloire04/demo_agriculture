@@ -120,18 +120,48 @@ test('le journal ne garde ni identifiant, ni IP, ni GPS', async (t) => {
   await mesures.vider();
   const [ligne] = (await readFile(path.join(dossier, 'journal-2026-10-23.jsonl'), 'utf8')).trim().split('\n');
   assert.deepEqual(Object.keys(JSON.parse(ligne)).sort(),
-    ['code', 'date', 'duree_api_ms', 'duree_audio_s', 'duree_ms', 'reconnu', 'reference', 'resultat', 'service', 'transcription']);
+    ['code', 'date', 'duree_api_ms', 'duree_audio_s', 'duree_ms', 'ecrit_le', 'reconnu', 'reference', 'resultat', 'service', 'transcription']);
 });
 
-test('lireJournal après une date, du plus récent au plus ancien', async (t) => {
-  const { mesures } = await preparer(t, '2026-10-23T09:00:00Z');
+test('lireJournal : du dernier écrit au premier, et seulement ceux écrits après le curseur', async (t) => {
+  const { mesures, horloge } = await preparer(t, '2026-10-22T10:00:01Z');
   mesures.appel(appel('2026-10-22T10:00:00.000Z', 'compris', { transcription: 'un' }));
+  horloge.aller('2026-10-23T08:00:01Z');
   mesures.appel(appel('2026-10-23T08:00:00.000Z', 'compris', { transcription: 'deux' }));
+  horloge.aller('2026-10-23T08:05:01Z');
   mesures.appel(appel('2026-10-23T08:05:00.000Z', 'non_compris', { transcription: 'trois' }));
   await mesures.vider();
-  assert.deepEqual((await mesures.lireJournal({})).map((a) => a.transcription), ['trois', 'deux', 'un']);
-  assert.deepEqual((await mesures.lireJournal({ apres: '2026-10-23T08:00:00.000Z' })).map((a) => a.transcription), ['trois']);
+  const tous = await mesures.lireJournal({});
+  assert.deepEqual(tous.map((a) => a.transcription), ['trois', 'deux', 'un']);
+  assert.equal(tous[0].ecrit_le, '2026-10-23T08:05:01.000Z');
+  assert.deepEqual((await mesures.lireJournal({ apres: tous[1].ecrit_le })).map((a) => a.transcription), ['trois']);
   assert.deepEqual((await mesures.lireJournal({ limite: 2 })).map((a) => a.transcription), ['trois', 'deux']);
+});
+
+test('direct : un appel commencé avant le dernier lu, mais fini après, n’est pas manqué', async (t) => {
+  const { mesures, horloge } = await preparer(t, '2026-10-23T10:00:06Z');
+  mesures.appel(appel('2026-10-23T10:00:05.000Z', 'compris', { transcription: 'court' }));
+  const [lu] = await mesures.lireJournal({});
+  horloge.aller('2026-10-23T10:00:40Z');
+  mesures.appel(appel('2026-10-23T10:00:00.000Z', 'compris', { transcription: 'long' }));
+  assert.deepEqual((await mesures.lireJournal({ apres: lu.ecrit_le })).map((a) => a.transcription), ['long']);
+});
+
+test('direct : deux appels écrits dans la même milliseconde ne se cachent pas', async (t) => {
+  const { mesures } = await preparer(t, '2026-10-23T10:00:06Z');
+  mesures.appel(appel('2026-10-23T10:00:01.000Z', 'compris', { transcription: 'un' }));
+  const [lu] = await mesures.lireJournal({});
+  mesures.appel(appel('2026-10-23T10:00:02.000Z', 'compris', { transcription: 'deux' }));
+  assert.deepEqual((await mesures.lireJournal({ apres: lu.ecrit_le })).map((a) => a.transcription), ['deux']);
+});
+
+test('direct : un appel commencé avant minuit et fini après est trouvé', async (t) => {
+  const { mesures, horloge } = await preparer(t, '2026-10-23T23:00:01Z'); // 00:00:01 le 24 à Porto-Novo
+  mesures.appel(appel('2026-10-23T23:00:00.500Z', 'compris', { transcription: 'après minuit' }));
+  const [lu] = await mesures.lireJournal({});
+  horloge.aller('2026-10-23T23:00:30Z');
+  mesures.appel(appel('2026-10-23T22:59:58.000Z', 'compris', { transcription: 'avant minuit' })); // rangé au 23
+  assert.deepEqual((await mesures.lireJournal({ apres: lu.ecrit_le })).map((a) => a.transcription), ['avant minuit']);
 });
 
 test('refus comptés par jour et par motif, avant comme après l’écriture', async (t) => {

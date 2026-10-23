@@ -447,14 +447,14 @@ function ligneAppel(a, { nouveau = false, detail = false } = {}) {
 
 function afficherDerniers(appels) {
   const liste = $('[data-appels="derniers"]');
-  dernierAppel = appels[0]?.date ?? dernierAppel;
+  dernierAppel = appels[0]?.ecrit_le ?? dernierAppel;
   if (!appels.length) return liste.replaceChildren(el('li', { class: 'vide-texte' }, 'Aucun appel pour le moment.'));
   liste.replaceChildren(...appels.slice(0, 5).map((a) => ligneAppel(a)));
 }
 
 function ajouterAppels(nouveaux) {
   if (!nouveaux.length) return;
-  dernierAppel = nouveaux[0].date;
+  dernierAppel = nouveaux[0].ecrit_le;
   const derniers = $('[data-appels="derniers"]');
   $('.vide-texte', derniers)?.remove();
   const journal = $('[data-appels="journal"]');

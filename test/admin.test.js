@@ -275,14 +275,14 @@ test('tableau : état du site et statistiques réelles', async (t) => {
   assert.deepEqual(r.statistiques.produits, [{ nom: 'Maïs', n: 1 }]);
 });
 
-test('appels : les derniers, et seulement ceux après une date', async (t) => {
+test('appels : les derniers, et seulement ceux écrits après le curseur', async (t) => {
   const { url, avecSession, mesures } = await demarrerApplication(t);
   await posterAudio(`${url}/api/prix`);
   await mesures.vider();
   const { appels } = await (await avecSession('/api/admin/appels')).json();
   assert.equal(appels.length, 1);
   assert.equal(appels[0].service, 'prix');
-  const apres = await (await avecSession(`/api/admin/appels?apres=${encodeURIComponent(appels[0].date)}`)).json();
+  const apres = await (await avecSession(`/api/admin/appels?apres=${encodeURIComponent(appels[0].ecrit_le)}`)).json();
   assert.deepEqual(apres.appels, []);
 });
 
