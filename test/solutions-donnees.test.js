@@ -182,6 +182,12 @@ test('pas de geste absurde pour la culture', () => {
   for (const frais of ['tomate', 'gboma', 'amarante', 'gombo', 'ananas', 'plantain', 'palmier']) absent(frais, 'pourriture', 'recolter-secher');
 });
 
+test('la voix d’un traitement n’arrondit jamais une dose (« mɔ̌ », environ)', () => {
+  for (const c of donnees.cas.filter((x) => x.traitement)) {
+    assert.ok(!/(^|\s)mɔ̌([\s.,|]|$)/.test(c.traitement.voix), `cas ${c.id} : ${c.traitement.voix}`);
+  }
+});
+
 test('références croisées', () => {
   const cultures = new Set(lexique.cultures.map((c) => c.id));
   const symptomes = new Set(lexique.symptomes.map((s) => s.id));
