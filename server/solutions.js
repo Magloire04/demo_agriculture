@@ -88,6 +88,7 @@ export function choisirSolutions(donnees, analyse, { departement = null, date = 
     const geste = donnees.gestes[id];
     if (!geste) throw new Error(`Geste inconnu : ${id}`);
     if (geste.saison && geste.saison !== saison) continue;
+    if (geste.cultures_exclues?.includes(culture)) continue;
     choisis.push({ element: { type: 'geste', id, fr: geste.fr, fon: geste.fon, sources: sourcesDe(donnees, geste.sources) }, voix: decouper(geste.voix), cas });
     liste.apports++;
   }

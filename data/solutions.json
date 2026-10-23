@@ -467,6 +467,15 @@
           "id": "fao-pertes-apres-recolte",
           "detail": "section 11.1"
         }
+      ],
+      "cultures_exclues": [
+        "tomate",
+        "gboma",
+        "amarante",
+        "gombo",
+        "ananas",
+        "plantain",
+        "palmier"
       ]
     },
     "observer-dessous": {
@@ -489,6 +498,14 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 77"
         }
+      ],
+      "cultures_exclues": [
+        "igname",
+        "manioc",
+        "ananas",
+        "palmier",
+        "plantain",
+        "anacarde"
       ]
     },
     "rotation-legumineuse": {
@@ -503,6 +520,15 @@
           "id": "inrab-recueil-2020",
           "detail": "fiche D-20"
         }
+      ],
+      "cultures_exclues": [
+        "haricot",
+        "arachide",
+        "soja",
+        "anacarde",
+        "palmier",
+        "plantain",
+        "ananas"
       ]
     },
     "arracher-striga": {
@@ -913,6 +939,19 @@
           "detail": "fiche S-2"
         }
       ]
+    },
+    "plants-sains-plantation": {
+      "fr": "À la prochaine plantation, prendre les boutures, rejets ou semenceaux sur des plants sains.",
+      "fon": "Hwenu e mi ná lɛ́ dó nǔ ɔ, mi zé atínvú sín atín e ma jɛ àzɔn ǎ lɛ́ jí.",
+      "voix": "Hwenu e mi ná lɛ́ dó nǔ ɔ, mi zé atínvú sín atín e ma jɛ àzɔn ǎ lɛ́ jí.",
+      "sources": [
+        {
+          "id": "pw-mosaique-manioc"
+        },
+        {
+          "id": "aa-rejets-sains-fon"
+        }
+      ]
     }
   },
   "par_symptome": {
@@ -1029,6 +1068,9 @@
       ],
       "taches": [
         "plantain-effeuiller"
+      ],
+      "pourriture": [
+        "pas-compost-malade"
       ]
     },
     "anacarde": {
@@ -1037,6 +1079,9 @@
       ],
       "fletrissement": [
         "anacarde-tailler"
+      ],
+      "deformation": [
+        "plants-sains-plantation"
       ]
     },
     "tomate": {
@@ -1045,6 +1090,9 @@
       ],
       "feuilles_mangees": [
         "detruire-attaques"
+      ],
+      "pourriture": [
+        "pas-compost-malade"
       ]
     },
     "gombo": {
@@ -1053,6 +1101,9 @@
       ],
       "jaunissement": [
         "gombo-compost-pied"
+      ],
+      "pourriture": [
+        "pas-compost-malade"
       ]
     },
     "oignon": {
@@ -1069,6 +1120,37 @@
       ],
       "jaunissement": [
         "maraichage-fumure-dose"
+      ]
+    },
+    "igname": {
+      "deformation": [
+        "plants-sains-plantation"
+      ]
+    },
+    "ananas": {
+      "deformation": [
+        "plants-sains-plantation"
+      ],
+      "pourriture": [
+        "pas-compost-malade"
+      ]
+    },
+    "palmier": {
+      "deformation": [
+        "plants-sains-plantation"
+      ],
+      "pourriture": [
+        "pas-compost-malade"
+      ]
+    },
+    "gboma": {
+      "pourriture": [
+        "pas-compost-malade"
+      ]
+    },
+    "amarante": {
+      "pourriture": [
+        "pas-compost-malade"
       ]
     }
   },

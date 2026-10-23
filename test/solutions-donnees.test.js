@@ -172,6 +172,16 @@ test('deux symptômes sur les données réelles : chacun apporte au moins un él
   }
 });
 
+test('pas de geste absurde pour la culture', () => {
+  const absent = (culture, symptome, geste) => assert.ok(
+    !signaler(culture, [symptome]).elements.some((e) => e.id === geste), `${culture} × ${symptome} : ${geste}`,
+  );
+  for (const legumineuse of ['haricot', 'arachide', 'soja']) absent(legumineuse, 'croissance', 'rotation-legumineuse');
+  for (const perenne of ['anacarde', 'palmier', 'plantain', 'ananas']) absent(perenne, 'striga', 'rotation-legumineuse');
+  for (const bouture of ['igname', 'ananas', 'palmier', 'plantain', 'anacarde']) absent(bouture, 'deformation', 'semences-saines');
+  for (const frais of ['tomate', 'gboma', 'amarante', 'gombo', 'ananas', 'plantain', 'palmier']) absent(frais, 'pourriture', 'recolter-secher');
+});
+
 test('références croisées', () => {
   const cultures = new Set(lexique.cultures.map((c) => c.id));
   const symptomes = new Set(lexique.symptomes.map((s) => s.id));

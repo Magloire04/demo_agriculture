@@ -91,6 +91,14 @@ test('deux symptômes dont un cas à plusieurs gestes : le second symptôme cont
   assert.equal(s.elements.length, 4);
 });
 
+test('un geste exclu pour une culture ne lui est jamais proposé', () => {
+  const avecExclusion = structuredClone(donnees);
+  avecExclusion.gestes.fumure.cultures_exclues = ['coton'];
+  const s = choisirSolutions(avecExclusion, analyse('coton', ['jaunissement']), { departement: null, date: AOUT, transcription: '' });
+  assert.ok(!ids(s).includes('fumure'), ids(s).join(', '));
+  assert.ok(ids(s).includes('desherber'));
+});
+
 test('morceaux : du titre à la mention, tous dans la liste des extraits', () => {
   const s = choisir(analyse('haricot', ['feuilles_mangees'], ['fruits']));
   assert.equal(texteVoix(s.morceaux[0]), 'titre fon');
