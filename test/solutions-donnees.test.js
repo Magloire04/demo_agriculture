@@ -48,9 +48,18 @@ test('chaque combinaison culture × symptôme donne au moins deux gestes sans sa
 });
 
 test('un traitement vient d’une source faite pour le Bénin et d’un cas nette', () => {
+  for (const s of Object.values(donnees.sources)) {
+    assert.ok(['fiche', 'guide', 'article', 'video', 'page'].includes(s.nature), `${s.titre} : nature ${s.nature}`);
+  }
   for (const c of donnees.cas.filter((x) => x.traitement)) {
     assert.equal(c.certitude, 'nette', `cas ${c.id}`);
-    for (const { id } of c.traitement.sources) assert.equal(donnees.sources[id].pour_le_benin, true, `cas ${c.id} : source ${id}`);
+    for (const { id } of c.traitement.sources) {
+      const s = donnees.sources[id];
+      assert.equal(s.pour_le_benin, true, `cas ${c.id} : source ${id}`);
+      // Spécification : fiches et guides de l'INRAB, du MAEP ou de la FAO, pas un article d'essai.
+      assert.ok(['INRAB', 'MAEP', 'FAO', 'IITA et INRAB'].includes(s.editeur), `cas ${c.id} : éditeur ${s.editeur}`);
+      assert.ok(['fiche', 'guide'].includes(s.nature), `cas ${c.id} : source ${id} de nature ${s.nature}`);
+    }
     assert.ok(['preparation', 'produit'].includes(c.traitement.type), `cas ${c.id} : type ${c.traitement.type}`);
   }
 });

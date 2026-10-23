@@ -5,6 +5,7 @@
     "inrab-recueil-2020": {
       "editeur": "INRAB",
       "titre": "Recueil des technologies agricoles prometteuses développées par le système national de recherche agricole",
+      "nature": "fiche",
       "annee": 2020,
       "url": "https://inrab.bj/uploads_files/categories/files/Recueil-des-technologies-agricoles-prometteuses-d-velopp-es-par-le-syst-me-national-de-recherche-agricole-5fd745412517e.pdf",
       "licence": null,
@@ -13,6 +14,7 @@
     "iita-inrab-maraichage-2010": {
       "editeur": "IITA et INRAB",
       "titre": "Integrated pest management in vegetable production: a guide for extension workers in West Africa",
+      "nature": "guide",
       "annee": 2010,
       "url": "https://cgspace.cgiar.org/bitstreams/47108e82-3f19-4032-b3c0-543f291eebdd/download",
       "licence": null,
@@ -21,6 +23,7 @@
     "fao-cla-2018": {
       "editeur": "FAO",
       "titre": "Gestion intégrée de la chenille légionnaire d'automne sur le maïs : guide pour les champs-écoles des producteurs en Afrique",
+      "nature": "guide",
       "annee": 2018,
       "url": "https://openknowledge.fao.org/handle/20.500.14283/i9124fr",
       "licence": "CC BY-NC-SA 3.0 IGO",
@@ -29,6 +32,7 @@
     "fao-pertes-apres-recolte": {
       "editeur": "FAO",
       "titre": "Prevention of post-harvest food losses: fruits, vegetables and root crops",
+      "nature": "guide",
       "annee": 1989,
       "url": "https://www.fao.org/4/x5039e/x5039E06.htm",
       "licence": null,
@@ -37,6 +41,7 @@
     "aa-compost-striga": {
       "editeur": "Access Agriculture",
       "titre": "Composting to beat striga",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/composting-beat-striga",
       "licence": "Tous droits réservés (lien seulement)",
@@ -45,6 +50,7 @@
     "aa-gombo": {
       "editeur": "Access Agriculture",
       "titre": "Taking care of okra",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/taking-care-okra",
       "licence": "Tous droits réservés (lien seulement)",
@@ -53,6 +59,7 @@
     "aa-pepiniere-oignon": {
       "editeur": "Access Agriculture",
       "titre": "Onion nursery",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/onion-nursery",
       "licence": "Tous droits réservés (lien seulement)",
@@ -61,6 +68,7 @@
     "aa-mildiou-tomate": {
       "editeur": "Access Agriculture",
       "titre": "Managing tomato late blight",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/managing-tomato-late-blight",
       "licence": "Tous droits réservés (lien seulement)",
@@ -69,6 +77,7 @@
     "aa-tuteurage-tomate": {
       "editeur": "Access Agriculture",
       "titre": "Staking tomato plants",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/staking-tomato-plants",
       "licence": "Tous droits réservés (lien seulement)",
@@ -77,6 +86,7 @@
     "aa-paillage": {
       "editeur": "Access Agriculture",
       "titre": "Mulch for a better soil and crop",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/mulch-better-soil-and-crop",
       "licence": "Tous droits réservés (lien seulement)",
@@ -85,6 +95,7 @@
     "aa-chenille-legionnaire": {
       "editeur": "Access Agriculture",
       "titre": "Killing fall armyworms naturally",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/killing-fall-armyworms-naturally",
       "licence": "Tous droits réservés (lien seulement)",
@@ -93,6 +104,7 @@
     "aa-rotation-legumineuses": {
       "editeur": "Access Agriculture",
       "titre": "Crop rotation with legumes",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/crop-rotation-legumes",
       "licence": "Tous droits réservés (lien seulement)",
@@ -101,6 +113,7 @@
     "fao-coton": {
       "editeur": "FAO",
       "titre": "Gestion intégrée de la production et des déprédateurs du coton : guide du facilitateur pour les champs-écoles des producteurs",
+      "nature": "guide",
       "annee": null,
       "url": "https://www.fao.org/3/a-i3722f.pdf",
       "licence": "CC BY-NC-SA 3.0 IGO",
@@ -109,6 +122,7 @@
     "aa-cla-fon": {
       "editeur": "Access Agriculture",
       "titre": "Killing fall armyworms naturally (version fon)",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/fon/e-ni-hu-ahwangonu-wanvu-fifame-ton-le-yovogletinken-ma-zan",
       "licence": "Tous droits réservés (lien seulement)",
@@ -117,6 +131,7 @@
     "aa-striga-fon": {
       "editeur": "Access Agriculture",
       "titre": "Integrated approach against striga (version fon)",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/fon/nuwalo-gege-xokple-do-fun-ahwan-xa-do",
       "licence": "Tous droits réservés (lien seulement)",
@@ -125,6 +140,7 @@
     "aa-striga-ensemble": {
       "editeur": "Access Agriculture",
       "titre": "Joining hands against striga",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/joining-hands-against-striga",
       "licence": "Tous droits réservés (lien seulement)",
@@ -133,6 +149,7 @@
     "aa-tri-semences": {
       "editeur": "Access Agriculture",
       "titre": "Seed sorting by flotation",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/seed-sorting-flotation",
       "licence": "Tous droits réservés (lien seulement)",
@@ -141,6 +158,7 @@
     "aa-semences-riz": {
       "editeur": "Access Agriculture",
       "titre": "Rice seed preservation",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/rice-seed-preservation",
       "licence": "Tous droits réservés (lien seulement)",
@@ -149,6 +167,7 @@
     "fao-manioc-2013": {
       "editeur": "FAO",
       "titre": "Produire plus avec moins : le manioc",
+      "nature": "guide",
       "annee": 2013,
       "url": "https://www.fao.org/4/i3278f/i3278f.pdf",
       "licence": "CC BY-NC-SA 3.0 IGO",
@@ -157,6 +176,7 @@
     "pw-mosaique-manioc": {
       "editeur": "CABI Plantwise",
       "titre": "Mosaïque africaine du manioc : liste verte (Pest Management Decision Guide)",
+      "nature": "fiche",
       "annee": 2016,
       "url": "https://doi.org/10.1079/PWKB.20167801156",
       "licence": "CC BY-SA 4.0 (non vérifiée)",
@@ -165,6 +185,7 @@
     "pw-pourridie-manioc": {
       "editeur": "CABI Plantwise",
       "titre": "Pourriture des racines du manioc, Ghana (Pest Management Decision Guide)",
+      "nature": "fiche",
       "annee": 2016,
       "url": "https://doi.org/10.1079/PWKB.20177800656",
       "licence": "CC BY-SA 4.0 (non vérifiée)",
@@ -173,6 +194,7 @@
     "pw-cercosporiose-ghana": {
       "editeur": "CABI Plantwise",
       "titre": "Cercosporiose noire du bananier, Ghana (Pest Management Decision Guide)",
+      "nature": "fiche",
       "annee": 2014,
       "url": "https://doi.org/10.1079/PWKB.20167800253",
       "licence": "CC BY-SA 4.0 (non vérifiée)",
@@ -181,6 +203,7 @@
     "pw-cercosporiose-rdc": {
       "editeur": "CABI Plantwise",
       "titre": "Cercosporiose noire du bananier, RDC (fiche en français)",
+      "nature": "fiche",
       "annee": 2014,
       "url": "https://doi.org/10.1079/PWKB.20147801231",
       "licence": "CC BY-SA 4.0 (non vérifiée)",
@@ -189,6 +212,7 @@
     "inrab-brab-2022-bananier": {
       "editeur": "INRAB",
       "titre": "Vodounou et al., bunchy top du bananier au Sud-Bénin, BRAB vol. 32 n° 1",
+      "nature": "article",
       "annee": 2022,
       "url": "https://publications-chercheurs.inrab.bj/uploads/fichiers/recents/214c0b8ce0fcb3ce389d88f240be3edd.pdf",
       "licence": null,
@@ -197,6 +221,7 @@
     "inrab-brab-2021-palmier": {
       "editeur": "INRAB",
       "titre": "Koussinou et al., fusariose du palmier à huile, BRAB vol. 31 n° 1",
+      "nature": "article",
       "annee": 2021,
       "url": "https://publications-chercheurs.inrab.bj/uploads/fichiers/recents/e4ed8e90541493b70abeea75d0b41baa.pdf",
       "licence": null,
@@ -205,6 +230,7 @@
     "aa-mosaique-manioc-fon": {
       "editeur": "Access Agriculture",
       "titre": "La mosaïque du manioc (version fon)",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/fon/ama-wunwun-fennye-ton-sin-azon",
       "licence": "Tous droits réservés (lien seulement)",
@@ -213,6 +239,7 @@
     "aa-rejets-sains-fon": {
       "editeur": "Access Agriculture",
       "titre": "Rejets de bananier sains (version fon)",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/fon/kokwevi-dagbe-bloblo",
       "licence": "Tous droits réservés (lien seulement)",
@@ -221,6 +248,7 @@
     "aa-fourmis-tisserandes-fon": {
       "editeur": "Access Agriculture",
       "titre": "Fourmis tisserandes dans les vergers (version fon)",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/fon/alo-do-ze-le-do-atinsinsengbo-miton-me",
       "licence": "Tous droits réservés (lien seulement)",
@@ -229,6 +257,7 @@
     "infonet-anacarde": {
       "editeur": "Infonet-Biovision (hébergé par Access Agriculture)",
       "titre": "Cashew",
+      "nature": "fiche",
       "annee": null,
       "url": "https://assets.accessagriculture.org/s3fs-public/Cashew_by_infonet_biovision.pdf",
       "licence": null,
@@ -237,6 +266,7 @@
     "aa-tylcv": {
       "editeur": "Access Agriculture",
       "titre": "Managing tomato leaf curl virus",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/managing-tomato-leaf-curl-virus",
       "licence": "Tous droits réservés (lien seulement)",
@@ -245,6 +275,7 @@
     "aa-maladies-oignon-fon": {
       "editeur": "Access Agriculture",
       "titre": "Managing onion diseases (version fon)",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/fon/managing-onion-diseases",
       "licence": "Tous droits réservés (lien seulement)",
@@ -253,6 +284,7 @@
     "aa-champ-oignon": {
       "editeur": "Access Agriculture",
       "titre": "Installing an onion field",
+      "nature": "video",
       "annee": null,
       "url": "https://www.accessagriculture.org/installing-onion-field",
       "licence": "Tous droits réservés (lien seulement)",
