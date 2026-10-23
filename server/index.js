@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { creerClientAsr, ErreurAsr, extensionAudio } from './asr.js';
 import { repondrePrix, resumerBase } from './prix.js';
+import { adresseClient, creerProtection } from './protection.js';
 import { creerReleves } from './releves.js';
 import { creerTextes } from './reponses.js';
 import { analyserSignalement, creerRegistre, destinataire } from './signalement.js';
@@ -16,7 +17,8 @@ import { choisirSolutions, solutionsPubliables } from './solutions.js';
 import { creerVoix } from './voix.js';
 
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const TAILLE_MAX_AUDIO = 25 * 1024 * 1024;
+// 60 secondes de WAV mono à 48 kHz pèsent 5,8 Mo : l'API n'accepte pas plus long.
+const TAILLE_MAX_AUDIO = 8 * 1024 * 1024;
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -43,19 +45,29 @@ const ENTETES_SECURITE = {
   'Referrer-Policy': 'same-origin',
   'Permissions-Policy': 'microphone=(self), geolocation=(self), camera=()',
   'Content-Security-Policy': "default-src 'self'; img-src 'self' data:; media-src 'self' blob:; style-src 'self'; script-src 'self'; connect-src 'self'; font-src 'self'; manifest-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
+  // Ni indexation, ni archivage, ni extrait dans un moteur ; aucun fichier repris par un autre site.
+  'X-Robots-Tag': 'noindex, nofollow, noarchive, nosnippet, noimageindex',
+  'Cross-Origin-Resource-Policy': 'same-origin',
+  'Cross-Origin-Opener-Policy': 'same-origin',
 };
 
 class ErreurHttp extends Error {
-  constructor(statut, message, code = 'requete_invalide') {
+  constructor(statut, message, code = 'requete_invalide', attente = 0) {
     super(message);
     this.statut = statut;
     this.code = code;
+    this.attente = attente; // secondes, pour l'en-tête Retry-After
   }
 }
 
-function envoyerJson(res, statut, donnees) {
+function envoyerJson(res, statut, donnees, attente = 0) {
   const corps = JSON.stringify(donnees);
-  res.writeHead(statut, { ...ENTETES_SECURITE, 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+  res.writeHead(statut, {
+    ...ENTETES_SECURITE,
+    'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-store',
+    ...(attente > 0 && { 'Retry-After': String(attente) }),
+  });
   res.end(corps);
 }
 
@@ -68,7 +80,7 @@ async function lireAudio(req) {
   let taille = 0;
   for await (const morceau of req) {
     taille += morceau.length;
-    if (taille > TAILLE_MAX_AUDIO) throw new ErreurHttp(413, "L'enregistrement est trop lourd (25 Mo au plus).", 'audio_trop_long');
+    if (taille > TAILLE_MAX_AUDIO) throw new ErreurHttp(413, "L'enregistrement est trop lourd (8 Mo au plus).", 'audio_trop_long');
     morceaux.push(morceau);
   }
   if (taille === 0) throw new ErreurHttp(422, "Aucun son n'a été reçu.", 'audio_trop_court');
@@ -92,19 +104,45 @@ const PHRASES_ERREUR = {
   asr_indisponible: 'erreur_reessayer',
   asr_injoignable: 'erreur_reessayer',
   audio_trop_court: 'erreur_trop_court',
+  trop_de_demandes: 'erreur_reessayer',
+  service_sature: 'erreur_reessayer',
 };
 
+// `protection` : null la désactive (tests qui ne portent pas sur elle).
+// `maxEnAttente` : demandes vocales en attente de l'API au-delà desquelles on refuse.
 export function creerApplication({
   asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierPublic = path.join(RACINE, 'public'),
-  voix = creerVoix(path.join(dossierPublic, 'voix')), solutions = null,
+  voix = creerVoix(path.join(dossierPublic, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
 }) {
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
   const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
 
   function verifierConseiller(req, url) {
     if (!codeConseiller) return;
+    const bloque = protection?.codeBloque(req) ?? 0;
+    if (bloque) {
+      throw new ErreurHttp(429, 'Trop d’essais du code conseiller. Réessayez dans un quart d’heure.', 'trop_de_demandes', Math.ceil(bloque / 1000));
+    }
     const fourni = req.headers['x-code-conseiller'] ?? url.searchParams.get('code');
-    if (!memeCode(fourni, codeConseiller)) throw new ErreurHttp(401, 'Code conseiller requis.', 'code_conseiller');
+    if (!memeCode(fourni, codeConseiller)) {
+      protection?.echecCode(req);
+      throw new ErreurHttp(401, 'Code conseiller requis.', 'code_conseiller');
+    }
+  }
+
+  // L'API traite une demande à la fois : au-delà de maxEnAttente demandes en file,
+  // la suivante est refusée tout de suite plutôt que d'attendre de longues minutes.
+  let enAttente = 0;
+  async function avecPlace(tache) {
+    if (enAttente >= maxEnAttente) {
+      throw new ErreurHttp(503, 'Le service reçoit trop de demandes en même temps. Réessayez dans une minute.', 'service_sature', 60);
+    }
+    enAttente++;
+    try {
+      return await tache();
+    } finally {
+      enAttente--;
+    }
   }
 
   function vuePublique(s) {
@@ -120,6 +158,8 @@ export function creerApplication({
       return envoyerJson(res, 200, {
         asr: { configure: asr.configure, simulation: asr.simulation },
         conseiller_protege: Boolean(codeConseiller),
+        // Le serveur connaît-il l'adresse du visiteur (limites par visiteur actives) ?
+        client_identifie: Boolean(adresseClient(req)),
       });
     }
     if (m === 'GET' && p === '/api/prix/base') return envoyerJson(res, 200, resumerBase(base, releves.lire()));
@@ -127,14 +167,14 @@ export function creerApplication({
       return envoyerJson(res, 200, { communes: communes.map(({ nom, departement }) => ({ nom, departement })) });
     }
 
-    if (m === 'POST' && p === '/api/prix') {
+    if (m === 'POST' && p === '/api/prix') return avecPlace(async () => {
       const { audio, type } = await lireAudio(req);
       const reponseApi = await asr.marche(audio, type, { noms: nomsMarches });
       const reponse = repondrePrix(base, releves.lire(), textes, reponseApi);
       return envoyerJson(res, 200, { ...reponse, voix: voix.fichiers(reponse.voix), simulation: asr.simulation });
-    }
+    });
 
-    if (m === 'POST' && p === '/api/signalements') {
+    if (m === 'POST' && p === '/api/signalements') return avecPlace(async () => {
       const { audio, type } = await lireAudio(req);
       const lat = nombre(url.searchParams.get('lat'), -90, 90);
       const lon = nombre(url.searchParams.get('lon'), -180, 180);
@@ -184,7 +224,7 @@ export function creerApplication({
         voix: voix.fichiers(textes.joindre([titre, recu]).voix),
         solutions: choisies ? { ...proposees, voix: voix.fichiers(morceaux) } : null,
       });
-    }
+    });
 
     if (m === 'GET' && p === '/api/signalements') {
       verifierConseiller(req, url);
@@ -268,6 +308,8 @@ export function creerApplication({
       res.once('finish', () => console.log(`${req.method} ${url.pathname} ${res.statusCode} ${Date.now() - debut} ms`));
     }
     try {
+      const refus = protection?.verifier(req, url);
+      if (refus) throw new ErreurHttp(refus.statut, refus.message, refus.code, refus.attente);
       if (url.pathname.startsWith('/api/')) await api(req, res, url);
       else await statique(req, res, url);
     } catch (e) {
@@ -279,7 +321,7 @@ export function creerApplication({
         erreur: connue ? e.message : 'Erreur interne du serveur.',
         erreur_fon: connue && PHRASES_ERREUR[e.code] ? textes.phrase(PHRASES_ERREUR[e.code]).fon : null,
         code: connue ? e.code : 'erreur_interne',
-      });
+      }, e.attente ?? 0);
     }
   };
 }

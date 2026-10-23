@@ -212,7 +212,21 @@ Le locuteur corrige le fon affiché (doses en chiffres) et le texte dit par la v
 | `GET` | `/api/signalements/{référence}/audio` | message vocal (conseiller) |
 | `GET` | `/api/prix/base`, `/api/communes`, `/api/etat` | données de référence et état du service |
 
-Si `CODE_CONSEILLER` est défini, les routes du conseiller demandent ce code, dans l'en-tête `X-Code-Conseiller` ou le paramètre `code`. La page `/conseiller` le demande à l'ouverture.
+Si `CODE_CONSEILLER` est défini, les routes du conseiller demandent ce code, dans l'en-tête `X-Code-Conseiller` ou le paramètre `code`. La page `/conseiller` le demande à l'ouverture. Après 5 codes faux en 15 minutes, le visiteur est bloqué un quart d'heure.
+
+### Protection contre les robots
+
+AgriFon est fait pour des personnes qui parlent à leur téléphone. `server/protection.js` écarte les robots sans rien demander de plus aux agriculteurs (ni captcha, ni compte) :
+
+- **Pas d'indexation.** `robots.txt` interdit tout le site ; chaque réponse porte `X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex`, et les pages la balise `<meta name="robots">` équivalente.
+- **Robots refusés.** Les moteurs de recherche, les robots d'IA (GPTBot, ClaudeBot, CCBot, PerplexityBot, Bytespider…), les outils de référencement, les aperçus de liens (WhatsApp, Facebook…), les outils de copie et les bibliothèques HTTP (curl, wget, python-requests, Scrapy…) ainsi que les navigateurs pilotés (HeadlessChrome, Selenium, Puppeteer, Playwright) reçoivent une erreur 403, comme une requête sans agent. Seuls `robots.txt` et `/api/etat` (vérifié par `scripts/deployer.sh` avec curl) leur restent ouverts.
+- **Pas de reprise par un autre site.** Un autre site ne peut ni intégrer les extraits audio, les images ou les données (`Cross-Origin-Resource-Policy: same-origin`, refus des requêtes `Sec-Fetch-Site: cross-site` hors navigation), ni envoyer une demande vocale : un `POST` doit venir de la page AgriFon (`Sec-Fetch-Site: same-origin`, ou, sur un navigateur plus ancien, un en-tête `Origin` égal au site). Un lien vers l'accueil, depuis WhatsApp par exemple, reste ouvert.
+- **Nombre de demandes limité par visiteur** : 20 demandes vocales par minute et 200 par heure, 600 appels à l'API par minute, 1 200 fichiers par minute. Au-delà, le serveur répond 429 avec `Retry-After` et un message en fon. Ces limites laissent une salle d'une trentaine de personnes, souvent derrière une même adresse Wi-Fi, essayer ensemble.
+- **Plafonds pour tous** : au-delà de 8 demandes vocales en attente de l'API, la suivante est refusée aussitôt (503) plutôt que d'attendre plusieurs minutes ; 500 signalements par jour au plus ; un audio de 8 Mo au plus.
+
+Derrière LiteSpeed, Node voit toujours l'adresse 127.0.0.1 : l'adresse du visiteur est la dernière de `X-Forwarded-For`, ajoutée par le proxy. Si elle manque, les limites par visiteur ne s'appliquent pas, pour ne pas bloquer tout le monde ensemble ; seuls les plafonds pour tous restent. `/api/etat` indique `client_identifie: true` quand l'adresse est connue.
+
+Un robot qui imite en tout un navigateur peut encore lire les pages publiques, au rythme limité d'un visiteur : aucune protection d'un site ouvert ne l'empêche entièrement. Les données sensibles (signalements, messages vocaux, positions) restent derrière le code conseiller.
 
 ## Charte graphique
 
@@ -251,6 +265,7 @@ server/
   solutions.js      solutions proposées après un signalement
   saison.js         saison des pluies ou saison sèche d'un département
   pesticides.js     règle d'autorisation d'un produit nommé
+  protection.js     robots refusés, origine des demandes, limites par visiteur
   texte.js          comparaison de mots sans tons ni accents
 data/
   referentiel.json  produits et marchés, avec leurs libellés dans le fichier du PAM
@@ -265,7 +280,7 @@ public/
   conseiller.html   écran conseiller
   css/, js/, fonts/, img/, icons/
   voix/             extraits audio des réponses en fongbé
-  manifest.webmanifest, sw.js
+  manifest.webmanifest, sw.js, robots.txt
 test/               tests (node --test)
 docs/captures/      captures d'écran du README
 ```
@@ -276,7 +291,7 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 114 tests couvrent la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds, apport de chaque symptôme, gestes exclus par culture), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
+Les 126 tests couvrent la protection contre les robots (agents refusés ou admis, adresse du visiteur, limites, origine des demandes, essais du code conseiller, plafonds), la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds, apport de chaque symptôme, gestes exclus par culture), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
 
 ## Limites connues
 

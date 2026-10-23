@@ -1,0 +1,4 @@
+# AgriFon est une démonstration réservée aux personnes : aucune exploration,
+# indexation, copie ou collecte pour l'entraînement d'une IA n'est autorisée.
+User-agent: *
+Disallow: /
