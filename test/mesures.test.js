@@ -49,6 +49,17 @@ test('une personne est comptée une fois par jour, et revenue si vue deux jours'
   assert.equal(s.parJour.at(-1).jour, '2026-10-23');
 });
 
+test('nombre d’identifiants par jour plafonné ; visite() dit si l’identifiant est nouveau', async (t) => {
+  const dossier = await mkdtemp(path.join(tmpdir(), 'agrifon-mesures-'));
+  t.after(() => rm(dossier, { recursive: true, force: true }));
+  const mesures = creerMesures(dossier, { maintenant: () => new Date('2026-10-23T09:00:00Z'), maxVisiteursParJour: 2 });
+  const ids = ['1', '2', '3'].map((c) => `${c}f2b8c1e-4a5d-4e6f-8a7b-9c0d1e2f3a4b`);
+  assert.deepEqual(ids.map((id) => mesures.visite(id)), [true, true, false]);
+  assert.equal(mesures.visite(ids[0]), false); // déjà vu aujourd'hui
+  await mesures.vider();
+  assert.equal((await mesures.statistiques({ jours: 1, signalements: [] })).personnes.total, 2);
+});
+
 test('identifiant forgé ignoré', async (t) => {
   const { dossier, mesures } = await preparer(t, '2026-10-23T09:00:00Z');
   mesures.visite('x'.repeat(5000));

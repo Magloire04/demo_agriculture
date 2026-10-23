@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { creerClientAsr, ErreurAsr, extensionAudio } from './asr.js';
 import { ENTETES_SECURITE, ErreurHttp, envoyerJson } from './http.js';
 import { repondrePrix, resumerBase } from './prix.js';
-import { adresseClient, creerProtection } from './protection.js';
+import { adresseClient, creerCompteur, creerProtection, estRobot } from './protection.js';
 import { creerReleves } from './releves.js';
 import { creerTextes } from './reponses.js';
 import { analyserSignalement, creerRegistre, destinataire } from './signalement.js';
@@ -90,8 +90,11 @@ const PRIX_COMPRIS = new Set(['ok', 'sans_prix', 'marche_seul']);
 export function creerApplication({
   asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierSite = path.join(RACINE, 'site'),
   voix = creerVoix(path.join(dossierSite, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
-  maxEnAttenteParVisiteur = 4, mesures = null, reglages = null,
+  maxEnAttenteParVisiteur = 4, mesures = null, reglages = null, maxVisitesParAdresse = 200,
 }) {
+  // Nouveaux visiteurs comptés par adresse sur 24 heures : de faux identifiants
+  // envoyés en masse depuis une adresse ne gonflent pas les chiffres.
+  const visitesParAdresse = creerCompteur({ fenetreMs: 86_400_000, maximum: maxVisitesParAdresse });
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
   const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
 
@@ -197,7 +200,14 @@ export function creerApplication({
 
     if (m === 'GET' && p === '/api/etat') {
       // L'application du téléphone envoie son identifiant anonyme à l'ouverture.
-      if (req.headers['x-visiteur']) mesures?.visite(String(req.headers['x-visiteur']));
+      // Cette route reste ouverte aux outils (déploiement) : un robot n'est pas compté.
+      const visiteur = req.headers['x-visiteur'];
+      if (mesures && visiteur && !estRobot(req.headers['user-agent'])) {
+        const adresse = adresseClient(req);
+        if (!adresse || !visitesParAdresse.attente(adresse)) {
+          if (mesures.visite(String(visiteur)) && adresse) visitesParAdresse.passer(adresse);
+        }
+      }
       return envoyerJson(res, 200, {
         asr: { configure: asr.configure, simulation: asr.simulation },
         conseiller_protege: Boolean(codeConseiller),

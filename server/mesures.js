@@ -29,7 +29,8 @@ function compter(compte, nom) {
   if (nom) compte.set(nom, (compte.get(nom) ?? 0) + 1);
 }
 
-export function creerMesures(dossier, { maintenant = () => new Date() } = {}) {
+// `maxVisiteursParJour` borne la place que de faux identifiants pourraient prendre.
+export function creerMesures(dossier, { maintenant = () => new Date(), maxVisiteursParJour = 10_000 } = {}) {
   let file = Promise.resolve();
   // Les tâches passent l'une après l'autre ; une erreur est consignée et avalée.
   function enFile(tache) {
@@ -109,21 +110,24 @@ export function creerMesures(dossier, { maintenant = () => new Date() } = {}) {
   purgerSiNouveauJour(jourLocal(maintenant()));
 
   return {
+    // Rend true si l'identifiant est compté pour la première fois aujourd'hui.
     visite(identifiant) {
       try {
-        if (typeof identifiant !== 'string' || !UUID_V4.test(identifiant)) return;
+        if (typeof identifiant !== 'string' || !UUID_V4.test(identifiant)) return false;
         const jour = jourLocal(maintenant());
         purgerSiNouveauJour(jour);
         if (vusAujourdhui.jour !== jour) Object.assign(vusAujourdhui, { jour, ids: new Set() });
         const id = identifiant.toLowerCase();
-        if (vusAujourdhui.ids.has(id)) return;
+        if (vusAujourdhui.ids.has(id) || vusAujourdhui.ids.size >= maxVisiteursParJour) return false;
         vusAujourdhui.ids.add(id);
         enFile(async () => {
           await preparer();
           await appendFile(fichier('visiteurs', jour, 'txt'), `${id}\n`);
         });
+        return true;
       } catch (e) {
         console.error(`Mesures : ${e.message}`);
+        return false;
       }
     },
 
