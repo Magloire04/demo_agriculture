@@ -77,7 +77,12 @@ function identifiantVisiteur() {
 async function verifierServeur() {
   const bandeau = $('[data-bandeau]');
   try {
-    const { asr } = await appelerApi('api/etat', { headers: { 'X-Visiteur': identifiantVisiteur() } });
+    const { asr, hors_service: horsService } = await appelerApi('api/etat', { headers: { 'X-Visiteur': identifiantVisiteur() } });
+    // Site coupé depuis le back office : le serveur sert la page d'attente à la place de l'accueil.
+    if (horsService) {
+      location.reload();
+      return;
+    }
     if (asr.simulation) {
       bandeau.textContent = 'Mode simulation : les réponses sont factices, aucune requête n’est envoyée à la reconnaissance vocale.';
       bandeau.hidden = false;

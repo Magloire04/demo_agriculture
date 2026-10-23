@@ -80,6 +80,10 @@
     "erreur_trop_court": {
       "fr": "L'enregistrement est trop court. Appuyez, parlez, puis appuyez de nouveau.",
       "fon": "Xó e mi ɖɔ é hwe gli dín. Mi zìn d’é jí, mi ɖɔ xó, bo lɛ́ zìn d’é jí."
+    },
+    "hors_service": {
+      "fr": "AgriFon est momentanément hors service. Revenez un peu plus tard.",
+      "fon": "Mǐ ma sixú yí gbe nú mi din ǎ."
     }
   }
 }

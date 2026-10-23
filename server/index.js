@@ -76,6 +76,7 @@ const PHRASES_ERREUR = {
   audio_trop_court: 'erreur_trop_court',
   trop_de_demandes: 'erreur_reessayer',
   service_sature: 'erreur_reessayer',
+  hors_service: 'hors_service',
 };
 
 const PRIX_COMPRIS = new Set(['ok', 'sans_prix', 'marche_seul']);
@@ -84,13 +85,34 @@ const PRIX_COMPRIS = new Set(['ok', 'sans_prix', 'marche_seul']);
 // `maxEnAttente` : demandes vocales en attente de l'API au-delà desquelles on refuse,
 // dont `maxEnAttenteParVisiteur` au plus pour un même visiteur.
 // `mesures` : visites, journal des demandes vocales et refus (server/mesures.js).
+// `reglages` : site hors service, solutions en brouillon (server/reglages.js) ; sans
+// eux, le site est toujours en service et `solutions` est servi tel quel.
 export function creerApplication({
   asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierSite = path.join(RACINE, 'site'),
   voix = creerVoix(path.join(dossierSite, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
-  maxEnAttenteParVisiteur = 4, mesures = null,
+  maxEnAttenteParVisiteur = 4, mesures = null, reglages = null,
 }) {
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
   const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
+
+  // Le réglage du back office l'emporte sur SOLUTIONS_BROUILLON, relu à chaque signalement.
+  const solutionsActives = () => (reglages
+    ? solutionsPubliables(solutions, { SOLUTIONS_BROUILLON: reglages.lire().solutions_brouillon ? '1' : '0' })
+    : solutions);
+
+  // Site coupé : la page d'attente remplace l'accueil, les demandes vocales sont
+  // refusées ; le reste (conseiller, administration, fichiers) répond normalement.
+  let pageAttente = null;
+  async function envoyerPageAttente(res) {
+    pageAttente ??= await readFile(path.join(dossierSite, 'hors-service.html'));
+    res.writeHead(503, {
+      ...ENTETES_SECURITE,
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'Retry-After': '300',
+    });
+    res.end(pageAttente);
+  }
 
   function verifierConseiller(req, url) {
     if (!codeConseiller) return;
@@ -181,6 +203,7 @@ export function creerApplication({
         conseiller_protege: Boolean(codeConseiller),
         // Le serveur connaît-il l'adresse du visiteur (limites par visiteur actives) ?
         client_identifie: Boolean(adresseClient(req)),
+        hors_service: Boolean(reglages?.horsService()),
       });
     }
     if (m === 'GET' && p === '/api/prix/base') return envoyerJson(res, 200, resumerBase(base, releves.lire()));
@@ -228,7 +251,7 @@ export function creerApplication({
         resultat: analyse.culture && analyse.symptomes.length ? 'compris' : 'non_compris',
       });
       // Le registre garde les solutions telles qu'elles ont été proposées, sans la voix.
-      const choisies = choisirSolutions(solutions, analyse, { departement: commune?.departement ?? null, date: new Date(), transcription: texte });
+      const choisies = choisirSolutions(solutionsActives(), analyse, { departement: commune?.departement ?? null, date: new Date(), transcription: texte });
       const { morceaux = [], ...proposees } = choisies ?? {};
 
       const signalement = await registre.ajouter({
@@ -350,6 +373,13 @@ export function creerApplication({
       if (refus) {
         mesures?.refus(refus.code);
         throw new ErreurHttp(refus.statut, refus.message, refus.code, refus.attente);
+      }
+      if (reglages?.horsService()) {
+        const p = url.pathname;
+        if ((req.method === 'GET' || req.method === 'HEAD') && (p === '/' || p === '/index.html')) return await envoyerPageAttente(res);
+        if (req.method === 'POST' && (p === '/api/prix' || p === '/api/signalements')) {
+          throw new ErreurHttp(503, textes.phrase('hors_service').fr, 'hors_service', 300);
+        }
       }
       if (url.pathname.startsWith('/api/')) await api(req, res, url);
       else await statique(req, res, url);
