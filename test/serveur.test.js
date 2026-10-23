@@ -265,6 +265,28 @@ test('client ASR : une seule requête à la fois vers l’API', async () => {
   assert.equal(maximum, 1);
 });
 
+test('client ASR : sante() en simulation, en réussite et en erreur réseau', async () => {
+  assert.deepEqual(await creerClientAsr({ simulation: true }).sante(), { ok: true, modele: 'simulation', duree_ms: 0 });
+  const requetes = [];
+  const bon = creerClientAsr({
+    identifiant: 'id',
+    motDePasse: 'mdp',
+    fetch: async (url, options) => {
+      requetes.push({ url: String(url), options });
+      return Response.json({ status: 'ok', modele: 'ROVER fonasr 0.9' });
+    },
+  });
+  const r = await bon.sante();
+  assert.deepEqual([r.ok, r.modele], [true, 'ROVER fonasr 0.9']);
+  assert.ok(Number.isFinite(r.duree_ms));
+  assert.equal(new URL(requetes[0].url).pathname, '/health');
+  assert.equal(requetes[0].options.headers.Authorization, `Basic ${Buffer.from('id:mdp').toString('base64')}`);
+  const panne = creerClientAsr({ identifiant: 'id', motDePasse: 'mdp', fetch: async () => { throw new TypeError('fetch failed'); } });
+  assert.deepEqual(Object.entries(await panne.sante()).filter(([k]) => k !== 'duree_ms'), [['ok', false], ['modele', null]]);
+  const refus = creerClientAsr({ identifiant: 'id', motDePasse: 'mdp', fetch: async () => Response.json({ detail: 'x' }, { status: 503 }) });
+  assert.equal((await refus.sante()).ok, false);
+});
+
 test('aucun dossier public/ : Passenger le servirait sans passer par le serveur ni par sa protection', async (t) => {
   const racine = new URL('../', import.meta.url);
   assert.equal(existsSync(new URL('public', racine)), false);

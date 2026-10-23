@@ -113,6 +113,19 @@ export function creerClientAsr({
     // Mode marché : produits reconnus dans le lexique, avec catégorie et montant.
     marche: (audio, typeMime, { noms = [] } = {}) =>
       appeler('/marche', audio, typeMime, { noms: noms.slice(0, 50).join(',') }),
+    // État de l'API pour le back office : hors de la file d'attente, 10 s au plus.
+    async sante() {
+      if (simulation) return { ok: true, modele: 'simulation', duree_ms: 0 };
+      const debut = Date.now();
+      try {
+        const reponse = await fetch(new URL('/health', url), { headers: auth ? { Authorization: auth } : {}, signal: AbortSignal.timeout(10_000) });
+        if (!reponse.ok) return { ok: false, modele: null, duree_ms: Date.now() - debut };
+        const donnees = await reponse.json().catch(() => ({}));
+        return { ok: true, modele: typeof donnees.modele === 'string' ? donnees.modele : null, duree_ms: Date.now() - debut };
+      } catch {
+        return { ok: false, modele: null, duree_ms: Date.now() - debut };
+      }
+    },
   };
 }
 

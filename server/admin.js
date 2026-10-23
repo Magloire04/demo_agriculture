@@ -2,7 +2,11 @@
 // serveur ne garde qu'une empreinte (scrypt), des sessions de 10 minutes sans
 // activité et un blocage après 3 essais faux. Routes sous /api/admin/.
 
+import { execFile } from 'node:child_process';
 import { randomBytes, scrypt, scryptSync, timingSafeEqual } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { readdir, stat } from 'node:fs/promises';
+import path from 'node:path';
 import { promisify } from 'node:util';
 import { ErreurHttp, envoyerJson, lireCorpsJson } from './http.js';
 import { adresseClient, creerCompteur } from './protection.js';
@@ -32,6 +36,37 @@ async function verifierSansBloquer(mdp, empreinte) {
   if (!m) return false;
   const attendue = Buffer.from(m[2], 'hex');
   return timingSafeEqual(await scryptAsync(String(mdp ?? ''), Buffer.from(m[1], 'hex'), attendue.length), attendue);
+}
+
+// Version du code en ligne, lue dans .git au démarrage (sept premiers caractères du commit).
+export function lireVersion(racine) {
+  const lire = (relatif) => {
+    try {
+      return readFileSync(path.join(racine, '.git', relatif), 'utf8').trim();
+    } catch {
+      return null;
+    }
+  };
+  let commit = null;
+  const tete = lire('HEAD');
+  if (tete?.startsWith('ref: ')) {
+    const ref = tete.slice(5);
+    commit = lire(ref) ?? lire('packed-refs')?.split('\n').find((l) => l.endsWith(` ${ref}`))?.split(' ')[0] ?? null;
+  } else if (tete) {
+    commit = tete;
+  }
+  return { commit: /^[0-9a-f]{7,40}$/.test(commit ?? '') ? commit.slice(0, 7) : null, demarre_le: new Date().toISOString() };
+}
+
+// Import des prix du PAM, tel que le lance la tâche planifiée.
+export function lancerImportPrix(racine) {
+  return new Promise((ok) => {
+    execFile(process.execPath, [path.join('scripts', 'importer-prix.js')], { cwd: racine, timeout: 360_000 }, (erreur, sortie, sortieErreur) => {
+      const lignes = (texte) => String(texte ?? '').trim().split('\n').filter(Boolean);
+      if (erreur) return ok({ ok: false, message: lignes(sortieErreur).at(-1) ?? 'Import des prix échoué.' });
+      return ok({ ok: true, message: lignes(sortie)[0] ?? 'Prix importés.' });
+    });
+  });
 }
 
 // Clé de blocage d'une adresse : l'IPv4 telle quelle, l'IPv6 ramenée à son /64,
@@ -106,6 +141,42 @@ export function creerAdmin({
     }
   }
 
+  let importEnCours = false;
+  const repondre = (res, donnees) => {
+    envoyerJson(res, 200, donnees);
+    return true;
+  };
+  const nombreJours = (valeur, defaut) => {
+    const n = Number.parseInt(valeur ?? '', 10);
+    return Number.isFinite(n) ? Math.min(90, Math.max(1, n)) : defaut;
+  };
+  const etatSite = () => {
+    const { actif, depuis } = reglages.lire().hors_service;
+    return { hors_service: actif, depuis };
+  };
+
+  async function services() {
+    const prix = releves.lire();
+    let messages = 0;
+    let octets = 0;
+    try {
+      for (const f of await readdir(dossierAudio)) {
+        const infos = await stat(path.join(dossierAudio, f));
+        if (!infos.isFile()) continue;
+        messages++;
+        octets += infos.size;
+      }
+    } catch {
+      // dossier absent : aucun message vocal
+    }
+    return {
+      api: await asr.sante(),
+      prix: { importe_le: prix.importe_le ?? null, derniere_date: prix.derniere_date ?? null },
+      stockage: { messages_vocaux: messages, octets },
+      version,
+    };
+  }
+
   function jetonDe(req) {
     return String(req.headers.cookie ?? '').match(/(?:^|;\s*)agrifon_admin=([0-9a-f]{64})(?:;|$)/)?.[1] ?? null;
   }
@@ -159,9 +230,40 @@ export function creerAdmin({
       }
       // Toute autre route exige la session, avant même de dire si elle existe.
       exigerSession(req);
-      if (m === 'GET' && p === '/api/admin/session') {
-        envoyerJson(res, 200, { connecte: true });
-        return true;
+      const route = `${m} ${p}`;
+      const q = url.searchParams;
+      if (route === 'GET /api/admin/session') return repondre(res, { connecte: true });
+      if (route === 'GET /api/admin/tableau') {
+        const statistiques = await mesures.statistiques({ jours: nombreJours(q.get('jours'), 7), signalements: registre.lister() });
+        return repondre(res, { site: etatSite(), statistiques });
+      }
+      if (route === 'GET /api/admin/appels') {
+        const apres = /^\d{4}-\d{2}-\d{2}T[\d:.]+Z$/.test(q.get('apres') ?? '') ? q.get('apres') : null;
+        return repondre(res, { appels: await mesures.lireJournal({ apres, limite: 50 }) });
+      }
+      if (route === 'GET /api/admin/refus') return repondre(res, { refus: await mesures.refusParJour(nombreJours(q.get('jours'), 14)) });
+      if (route === 'GET /api/admin/services') return repondre(res, await services());
+      if (route === 'GET /api/admin/reglages') return repondre(res, reglages.lire());
+      if (route === 'POST /api/admin/hors-service') {
+        const { actif } = await lireCorpsJson(req);
+        if (typeof actif !== 'boolean') throw new ErreurHttp(400, 'Indiquez actif : true ou false.');
+        await (actif ? reglages.mettreHorsService() : reglages.remettreEnService());
+        return repondre(res, { site: etatSite() });
+      }
+      if (route === 'POST /api/admin/solutions-brouillon') {
+        const { actif } = await lireCorpsJson(req);
+        if (typeof actif !== 'boolean') throw new ErreurHttp(400, 'Indiquez actif : true ou false.');
+        await reglages.definirSolutionsBrouillon(actif);
+        return repondre(res, { solutions_brouillon: reglages.lire().solutions_brouillon });
+      }
+      if (route === 'POST /api/admin/prix/importer') {
+        if (importEnCours) throw new ErreurHttp(409, 'Un import des prix est déjà en cours.', 'import_en_cours');
+        importEnCours = true;
+        try {
+          return repondre(res, await importerPrix());
+        } finally {
+          importEnCours = false;
+        }
       }
       throw new ErreurHttp(404, 'Adresse inconnue.', 'introuvable');
     },

@@ -1,12 +1,18 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { creerAdmin, creerSessions, empreinteMotDePasse, verifierMotDePasse } from '../server/admin.js';
+import { creerAdmin, creerSessions, empreinteMotDePasse, lireVersion, verifierMotDePasse } from '../server/admin.js';
+import { creerApplication } from '../server/index.js';
+import { creerReglages } from '../server/reglages.js';
+import { creerTextes } from '../server/reponses.js';
+import { creerRegistre } from '../server/signalement.js';
+import { creerVoix } from '../server/voix.js';
 import { envoyerJson, ErreurHttp } from '../server/http.js';
 import { creerMesures } from '../server/mesures.js';
 
@@ -194,4 +200,142 @@ test('script : écrit l’empreinte dans .env sans afficher le mot de passe, gar
   const court = await lancerScript(env, 'court\ncourt\n');
   assert.notEqual(court.code, 0);
   assert.equal(await readFile(env, 'utf8'), contenu); // .env inchangé après un refus
+});
+
+// ---------- Routes de données, branchées dans l'application complète ----------
+
+const lireData = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
+const NAVIGATEUR = 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36';
+
+async function demarrerApplication(t, { importerPrix = async () => ({ ok: true, message: 'Prix importés.' }) } = {}) {
+  const dossier = await mkdtemp(path.join(tmpdir(), 'agrifon-admin-app-'));
+  t.after(() => rm(dossier, { recursive: true, force: true }));
+  const asr = {
+    configure: true,
+    simulation: false,
+    marche: async () => ({ transcription: 'gbàdé glazuwe', produits: [{ terme: 'gbàdé', terme_canonique: 'gbàdé' }], id: 'r1' }),
+    transcrire: async () => ({ texte: 'gbàdé ama jaunissent', texte_ponctue: 'Gbàdé ama jaunissent.', id: 'r2' }),
+    sante: async () => ({ ok: true, modele: 'ROVER fonasr', duree_ms: 12 }),
+  };
+  const registre = await creerRegistre(dossier);
+  const reglages = await creerReglages(path.join(dossier, 'reglages.json'), { solutionsBrouillon: true });
+  const mesures = creerMesures(path.join(dossier, 'mesures'));
+  const releves = { lire: () => JSON.parse(readFileSync(new URL('./fixtures/releves.json', import.meta.url), 'utf8')) };
+  await mkdir(path.join(dossier, 'audio'), { recursive: true });
+  await writeFile(path.join(dossier, 'audio', 'SIG-20261023-901.webm'), Buffer.alloc(1000));
+  await writeFile(path.join(dossier, 'audio', 'SIG-20261023-902.webm'), Buffer.alloc(500));
+  const admin = creerAdmin({
+    empreinte: EMPREINTE, sessions: creerSessions(), mesures, reglages, registre, releves, asr,
+    version: { commit: 'abc1234', demarre_le: '2026-10-23T08:00:00.000Z' }, dossierAudio: path.join(dossier, 'audio'), importerPrix,
+  });
+  const gerer = creerApplication({
+    asr, base: lireData('referentiel.json'), releves, lexique: lireData('lexique.json'), communes: lireData('communes.json').communes,
+    registre, textes: creerTextes(lireData('reponses.json')), voix: creerVoix('/inexistant'), solutions: lireData('solutions.json'),
+    protection: null, mesures, reglages, admin,
+  });
+  const serveur = createServer(gerer);
+  await new Promise((r) => serveur.listen(0, '127.0.0.1', r));
+  t.after(() => serveur.close());
+  const url = `http://127.0.0.1:${serveur.address().port}`;
+  const j = jeton(await connexion(url, MDP));
+  const avecSession = (chemin, options = {}) => fetch(`${url}${chemin}`, { ...options, headers: { Cookie: `agrifon_admin=${j}`, ...options.headers } });
+  const poster = (chemin, corps) => avecSession(chemin, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Activite': '1' }, body: JSON.stringify(corps) });
+  return { url, avecSession, poster, mesures, reglages };
+}
+
+const posterAudio = (url) => fetch(url, { method: 'POST', headers: { 'Content-Type': 'audio/webm' }, body: 'audio' });
+
+test('routes de l’administration : 401 sans session', async (t) => {
+  const { url } = await demarrerApplication(t);
+  const routes = [['GET', '/api/admin/tableau'], ['GET', '/api/admin/appels'], ['GET', '/api/admin/refus'], ['GET', '/api/admin/services'],
+    ['GET', '/api/admin/reglages'], ['POST', '/api/admin/prix/importer'], ['POST', '/api/admin/hors-service'], ['POST', '/api/admin/solutions-brouillon']];
+  for (const [methode, chemin] of routes) assert.equal((await fetch(`${url}${chemin}`, { method: methode })).status, 401, `${methode} ${chemin}`);
+});
+
+test('tableau : état du site et statistiques réelles', async (t) => {
+  const { url, avecSession, mesures } = await demarrerApplication(t);
+  await fetch(`${url}/api/etat`, { headers: { 'X-Visiteur': '3f2b8c1e-4a5d-4e6f-8a7b-9c0d1e2f3a4b', 'User-Agent': NAVIGATEUR } });
+  await posterAudio(`${url}/api/prix`);
+  await posterAudio(`${url}/api/signalements`);
+  await mesures.vider();
+  const r = await (await avecSession('/api/admin/tableau?jours=7')).json();
+  assert.deepEqual(r.site, { hors_service: false, depuis: null });
+  assert.equal(r.statistiques.personnes.total, 1);
+  assert.deepEqual(r.statistiques.demandes, { comprises: 2, non_comprises: 0, erreurs: 0 });
+  assert.equal(r.statistiques.signalements.total, 1);
+  assert.deepEqual(r.statistiques.produits, [{ nom: 'Maïs', n: 1 }]);
+});
+
+test('appels : les derniers, et seulement ceux après une date', async (t) => {
+  const { url, avecSession, mesures } = await demarrerApplication(t);
+  await posterAudio(`${url}/api/prix`);
+  await mesures.vider();
+  const { appels } = await (await avecSession('/api/admin/appels')).json();
+  assert.equal(appels.length, 1);
+  assert.equal(appels[0].service, 'prix');
+  const apres = await (await avecSession(`/api/admin/appels?apres=${encodeURIComponent(appels[0].date)}`)).json();
+  assert.deepEqual(apres.appels, []);
+});
+
+test('hors service coupé puis rétabli depuis l’administration', async (t) => {
+  const { url, poster, avecSession } = await demarrerApplication(t);
+  const coupe = await (await poster('/api/admin/hors-service', { actif: true })).json();
+  assert.equal(coupe.site.hors_service, true);
+  assert.equal((await fetch(`${url}/`)).status, 503);
+  assert.equal((await avecSession('/api/admin/tableau')).status, 200); // l'administration reste ouverte
+  const remis = await (await poster('/api/admin/hors-service', { actif: false })).json();
+  assert.equal(remis.site.hors_service, false);
+  assert.equal((await fetch(`${url}/`)).status, 200);
+  const reglages = await (await avecSession('/api/admin/reglages')).json();
+  assert.equal(reglages.coupures.length, 1);
+  assert.ok(reglages.coupures[0].fin);
+  assert.equal((await poster('/api/admin/hors-service', { actif: 'oui' })).status, 400);
+});
+
+test('solutions en brouillon réglées depuis l’administration', async (t) => {
+  const { poster, reglages } = await demarrerApplication(t);
+  assert.deepEqual(await (await poster('/api/admin/solutions-brouillon', { actif: false })).json(), { solutions_brouillon: false });
+  assert.equal(reglages.lire().solutions_brouillon, false);
+});
+
+test('import des prix : un seul à la fois', async (t) => {
+  let liberer;
+  const fin = new Promise((r) => { liberer = r; });
+  const { poster } = await demarrerApplication(t, { importerPrix: async () => { await fin; return { ok: true, message: 'Prix importés : 398 couples.' }; } });
+  const premier = poster('/api/admin/prix/importer', {});
+  await new Promise((r) => setTimeout(r, 50));
+  const second = await poster('/api/admin/prix/importer', {});
+  assert.equal(second.status, 409);
+  assert.equal((await second.json()).code, 'import_en_cours');
+  liberer();
+  assert.deepEqual(await (await premier).json(), { ok: true, message: 'Prix importés : 398 couples.' });
+});
+
+test('services : API, prix, messages vocaux, version', async (t) => {
+  const { avecSession } = await demarrerApplication(t);
+  assert.deepEqual(await (await avecSession('/api/admin/services')).json(), {
+    api: { ok: true, modele: 'ROVER fonasr', duree_ms: 12 },
+    prix: { importe_le: '2026-10-21T06:00:00.000Z', derniere_date: '2026-09-15' },
+    stockage: { messages_vocaux: 2, octets: 1500 },
+    version: { commit: 'abc1234', demarre_le: '2026-10-23T08:00:00.000Z' },
+  });
+});
+
+test('refus : jours bornés à 90', async (t) => {
+  const { avecSession } = await demarrerApplication(t);
+  assert.equal((await (await avecSession('/api/admin/refus?jours=500')).json()).refus.length, 90);
+  assert.equal((await (await avecSession('/api/admin/refus')).json()).refus.length, 14);
+});
+
+test('version du code lue dans .git : branche, références groupées, ou rien', async (t) => {
+  const racine = await mkdtemp(path.join(tmpdir(), 'agrifon-git-'));
+  t.after(() => rm(racine, { recursive: true, force: true }));
+  assert.equal(lireVersion(racine).commit, null);
+  await mkdir(path.join(racine, '.git', 'refs', 'heads'), { recursive: true });
+  await writeFile(path.join(racine, '.git', 'HEAD'), 'ref: refs/heads/main\n');
+  await writeFile(path.join(racine, '.git', 'packed-refs'), '# pack-refs\n955eb3dffffffffffffffffffffffffffffffff0 refs/heads/main\n');
+  assert.equal(lireVersion(racine).commit, '955eb3d');
+  await writeFile(path.join(racine, '.git', 'refs', 'heads', 'main'), '0c6bc02eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee1\n');
+  assert.equal(lireVersion(racine).commit, '0c6bc02');
+  assert.match(lireVersion(racine).demarre_le, /^\d{4}-\d{2}-\d{2}T/);
 });

@@ -7,11 +7,14 @@ import { createServer } from 'node:http';
 import { timingSafeEqual } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { creerAdmin, creerSessions, lancerImportPrix, lireVersion } from './admin.js';
 import { creerClientAsr, ErreurAsr, extensionAudio } from './asr.js';
 import { ENTETES_SECURITE, ErreurHttp, envoyerJson } from './http.js';
 import { repondrePrix, resumerBase } from './prix.js';
 import { adresseClient, creerCompteur, creerProtection, estRobot } from './protection.js';
+import { creerMesures } from './mesures.js';
 import { creerReleves } from './releves.js';
+import { creerReglages } from './reglages.js';
 import { creerTextes } from './reponses.js';
 import { analyserSignalement, creerRegistre, destinataire } from './signalement.js';
 import { choisirSolutions, solutionsPubliables } from './solutions.js';
@@ -90,7 +93,7 @@ const PRIX_COMPRIS = new Set(['ok', 'sans_prix', 'marche_seul']);
 export function creerApplication({
   asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierSite = path.join(RACINE, 'site'),
   voix = creerVoix(path.join(dossierSite, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
-  maxEnAttenteParVisiteur = 4, mesures = null, reglages = null, maxVisitesParAdresse = 200,
+  maxEnAttenteParVisiteur = 4, mesures = null, reglages = null, maxVisitesParAdresse = 200, admin = null,
 }) {
   // Nouveaux visiteurs comptés par adresse sur 24 heures : de faux identifiants
   // envoyés en masse depuis une adresse ne gonflent pas les chiffres.
@@ -365,6 +368,7 @@ export function creerApplication({
     }
     if (relatif === '/') relatif = '/index.html';
     if (relatif === '/conseiller') relatif = '/conseiller.html';
+    if (relatif === '/admin') relatif = '/admin.html';
     const chemin = path.join(dossierSite, path.normalize(relatif));
     if (!chemin.startsWith(dossierSite + path.sep)) throw new ErreurHttp(404, 'Fichier introuvable.', 'introuvable');
     const ext = path.extname(chemin);
@@ -384,6 +388,8 @@ export function creerApplication({
         mesures?.refus(refus.code);
         throw new ErreurHttp(refus.statut, refus.message, refus.code, refus.attente);
       }
+      // L'administration passe avant le mode hors service, pour pouvoir le lever.
+      if (admin && url.pathname.startsWith('/api/admin/') && await admin.gerer(req, res, url)) return;
       if (reglages?.horsService()) {
         const p = url.pathname;
         if ((req.method === 'GET' || req.method === 'HEAD') && (p === '/' || p === '/index.html')) return await envoyerPageAttente(res);
@@ -435,9 +441,20 @@ export async function demarrer() {
   const registre = await creerRegistre(dossierDonnees);
   // Prix importés par scripts/importer-prix.js, sinon l'instantané livré avec le code.
   const releves = creerReleves([path.join(dossierDonnees, 'releves-prix.json'), path.join(RACINE, 'data', 'releves-prix.json')]);
+  // Réglages du back office : SOLUTIONS_BROUILLON n'en est que la valeur de départ.
+  const reglages = await creerReglages(path.join(dossierDonnees, 'reglages.json'), { solutionsBrouillon: env.SOLUTIONS_BROUILLON === '1' });
+  const mesures = creerMesures(path.join(dossierDonnees, 'mesures'));
+  const admin = creerAdmin({
+    empreinte: env.ADMIN_MDP_EMPREINTE || '',
+    sessions: creerSessions(),
+    mesures, reglages, registre, releves, asr,
+    version: lireVersion(RACINE),
+    dossierAudio: path.join(dossierDonnees, 'audio'),
+    importerPrix: () => lancerImportPrix(RACINE),
+  });
   const gerer = creerApplication({
     asr, base, releves, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '',
-    solutions: solutionsPubliables(solutions, env),
+    solutions, mesures, reglages, admin,
   });
 
   // Un hébergeur peut fournir un socket (chemin) au lieu d'un numéro de port.
@@ -449,9 +466,10 @@ export async function demarrer() {
     console.log(`AgriFon : à l'écoute sur ${typeof port === 'number' ? `http://localhost:${port}` : port}`);
     if (asr.simulation) console.log('Mode SIMULATION : aucune requête envoyée à l’API, réponses factices.');
     else if (!asr.configure) console.warn('ASR_ID / ASR_MDP absents : la reconnaissance vocale renverra une erreur (voir .env.example).');
-    if (!solutionsPubliables(solutions, env)) {
-      console.warn('Solutions après signalement non proposées : leur fon attend la relecture d’un locuteur (data/solutions.json, fon_a_relire). Pour une démonstration, définir SOLUTIONS_BROUILLON=1.');
+    if (!solutionsPubliables(solutions, { SOLUTIONS_BROUILLON: reglages.lire().solutions_brouillon ? '1' : '0' })) {
+      console.warn('Solutions après signalement non proposées : leur fon attend la relecture d’un locuteur (data/solutions.json, fon_a_relire). Pour une démonstration, activer les solutions en brouillon dans le back office.');
     }
+    if (!env.ADMIN_MDP_EMPREINTE) console.warn('ADMIN_MDP_EMPREINTE absent : le back office restera fermé (node scripts/admin-mot-de-passe.js).');
   };
   if (typeof port === 'number') serveur.listen(port, hote, pret);
   else serveur.listen(port, pret);
