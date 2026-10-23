@@ -82,6 +82,15 @@ test('deux symptômes : chacun contribue', () => {
   assert.deepEqual(ids(s), ['fumure', 'retirer-feuilles', 'desherber', 'bruler']);
 });
 
+test('deux symptômes dont un cas à plusieurs gestes : le second symptôme contribue aussi', () => {
+  const avecCasCharge = structuredClone(donnees);
+  avecCasCharge.cas.find((c) => c.id === 'haricot-foreurs').gestes = ['visiter', 'ramasser', 'bruler'];
+  const s = choisirSolutions(avecCasCharge, analyse('haricot', ['feuilles_mangees', 'jaunissement'], ['fruits']), { departement: null, date: AOUT, transcription: '' });
+  assert.equal(s.elements[0].type, 'traitement');
+  assert.ok(s.elements.some((e) => ['fumure', 'desherber'].includes(e.id)), ids(s).join(', '));
+  assert.equal(s.elements.length, 4);
+});
+
 test('morceaux : du titre à la mention, tous dans la liste des extraits', () => {
   const s = choisir(analyse('haricot', ['feuilles_mangees'], ['fruits']));
   assert.equal(texteVoix(s.morceaux[0]), 'titre fon');

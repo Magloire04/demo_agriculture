@@ -45,51 +45,62 @@ export function choisirSolutions(donnees, analyse, { departement = null, date = 
   const retenus = [];
   for (const symptome of symptomes) {
     const r = trouverCas(donnees, culture, symptome, parties, motsTexte, retenus.map((x) => x.cas));
-    if (r) retenus.push(r);
+    if (r) retenus.push({ ...r, symptome });
   }
   const rang = (r) => (r.certitude === 'nette' ? 0 : 1);
   const problemes = retenus.sort((a, b) => rang(a) - rang(b)).slice(0, MAX_PROBLEMES);
 
-  const elements = [];
-  const voixElements = [];
-  const origine = new Map(); // élément -> cas d'où il vient
-  const ajouter = (element, voix, cas = null) => {
-    elements.push(element);
-    voixElements.push(voix);
-    if (cas) origine.set(element, cas);
-  };
-
+  const choisis = []; // { element, voix, cas }
   const avecTraitement = problemes.find((p) => p.certitude === 'nette' && p.cas.traitement);
   if (avecTraitement) {
     const { cas } = avecTraitement;
     const t = cas.traitement;
-    const element = {
-      type: 'traitement', id: `${cas.id}.traitement`, fr: t.fr, fon: t.fon,
-      ...(t.securite && { securite: { fr: t.securite.fr, fon: t.securite.fon } }),
-      reserves: t.reserves ?? [],
-      sources: sourcesDe(donnees, t.sources),
-    };
-    ajouter(element, [...decouper(t.voix), ...decouper(t.securite?.voix)], cas);
+    choisis.push({
+      element: {
+        type: 'traitement', id: `${cas.id}.traitement`, fr: t.fr, fon: t.fon,
+        ...(t.securite && { securite: { fr: t.securite.fr, fon: t.securite.fon } }),
+        reserves: t.reserves ?? [],
+        sources: sourcesDe(donnees, t.sources),
+      },
+      voix: [...decouper(t.voix), ...decouper(t.securite?.voix)],
+      cas,
+    });
   }
 
-  // Gestes des cas, puis ceux de la culture et du symptôme, symptômes à tour de rôle.
-  const candidats = problemes.flatMap((p) => (p.cas.gestes ?? []).map((id) => ({ id, cas: p.cas })));
-  const listes = symptomes.map((s) => [...(donnees.par_culture?.[culture]?.[s] ?? []), ...(donnees.par_symptome?.[s] ?? [])]);
-  for (let i = 0; listes.some((l) => i < l.length); i++) {
-    for (const l of listes) if (i < l.length) candidats.push({ id: l[i], cas: null });
-  }
-  for (const { id, cas } of candidats) {
-    if (elements.length >= MAX_ELEMENTS) break;
-    if (elements.some((e) => e.id === id)) continue;
+  // Une liste par symptôme : gestes du cas retenu pour ce symptôme, puis ceux de la
+  // culture, puis ceux par défaut. Le symptôme qui a le moins apporté est servi en
+  // premier, pour qu'aucun ne reste sans geste.
+  const casDe = new Map(problemes.map((p) => [p.symptome, p.cas]));
+  const listes = symptomes.map((s) => ({
+    ids: [
+      ...(casDe.get(s)?.gestes ?? []).map((id) => ({ id, cas: casDe.get(s) })),
+      ...[...(donnees.par_culture?.[culture]?.[s] ?? []), ...(donnees.par_symptome?.[s] ?? [])].map((id) => ({ id, cas: null })),
+    ],
+    suivant: 0,
+    apports: avecTraitement?.symptome === s ? 1 : 0,
+  }));
+  while (choisis.length < MAX_ELEMENTS) {
+    const restantes = listes.filter((l) => l.suivant < l.ids.length);
+    if (!restantes.length) break;
+    const liste = restantes.reduce((a, b) => (b.apports < a.apports ? b : a));
+    const { id, cas } = liste.ids[liste.suivant++];
+    if (choisis.some((c) => c.element.id === id)) continue;
     const geste = donnees.gestes[id];
     if (!geste) throw new Error(`Geste inconnu : ${id}`);
     if (geste.saison && geste.saison !== saison) continue;
-    ajouter({ type: 'geste', id, fr: geste.fr, fon: geste.fon, sources: sourcesDe(donnees, geste.sources) }, decouper(geste.voix), cas);
+    choisis.push({ element: { type: 'geste', id, fr: geste.fr, fon: geste.fon, sources: sourcesDe(donnees, geste.sources) }, voix: decouper(geste.voix), cas });
+    liste.apports++;
   }
+
+  // Affichage : le traitement, puis les gestes des cas, puis les autres.
+  const rangAffichage = (c) => (c.element.type === 'traitement' ? 0 : c.cas ? 1 : 2);
+  choisis.sort((a, b) => rangAffichage(a) - rangAffichage(b));
+  const elements = choisis.map((c) => c.element);
+  const voixElements = choisis.map((c) => c.voix);
 
   // La vidéo d'un cas accompagne le premier élément qui en vient.
   for (const { cas } of problemes) {
-    const premier = elements.find((e) => origine.get(e) === cas);
+    const premier = choisis.find((c) => c.cas === cas)?.element;
     if (cas.video && premier && !premier.video) premier.video = { url: cas.video.url, titre: cas.video.titre };
   }
 

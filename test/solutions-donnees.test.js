@@ -150,6 +150,28 @@ test('phrases réelles avec « du » : aucun traitement pour une pourriture ou d
   }
 });
 
+test('deux symptômes sur les données réelles : chacun apporte au moins un élément', () => {
+  const sansSaison = (id) => !donnees.gestes[id]?.saison;
+  for (const culture of lexique.cultures) {
+    for (const [i, a] of lexique.symptomes.entries()) {
+      for (const b of lexique.symptomes.slice(i + 1)) {
+        for (const parties of [[], ['fruits']]) {
+          const s = signaler(culture.id, [a.id, b.id], { parties });
+          const ids = new Set(s.elements.map((e) => e.id));
+          for (const symptome of [a.id, b.id]) {
+            const cas = s.problemes.map((p) => donnees.cas.find((c) => c.id === p.id)).find((c) => c.symptomes.includes(symptome));
+            const possibles = [
+              ...(cas ? [`${cas.id}.traitement`, ...(cas.gestes ?? [])] : []),
+              ...(donnees.par_culture[culture.id]?.[symptome] ?? []), ...(donnees.par_symptome[symptome] ?? []),
+            ].filter((id) => id.endsWith('.traitement') || sansSaison(id));
+            assert.ok(possibles.some((id) => ids.has(id)), `${culture.id} × ${a.id} + ${b.id} (${parties.join()}) : rien pour ${symptome}`);
+          }
+        }
+      }
+    }
+  }
+});
+
 test('références croisées', () => {
   const cultures = new Set(lexique.cultures.map((c) => c.id));
   const symptomes = new Set(lexique.symptomes.map((s) => s.id));
