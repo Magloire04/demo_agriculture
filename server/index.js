@@ -206,10 +206,9 @@ export function creerApplication({
       // Cette route reste ouverte aux outils (déploiement) : un robot n'est pas compté.
       const visiteur = req.headers['x-visiteur'];
       if (mesures && visiteur && !estRobot(req.headers['user-agent'])) {
-        const adresse = adresseClient(req);
-        if (!adresse || !visitesParAdresse.attente(adresse)) {
-          if (mesures.visite(String(visiteur)) && adresse) visitesParAdresse.passer(adresse);
-        }
+        // Sans adresse connue, tous partagent une même limite.
+        const adresse = adresseClient(req) ?? 'inconnue';
+        if (!visitesParAdresse.attente(adresse) && mesures.visite(String(visiteur))) visitesParAdresse.passer(adresse);
       }
       return envoyerJson(res, 200, {
         asr: { configure: asr.configure, simulation: asr.simulation },

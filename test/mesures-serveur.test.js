@@ -91,6 +91,15 @@ test('au plus N nouveaux visiteurs par adresse et par jour', async (t) => {
   assert.equal((await mesures.statistiques({ jours: 1, signalements: [] })).personnes.total, 3);
 });
 
+test('sans adresse connue, les nouveaux visiteurs partagent une même limite', async (t) => {
+  const { url, mesures } = await demarrer(t, { maxVisitesParAdresse: 2 });
+  for (const c of ['1', '2', '3']) {
+    await fetch(`${url}/api/etat`, { headers: { 'X-Visiteur': `${c}f2b8c1e-4a5d-4e6f-8a7b-9c0d1e2f3a4b`, 'User-Agent': NAVIGATEUR } });
+  }
+  await mesures.vider();
+  assert.equal((await mesures.statistiques({ jours: 1, signalements: [] })).personnes.total, 2);
+});
+
 test('prix compris journalisé avec durées et produits reconnus, non compris aussi', async (t) => {
   const { url, mesures } = await demarrer(t);
   assert.equal((await poster(`${url}/api/prix`)).status, 200);
