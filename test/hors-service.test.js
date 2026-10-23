@@ -59,8 +59,20 @@ test('site coupé : l’accueil rend la page d’attente en 503 avec Retry-After
     assert.match(rep.headers.get('content-security-policy'), /default-src 'self'/);
     const corps = await rep.text();
     assert.ok(corps.includes(FON) && corps.includes(FR), adresse);
-    assert.ok(!corps.includes('<script'), 'aucun script dans la page d’attente');
+    assert.ok(!/<script(?![^>]*\bsrc=)/.test(corps), 'aucun script en ligne dans la page d’attente');
   }
+});
+
+test('site coupé : la page d’attente guette le retour du service, même dans l’application installée', async (t) => {
+  const { url, reglages } = await demarrer(t);
+  await reglages.mettreHorsService();
+  const corps = await (await fetch(`${url}/`)).text();
+  assert.match(corps, /<script src="js\/hors-service\.js" defer><\/script>/);
+  const script = await fetch(`${url}/js/hors-service.js`);
+  assert.equal(script.status, 200);
+  assert.match(script.headers.get('content-type'), /javascript/);
+  const code = await script.text();
+  assert.ok(code.includes('api/etat') && code.includes('location.reload()'));
 });
 
 test('site coupé : une demande vocale reçoit hors_service en fon et en français', async (t) => {
