@@ -265,6 +265,19 @@ test('client ASR : une seule requête à la fois vers l’API', async () => {
   assert.equal(maximum, 1);
 });
 
+test('/admin sert la page d’administration, sans script ni style en ligne', async (t) => {
+  const url = await demarrer(t, { asr: fausseAsr() });
+  const rep = await fetch(`${url}/admin`);
+  assert.equal(rep.status, 200);
+  assert.match(rep.headers.get('content-type'), /^text\/html/);
+  const page = await rep.text();
+  assert.match(page, /<title>[^<]*Administration[^<]*<\/title>/);
+  assert.match(page, /<script type="module" src="js\/admin\.js"><\/script>/);
+  assert.ok(!/<style|style="|<script>/.test(page), 'aucun style ni script en ligne (CSP)');
+  assert.equal((await fetch(`${url}/js/admin.js`)).status, 200);
+  assert.equal((await fetch(`${url}/css/admin.css`)).status, 200);
+});
+
 test('client ASR : sante() en simulation, en réussite et en erreur réseau', async () => {
   assert.deepEqual(await creerClientAsr({ simulation: true }).sante(), { ok: true, modele: 'simulation', duree_ms: 0 });
   const requetes = [];
