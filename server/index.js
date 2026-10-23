@@ -8,6 +8,7 @@ import { timingSafeEqual } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { creerClientAsr, ErreurAsr, extensionAudio } from './asr.js';
+import { ENTETES_SECURITE, ErreurHttp, envoyerJson } from './http.js';
 import { repondrePrix, resumerBase } from './prix.js';
 import { adresseClient, creerProtection } from './protection.js';
 import { creerReleves } from './releves.js';
@@ -39,37 +40,6 @@ const TYPES = {
   '.wav': 'audio/wav',
   '.flac': 'audio/flac',
 };
-
-const ENTETES_SECURITE = {
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'same-origin',
-  'Permissions-Policy': 'microphone=(self), geolocation=(self), camera=()',
-  'Content-Security-Policy': "default-src 'self'; img-src 'self' data:; media-src 'self' blob:; style-src 'self'; script-src 'self'; connect-src 'self'; font-src 'self'; manifest-src 'self'; worker-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
-  // Ni indexation, ni archivage, ni extrait dans un moteur ; aucun fichier repris par un autre site.
-  'X-Robots-Tag': 'noindex, nofollow, noarchive, nosnippet, noimageindex',
-  'Cross-Origin-Resource-Policy': 'same-origin',
-  'Cross-Origin-Opener-Policy': 'same-origin',
-};
-
-class ErreurHttp extends Error {
-  constructor(statut, message, code = 'requete_invalide', attente = 0) {
-    super(message);
-    this.statut = statut;
-    this.code = code;
-    this.attente = attente; // secondes, pour l'en-tête Retry-After
-  }
-}
-
-function envoyerJson(res, statut, donnees, attente = 0) {
-  const corps = JSON.stringify(donnees);
-  res.writeHead(statut, {
-    ...ENTETES_SECURITE,
-    'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-store',
-    ...(attente > 0 && { 'Retry-After': String(attente) }),
-  });
-  res.end(corps);
-}
 
 async function lireAudio(req) {
   const type = String(req.headers['content-type'] ?? '').toLowerCase();
