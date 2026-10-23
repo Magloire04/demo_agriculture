@@ -1,5 +1,5 @@
 // Liste les extraits audio que les réponses peuvent dire, avec le nom de fichier
-// attendu dans public/voix, et signale ceux qui manquent.
+// attendu dans site/voix, et signale ceux qui manquent.
 //
 //   node scripts/lister-voix.js                  résumé : extraits présents et manquants
 //   node scripts/lister-voix.js --json liste.json écrit la liste complète [{ fichier, texte }]
@@ -20,7 +20,7 @@ const [reponses, base, { communes }, solutions] = await Promise.all([
   lire('data/reponses.json'), lire('data/referentiel.json'), lire('data/communes.json'), lire('data/solutions.json'),
 ]);
 const liste = listerMorceaux(reponses, base, communes, solutions).map((texte) => ({ fichier: fichierVoix(texte), texte }));
-const manquants = liste.filter((x) => !existsSync(path.join(RACINE, 'public', 'voix', x.fichier)));
+const manquants = liste.filter((x) => !existsSync(path.join(RACINE, 'site', 'voix', x.fichier)));
 
 const i = process.argv.indexOf('--json');
 if (i > 0) {
@@ -31,6 +31,6 @@ if (i > 0) {
   }
   await writeFile(sortie, `${JSON.stringify(liste, null, 1)}\n`);
 }
-console.log(`${liste.length} extraits, ${manquants.length} manquants dans public/voix.`);
+console.log(`${liste.length} extraits, ${manquants.length} manquants dans site/voix.`);
 for (const x of manquants.slice(0, 20)) console.log(`  ${x.fichier}  ${x.texte}`);
 if (manquants.length > 20) console.log(`  … et ${manquants.length - 20} autres`);
