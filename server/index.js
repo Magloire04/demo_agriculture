@@ -109,10 +109,12 @@ const PHRASES_ERREUR = {
 };
 
 // `protection` : null la désactive (tests qui ne portent pas sur elle).
-// `maxEnAttente` : demandes vocales en attente de l'API au-delà desquelles on refuse.
+// `maxEnAttente` : demandes vocales en attente de l'API au-delà desquelles on refuse,
+// dont `maxEnAttenteParVisiteur` au plus pour un même visiteur.
 export function creerApplication({
   asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierPublic = path.join(RACINE, 'public'),
   voix = creerVoix(path.join(dossierPublic, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
+  maxEnAttenteParVisiteur = 4,
 }) {
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
   const nomsMarches = [...new Set(base.marches.flatMap((m) => [m.nom, m.ville]))].slice(0, 50);
@@ -132,16 +134,26 @@ export function creerApplication({
 
   // L'API traite une demande à la fois : au-delà de maxEnAttente demandes en file,
   // la suivante est refusée tout de suite plutôt que d'attendre de longues minutes.
+  // La place n'est prise qu'une fois l'audio reçu, pour l'appel à l'API seulement.
   let enAttente = 0;
-  async function avecPlace(tache) {
-    if (enAttente >= maxEnAttente) {
+  const enAttenteDe = new Map(); // visiteur -> demandes en file
+  async function avecPlace(req, tache) {
+    const client = adresseClient(req);
+    const siens = client ? enAttenteDe.get(client) ?? 0 : 0;
+    if (enAttente >= maxEnAttente || siens >= maxEnAttenteParVisiteur) {
       throw new ErreurHttp(503, 'Le service reçoit trop de demandes en même temps. Réessayez dans une minute.', 'service_sature', 60);
     }
     enAttente++;
+    if (client) enAttenteDe.set(client, siens + 1);
     try {
       return await tache();
     } finally {
       enAttente--;
+      if (client) {
+        const reste = enAttenteDe.get(client) - 1;
+        if (reste > 0) enAttenteDe.set(client, reste);
+        else enAttenteDe.delete(client);
+      }
     }
   }
 
@@ -167,14 +179,14 @@ export function creerApplication({
       return envoyerJson(res, 200, { communes: communes.map(({ nom, departement }) => ({ nom, departement })) });
     }
 
-    if (m === 'POST' && p === '/api/prix') return avecPlace(async () => {
+    if (m === 'POST' && p === '/api/prix') {
       const { audio, type } = await lireAudio(req);
-      const reponseApi = await asr.marche(audio, type, { noms: nomsMarches });
+      const reponseApi = await avecPlace(req, () => asr.marche(audio, type, { noms: nomsMarches }));
       const reponse = repondrePrix(base, releves.lire(), textes, reponseApi);
       return envoyerJson(res, 200, { ...reponse, voix: voix.fichiers(reponse.voix), simulation: asr.simulation });
-    });
+    }
 
-    if (m === 'POST' && p === '/api/signalements') return avecPlace(async () => {
+    if (m === 'POST' && p === '/api/signalements') {
       const { audio, type } = await lireAudio(req);
       const lat = nombre(url.searchParams.get('lat'), -90, 90);
       const lon = nombre(url.searchParams.get('lon'), -180, 180);
@@ -185,7 +197,7 @@ export function creerApplication({
       // Les communes du département aident l'API à reconnaître un nom de lieu.
       const noms = communeChoisie ? communes.filter((c) => c.departement === communeChoisie.departement).map((c) => c.nom) : [];
 
-      const reponseApi = await asr.transcrire(audio, type, { noms });
+      const reponseApi = await avecPlace(req, () => asr.transcrire(audio, type, { noms }));
       const texte = reponseApi.texte_ponctue ?? reponseApi.texte ?? '';
       const analyse = analyserSignalement(lexique, communes, texte);
       const commune = communeChoisie
@@ -208,6 +220,7 @@ export function creerApplication({
         simulation: asr.simulation,
         solutions: choisies ? proposees : null,
       });
+      protection?.signalementAccepte(req);
       const titre = textes.phrase('signalement_transmis');
       const recu = commune
         ? textes.phrase('signalement_recu_commune', { commune: commune.nom })
@@ -224,7 +237,7 @@ export function creerApplication({
         voix: voix.fichiers(textes.joindre([titre, recu]).voix),
         solutions: choisies ? { ...proposees, voix: voix.fichiers(morceaux) } : null,
       });
-    });
+    }
 
     if (m === 'GET' && p === '/api/signalements') {
       verifierConseiller(req, url);

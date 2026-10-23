@@ -78,7 +78,9 @@ export const LIMITES = {
   api: [{ fenetreMs: MINUTE, maximum: 600 }],
   fichiers: [{ fenetreMs: MINUTE, maximum: 1200 }],
   code: [{ fenetreMs: 15 * MINUTE, maximum: 5 }], // essais faux du code conseiller
-  // Tous visiteurs confondus : borne la place prise par les messages vocaux.
+  // Signalements enregistrés : par visiteur, et tous visiteurs confondus pour borner
+  // la place prise par les messages vocaux. Seuls les signalements acceptés comptent.
+  signalementsVisiteur: [{ fenetreMs: 24 * 60 * MINUTE, maximum: 100 }],
   signalementsJour: [{ fenetreMs: 24 * 60 * MINUTE, maximum: 500 }],
 };
 
@@ -99,9 +101,10 @@ export function creerProtection({ limites = {}, maintenant = Date.now } = {}) {
   for (const [nom, regles] of Object.entries({ ...LIMITES, ...limites })) {
     compteurs[nom] = regles.map((r) => creerCompteur({ ...r, maintenant }));
   }
+  const attenteDe = (nom, cle) => Math.max(0, ...compteurs[nom].map((c) => c.attente(cle)));
   // Un passage n'est compté que s'il est permis par toutes les fenêtres.
   function passer(nom, cle) {
-    const attente = Math.max(0, ...compteurs[nom].map((c) => c.attente(cle)));
+    const attente = attenteDe(nom, cle);
     if (!attente) compteurs[nom].forEach((c) => c.passer(cle));
     return attente;
   }
@@ -133,11 +136,20 @@ export function creerProtection({ limites = {}, maintenant = Date.now } = {}) {
         const attente = passer(vocale ? 'audio' : api ? 'api' : 'fichiers', client);
         if (attente) return refus(429, 'trop_de_demandes', 'Trop de demandes. Réessayez dans un moment.', attente);
       }
+      // Les quotas de signalements sont seulement consultés ici : signalementAccepte()
+      // les décompte une fois le signalement enregistré.
       if (vocale && p === '/api/signalements') {
-        const attente = passer('signalementsJour', 'tous');
+        const parVisiteur = client ? attenteDe('signalementsVisiteur', client) : 0;
+        if (parVisiteur) return refus(429, 'trop_de_demandes', 'Vous avez envoyé beaucoup de signalements aujourd’hui. Réessayez demain.', parVisiteur);
+        const attente = attenteDe('signalementsJour', 'tous');
         if (attente) return refus(503, 'service_sature', 'Le service a reçu trop de signalements aujourd’hui. Réessayez plus tard.', attente);
       }
       return null;
+    },
+    signalementAccepte(req) {
+      const client = adresseClient(req);
+      if (client) passer('signalementsVisiteur', client);
+      passer('signalementsJour', 'tous');
     },
     // Délai (en millisecondes) avant un nouvel essai du code conseiller, 0 si permis.
     codeBloque: (req) => Math.max(0, ...compteurs.code.map((c) => c.attente(cleCode(req)))),

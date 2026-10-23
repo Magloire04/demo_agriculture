@@ -22,7 +22,7 @@ const CUBOT = 'Mozilla/5.0 (Linux; Android 10; CUBOT X30) AppleWebKit/537.36 (KH
 const PAGE = { 'User-Agent': CHROME_ANDROID, 'Sec-Fetch-Site': 'same-origin', 'Sec-Fetch-Mode': 'cors' };
 const depuis = (ip, entetes = PAGE) => ({ ...entetes, 'X-Forwarded-For': ip });
 
-async function demarrer(t, { protection = creerProtection(), asr = fausseAsr(), codeConseiller = '', maxEnAttente } = {}) {
+async function demarrer(t, { protection = creerProtection(), asr = fausseAsr(), codeConseiller = '', maxEnAttente, maxEnAttenteParVisiteur } = {}) {
   const dossier = await mkdtemp(path.join(tmpdir(), 'agrifon-'));
   const gerer = creerApplication({
     asr,
@@ -37,6 +37,7 @@ async function demarrer(t, { protection = creerProtection(), asr = fausseAsr(), 
     solutions: lire('solutions.json'),
     protection,
     ...(maxEnAttente && { maxEnAttente }),
+    ...(maxEnAttenteParVisiteur && { maxEnAttenteParVisiteur }),
   });
   const serveur = createServer(gerer);
   await new Promise((r) => serveur.listen(0, '127.0.0.1', r));
@@ -181,7 +182,7 @@ test('code conseiller : bloqué 15 minutes après 5 essais faux, pour ce visiteu
   assert.equal((await essai('secret', '41.85.160.99')).status, 200);
 });
 
-test('trop de demandes vocales en attente : refus immédiat plutôt qu’une longue attente', async (t) => {
+test('trop de demandes vocales en attente : refus immédiat plutôt qu’une longue attente', { timeout: 5000 }, async (t) => {
   let liberer;
   const attente = new Promise((r) => { liberer = r; });
   const url = await demarrer(t, { asr: fausseAsr({ attente }), maxEnAttente: 2 });
@@ -193,6 +194,50 @@ test('trop de demandes vocales en attente : refus immédiat plutôt qu’une lon
   liberer();
   assert.deepEqual((await Promise.all(enCours)).map((r) => r.status), [200, 200]);
   assert.equal((await poster(`${url}/api/prix`, depuis('1.1.1.3'))).status, 200);
+});
+
+test('un signalement refusé ne consomme pas le quota du jour', async (t) => {
+  const url = await demarrer(t, { protection: creerProtection({ limites: { signalementsJour: [{ fenetreMs: 86_400_000, maximum: 2 }] } }) });
+  const vide = (ip) => fetch(`${url}/api/signalements`, { method: 'POST', headers: { 'Content-Type': 'audio/webm', ...depuis(ip) }, body: '' });
+  assert.equal((await vide('1.1.1.1')).status, 422);
+  assert.equal((await vide('1.1.1.1')).status, 422);
+  assert.equal((await poster(`${url}/api/signalements`, depuis('1.1.1.1'))).status, 201);
+  assert.equal((await poster(`${url}/api/signalements`, depuis('1.1.1.2'))).status, 201);
+});
+
+test('un visiteur seul ne peut pas épuiser le quota du jour de tous', async (t) => {
+  const url = await demarrer(t, { protection: creerProtection({ limites: { signalementsVisiteur: [{ fenetreMs: 86_400_000, maximum: 1 }] } }) });
+  assert.equal((await poster(`${url}/api/signalements`, depuis('1.1.1.1'))).status, 201);
+  const refus = await poster(`${url}/api/signalements`, depuis('1.1.1.1'));
+  assert.equal(refus.status, 429);
+  assert.equal((await refus.json()).code, 'trop_de_demandes');
+  assert.equal((await poster(`${url}/api/signalements`, depuis('1.1.1.2'))).status, 201);
+});
+
+test('un envoi lent n’occupe pas de place dans la file de l’API', { timeout: 5000 }, async (t) => {
+  const url = await demarrer(t, { maxEnAttente: 1 });
+  const { hostname, port } = new URL(url);
+  // Envoi commencé (1 octet sur 10), jamais terminé pendant le test.
+  const lent = request({ hostname, port, path: '/api/prix', method: 'POST', headers: { ...depuis('1.1.1.1'), 'Content-Type': 'audio/webm', 'Content-Length': 10 } });
+  lent.on('error', () => {});
+  lent.write('a');
+  t.after(() => lent.destroy());
+  await new Promise((r) => setTimeout(r, 50));
+  assert.equal((await poster(`${url}/api/prix`, depuis('1.1.1.2'))).status, 200);
+});
+
+test('un visiteur seul ne prend pas toutes les places de la file', { timeout: 5000 }, async (t) => {
+  let liberer;
+  const attente = new Promise((r) => { liberer = r; });
+  const url = await demarrer(t, { asr: fausseAsr({ attente }), maxEnAttente: 4, maxEnAttenteParVisiteur: 2 });
+  const enCours = [poster(`${url}/api/prix`, depuis('1.1.1.1')), poster(`${url}/api/prix`, depuis('1.1.1.1'))];
+  await new Promise((r) => setTimeout(r, 50));
+  const refus = await poster(`${url}/api/prix`, depuis('1.1.1.1'));
+  assert.equal(refus.status, 503);
+  const autre = poster(`${url}/api/prix`, depuis('1.1.1.2'));
+  await new Promise((r) => setTimeout(r, 50));
+  liberer();
+  assert.deepEqual((await Promise.all([...enCours, autre])).map((r) => r.status), [200, 200, 200]);
 });
 
 test('nombre de signalements par jour plafonné, tous visiteurs confondus', async (t) => {
