@@ -99,7 +99,7 @@ button { font: inherit; }
 .graphe { position: relative; }
 .graphe-barres { display: flex; align-items: flex-end; gap: 2px; height: 150px; border-bottom: 1px solid #B9C5BB; }
 .graphe-petit .graphe-barres { height: 110px; gap: 1px; }
-.graphe-barres button { flex: 1; min-width: 4px; border: 0; padding: 0; background: var(--vert); border-radius: 4px 4px 0 0; cursor: pointer; }
+.graphe-barres button { flex: 1; min-width: 4px; border: 0; padding: 0; background: var(--vert); border-radius: 4px 4px 0 0; cursor: pointer; transition: height .5s cubic-bezier(.2, .8, .2, 1); }
 .graphe-barres button.vide { background: var(--filet); }
 .graphe-barres button:hover, .graphe-barres button:focus-visible { background: var(--vert-fonce); outline: none; }
 .graphe-axe { display: flex; justify-content: space-between; font-size: 11px; color: var(--encre-douce); margin-top: 6px; }
@@ -129,6 +129,9 @@ button { font: inherit; }
 .appels .fon { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .appels small { color: var(--encre-douce); font-size: 11.5px; }
 .appels-detail .fon { white-space: normal; }
+.bouton-plus { align-self: flex-start; margin-top: -14px; }
+.releve-erreur { margin: 0 0 22px; padding: 10px 14px; border-radius: 8px; background: var(--rouge-clair); color: var(--rouge); font-size: 13px; font-weight: 600; }
+.releve-erreur:empty { display: none; }
 .resultat { font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .resultat svg { width: 15px; height: 15px; }
 .resultat-compris { color: #1A6B33; }

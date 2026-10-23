@@ -215,6 +215,7 @@ let minuterie = 0;
 let siteCoupe = false;
 let premierAffichage = true;
 let dernierAppel = null;
+let charge = false; // une relève a abouti depuis la connexion
 let rubrique = 'tableau';
 
 function montrerConnexion(message = '') {
@@ -259,12 +260,17 @@ function afficherSite(site) {
   onde.couper(siteCoupe);
 }
 
-const fermerConfirmation = () => confirmer.removeAttribute('data-ouvert');
+// Fermée, la confirmation est inerte : ses boutons ne se prennent pas au clavier.
+function fermerConfirmation() {
+  confirmer.removeAttribute('data-ouvert');
+  confirmer.inert = true;
+}
 
 basculer.addEventListener('click', async () => {
   if (!siteCoupe) {
     if (confirmer.hasAttribute('data-ouvert')) return fermerConfirmation();
     confirmer.setAttribute('data-ouvert', '');
+    confirmer.inert = false;
     return $('[data-couper]').focus();
   }
   try {
@@ -334,29 +340,49 @@ function poserChiffres(valeurs) {
   }, 1300);
 }
 
+function montrerBulle(conteneur, b) {
+  const bulle = $('.bulle', conteneur);
+  const r = b.getBoundingClientRect();
+  const g = conteneur.getBoundingClientRect();
+  bulle.textContent = b.getAttribute('aria-label');
+  bulle.style.left = `${r.left - g.left + r.width / 2}px`;
+  bulle.style.top = `${r.top - g.top}px`;
+  bulle.dataset.barre = b.dataset.i;
+  bulle.setAttribute('data-visible', '');
+}
+
+// Les barres sont créées une fois, puis mises à jour à chaque relève : le focus
+// du clavier et la bulle ouverte restent en place, et la bulle suit sa barre.
 function graphe(conteneur, points, axe) {
   const max = Math.max(1, ...points.map((p) => p.valeur));
-  const bulle = el('div', { class: 'bulle' });
-  const barres = el('div', { class: 'graphe-barres' });
-  for (const p of points) {
-    const b = el('button', { type: 'button', class: p.valeur ? null : 'vide', 'aria-label': p.texte });
-    b.style.height = `${Math.max(2, (p.valeur / max) * 100)}%`;
-    const montrer = () => {
-      const r = b.getBoundingClientRect();
-      const g = conteneur.getBoundingClientRect();
-      bulle.textContent = p.texte;
-      bulle.style.left = `${r.left - g.left + r.width / 2}px`;
-      bulle.style.top = `${r.top - g.top}px`;
-      bulle.setAttribute('data-visible', '');
-    };
+  let barres = $('.graphe-barres', conteneur);
+  if (barres?.children.length !== points.length) {
+    barres = el('div', { class: 'graphe-barres' });
+    const bulle = el('div', { class: 'bulle' });
     const cacher = () => bulle.removeAttribute('data-visible');
-    b.addEventListener('mouseenter', montrer);
-    b.addEventListener('focus', montrer);
-    b.addEventListener('mouseleave', cacher);
-    b.addEventListener('blur', cacher);
-    barres.append(b);
+    points.forEach((_, i) => {
+      const b = el('button', { type: 'button', 'data-i': String(i) });
+      const montrer = () => montrerBulle(conteneur, b);
+      b.addEventListener('mouseenter', montrer);
+      b.addEventListener('focus', montrer);
+      b.addEventListener('mouseleave', cacher);
+      b.addEventListener('blur', cacher);
+      b.addEventListener('transitionend', () => {
+        if (bulle.hasAttribute('data-visible') && bulle.dataset.barre === b.dataset.i) montrer();
+      });
+      barres.append(b);
+    });
+    conteneur.replaceChildren(barres, el('div', { class: 'graphe-axe' }), bulle);
   }
-  conteneur.replaceChildren(barres, el('div', { class: 'graphe-axe' }, axe.map((a) => el('span', {}, a))), bulle);
+  points.forEach((p, i) => {
+    const b = barres.children[i];
+    b.classList.toggle('vide', !p.valeur);
+    b.setAttribute('aria-label', p.texte);
+    b.style.height = `${Math.max(2, (p.valeur / max) * 100)}%`;
+  });
+  $('.graphe-axe', conteneur).replaceChildren(...axe.map((a) => el('span', {}, a)));
+  const bulle = $('.bulle', conteneur);
+  if (bulle.hasAttribute('data-visible')) montrerBulle(conteneur, barres.children[Number(bulle.dataset.barre)]);
 }
 
 function classement(liste, elements) {
@@ -456,26 +482,56 @@ function ajouterAppels(nouveaux) {
   if (!nouveaux.length) return;
   dernierAppel = nouveaux[0].ecrit_le;
   const derniers = $('[data-appels="derniers"]');
-  $('.vide-texte', derniers)?.remove();
   const journal = $('[data-appels="journal"]');
+  const journalOuvert = !$('[data-section="journal"]').hidden;
+  $('.vide-texte', derniers)?.remove();
+  if (journalOuvert) $('.vide-texte', journal)?.remove();
   [...nouveaux].reverse().forEach((a, i) => {
     derniers.prepend(ligneAppel(a, { nouveau: !reduit }));
-    if (!$('[data-section="journal"]').hidden) journal.prepend(ligneAppel(a, { nouveau: !reduit, detail: true }));
+    if (journalOuvert) journal.prepend(ligneAppel(a, { nouveau: !reduit, detail: true }));
     setTimeout(() => onde.pic(), i * 350); // chaque appel se voit dans l'onde
   });
   while (derniers.children.length > 5) derniers.lastElementChild.remove();
-  while (journal.children.length > 50) journal.lastElementChild.remove();
+}
+
+// Le journal se lit par pages de 50, de la plus récente à la plus ancienne ;
+// le bouton ramène la page précédente tant qu'il en reste.
+const PAGE_JOURNAL = 50;
+let plusAncien = null;
+const boutonPlus = $('[data-plus]');
+const messageJournal = $('[data-message-journal]');
+
+function poserPage(appels, { suite = false } = {}) {
+  const liste = $('[data-appels="journal"]');
+  const lignes = appels.map((a) => ligneAppel(a, { detail: true }));
+  if (suite) liste.append(...lignes);
+  else liste.replaceChildren(...(lignes.length ? lignes : [el('li', { class: 'vide-texte' }, 'Aucun appel pour le moment.')]));
+  if (appels.length) plusAncien = appels.at(-1).ecrit_le;
+  boutonPlus.hidden = appels.length < PAGE_JOURNAL;
 }
 
 async function chargerJournal() {
-  const liste = $('[data-appels="journal"]');
+  boutonPlus.hidden = true;
+  messageJournal.textContent = '';
   try {
-    const { appels } = await api('api/admin/appels');
-    liste.replaceChildren(...(appels.length ? appels.map((a) => ligneAppel(a, { detail: true })) : [el('li', { class: 'vide-texte' }, 'Aucun appel pour le moment.')]));
+    poserPage((await api('api/admin/appels')).appels);
   } catch (erreur) {
-    liste.replaceChildren(el('li', { class: 'vide-texte' }, erreur.message));
+    $('[data-appels="journal"]').replaceChildren(el('li', { class: 'vide-texte' }, erreur.message));
   }
 }
+
+boutonPlus.addEventListener('click', async () => {
+  boutonPlus.disabled = true;
+  messageJournal.textContent = '';
+  try {
+    poserPage((await api(`api/admin/appels?avant=${encodeURIComponent(plusAncien)}`, { action: true })).appels, { suite: true });
+    if (boutonPlus.hidden) messageJournal.textContent = 'C’est le début du journal.';
+  } catch (erreur) {
+    messageJournal.textContent = erreur.message;
+  } finally {
+    boutonPlus.disabled = false;
+  }
+});
 
 /* ---------- refus, services, réglages ---------- */
 
@@ -561,15 +617,23 @@ $('[data-brouillon]').addEventListener('change', async (e) => {
 
 /* ---------- démarrage et relève ---------- */
 
-async function relever() {
+const etatReleve = $('[data-etat-releve]');
+
+// Tant qu'aucune relève n'a abouti, les derniers appels sont posés en entier ;
+// ensuite, seuls les nouveaux s'y ajoutent. Une relève qui échoue le dit et la
+// suivante réessaie ; une session terminée ramène à la connexion.
+async function relever({ action = false } = {}) {
   if (document.hidden || vueBo.hidden) return;
   try {
-    const apres = dernierAppel ? `?apres=${encodeURIComponent(dernierAppel)}` : '';
-    const [tableau, { appels }] = await Promise.all([api('api/admin/tableau'), api(`api/admin/appels${apres}`)]);
+    const apres = charge && dernierAppel ? `?apres=${encodeURIComponent(dernierAppel)}` : '';
+    const [tableau, { appels }] = await Promise.all([api('api/admin/tableau', { action }), api(`api/admin/appels${apres}`)]);
     afficherTableau(tableau);
-    ajouterAppels(appels);
-  } catch {
-    // relève suivante dans 5 secondes ; une session terminée ramène à la connexion
+    if (charge) ajouterAppels(appels);
+    else afficherDerniers(appels);
+    charge = true;
+    etatReleve.textContent = '';
+  } catch (erreur) {
+    if (erreur.statut !== 401) etatReleve.textContent = `${erreur.message} Nouvel essai dans 5 secondes.`;
   }
 }
 
@@ -578,17 +642,13 @@ async function demarrerBo() {
   vueBo.hidden = false;
   premierAffichage = true;
   dernierAppel = null;
+  charge = false;
+  etatReleve.textContent = '';
   ouvrirRubrique(rubrique);
   onde.demarrer();
-  try {
-    const [tableau, { appels }] = await Promise.all([api('api/admin/tableau', { action: true }), api('api/admin/appels')]);
-    afficherTableau(tableau);
-    afficherDerniers(appels);
-  } catch {
-    return;
-  }
   clearInterval(minuterie);
   minuterie = setInterval(relever, RELEVE_MS);
+  await relever({ action: true });
 }
 
 document.addEventListener('visibilitychange', () => {

@@ -30,7 +30,7 @@
       <div class="bande-onde"><canvas data-onde aria-hidden="true"></canvas></div>
       <div class="bande-action"><button class="bouton bouton-couper" type="button" data-basculer>Mettre hors service</button></div>
     </header>
-    <div class="confirmer" data-confirmer><div><div class="confirmer-contenu">
+    <div class="confirmer" data-confirmer inert><div><div class="confirmer-contenu">
       <p>Couper AgriFon maintenant ? Les téléphones afficheront la page d'attente jusqu'à ce que vous remettiez le site en service. L'écran conseiller reste ouvert.</p>
       <button class="bouton bouton-plein-rouge" type="button" data-couper>Couper le site</button>
       <button class="bouton bouton-discret" type="button" data-annuler>Annuler</button>
@@ -46,6 +46,7 @@
     </nav>
 
     <main class="page">
+      <p class="releve-erreur" role="status" data-etat-releve></p>
       <section data-section="tableau" aria-label="Tableau de bord">
         <div class="chiffres">
           <div class="chiffre"><span class="chiffre-val" data-chiffre="personnes">0</span><span class="chiffre-lib">personnes</span><span class="chiffre-sous" data-sous="personnes"></span></div>
@@ -76,8 +77,10 @@
 
       <section data-section="journal" aria-label="Journal des appels" hidden>
         <h2 class="titre-section">Journal des appels</h2>
-        <p class="aide">Les 50 dernières demandes vocales. Ni adresse IP, ni position, ni identifiant : seulement ce qui a été dit et compris.</p>
+        <p class="aide">Les demandes vocales des 90 derniers jours, les plus récentes d'abord. Ni adresse IP, ni position, ni identifiant : seulement ce qui a été dit et compris.</p>
         <ul class="appels appels-detail" data-appels="journal"></ul>
+        <button class="bouton bouton-contour bouton-plus" type="button" data-plus hidden>Voir les appels précédents</button>
+        <p class="aide" role="status" data-message-journal></p>
       </section>
 
       <section data-section="refus" aria-label="Refus" hidden>
