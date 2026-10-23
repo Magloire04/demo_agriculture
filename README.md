@@ -118,7 +118,7 @@ L'application retrouve les mots attendus dans la transcription, sans tenir compt
 | Communes | `data/communes.json`, champ `termes` | noms officiels ; variantes pour 13 communes sur 77 seulement |
 | Réponses affichées | `data/reponses.json`, champ `fon` | 15 phrases et 2 unités, rédigées d'après des sources publiées, à faire relire |
 | Noms des produits | `data/referentiel.json`, champ `nom_fon` | affichés à côté du nom français, à faire relire |
-| Solutions proposées | `data/solutions.json`, champs `fon` et `voix` | 84 textes (phrases, gestes, problèmes, traitements) rédigés en brouillon, **à faire relire avant la mise en ligne** (voir « Solutions proposées ») |
+| Solutions proposées | `data/solutions.json`, champs `fon` et `voix` | 85 textes (phrases, gestes, problèmes, traitements) rédigés en brouillon, **à faire relire avant la mise en ligne** (voir « Solutions proposées ») |
 
 Méthode : dire chaque phrase de démonstration dans l'application, lire la ligne « Vous avez dit : … », ajouter les mots tels qu'ils y sont transcrits dans le fichier concerné, puis redémarrer le serveur.
 
@@ -276,7 +276,7 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 104 tests couvrent la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
+Les 114 tests couvrent la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds, apport de chaque symptôme, gestes exclus par culture), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
 
 ## Limites connues
 
