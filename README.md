@@ -161,7 +161,7 @@ npm run importer-prix
 
 ### Réponse à voix haute
 
-Le bouton « Écouter en fongbé » dit la réponse avec des extraits audio préparés à l'avance (`public/voix`, 460 fichiers MP3, 7,7 Mo). Le champ `voix` de `data/reponses.json` reprend chaque phrase fon, coupée en morceaux par `|` : « È nɔ sa gbadé kilo ɖokpó yí | 90 | ɖo Glazoué axi mɛ. ». Le serveur rend la liste des fichiers à enchaîner, et le téléphone les lit l'un après l'autre (`public/js/voix.js`). S'il manque un seul extrait, le bouton n'apparaît pas. Le serveur regarde le dossier à chaque réponse : un extrait ajouté, remplacé ou retiré compte tout de suite, sans redémarrage.
+Le bouton « Écouter en fongbé » dit la réponse avec des extraits audio préparés à l'avance (`site/voix`, 577 fichiers MP3, 12 Mo). Le champ `voix` de `data/reponses.json` reprend chaque phrase fon, coupée en morceaux par `|` : « È nɔ sa gbadé kilo ɖokpó yí | 90 | ɖo Glazoué axi mɛ. ». Le serveur rend la liste des fichiers à enchaîner, et le téléphone les lit l'un après l'autre (`site/js/voix.js`). S'il manque un seul extrait, le bouton n'apparaît pas. Le serveur regarde le dossier à chaque réponse : un extrait ajouté, remplacé ou retiré compte tout de suite, sans redémarrage.
 
 Les prix sont dits comme au marché, en kpɔ́nwun (25 F), ɖɔ̌la (5 F) et caki (1 000 F) : 90 F se dit « kpɔ́nwun atɔ̀n ɖɔ̌la atɔ̀n », 1 500 F « caki ɖokpó adaɖé » (`server/nombres-fon.js`, règles du guide de fon du Corps de la Paix, des dictionnaires fongbebenin.com et edutechbenin.com et de la presse traduite en fon). Le prix est arrondi à 5 F à l'oral, suivi de « mɔ̌ » (environ) quand on arrondit ; l'écran garde le prix exact.
 
@@ -224,6 +224,8 @@ AgriFon est fait pour des personnes qui parlent à leur téléphone. `server/pro
 - **Nombre de demandes limité par visiteur** : 20 demandes vocales par minute et 200 par heure, 600 appels à l'API par minute, 1 200 fichiers par minute. Au-delà, le serveur répond 429 avec `Retry-After` et un message en fon. Ces limites laissent une salle d'une trentaine de personnes, souvent derrière une même adresse Wi-Fi, essayer ensemble.
 - **Plafonds pour tous** : au-delà de 8 demandes vocales en attente de l'API, dont 4 au plus pour un même visiteur, la suivante est refusée aussitôt (503) plutôt que d'attendre plusieurs minutes. La place n'est prise qu'une fois l'audio reçu : un envoi lent ne bloque pas la file. 100 signalements par jour par visiteur et 500 pour tous ; seuls les signalements enregistrés comptent. Un audio de 8 Mo au plus.
 
+Les fichiers de l'application sont dans `site/`, et non dans `public/` : Passenger sert lui-même tout fichier d'un dossier `public/`, sans passer par le serveur, donc sans cette protection ni les en-têtes de sécurité. Un test refuse le retour d'un dossier `public/`.
+
 Derrière LiteSpeed, Node voit toujours l'adresse 127.0.0.1 : l'adresse du visiteur est la dernière de `X-Forwarded-For`, ajoutée par le proxy. Si elle manque, les limites par visiteur ne s'appliquent pas, pour ne pas bloquer tout le monde ensemble ; seuls les plafonds pour tous restent. `/api/etat` indique `client_identifie: true` quand l'adresse est connue.
 
 Un robot qui imite en tout un navigateur peut encore lire les pages publiques, au rythme limité d'un visiteur : aucune protection d'un site ouvert ne l'empêche entièrement. Les données sensibles (signalements, messages vocaux, positions) restent derrière le code conseiller.
@@ -232,12 +234,12 @@ Un robot qui imite en tout un navigateur peut encore lire les pages publiques, a
 
 L'interface reprend les éléments de la charte graphique du Gouvernement du Bénin :
 
-- police Montserrat (Light pour les titres en capitales, Regular pour le texte), incluse dans `public/fonts/` ;
+- police Montserrat (Light pour les titres en capitales, Regular pour le texte), incluse dans `site/fonts/` ;
 - couleurs du drapeau (vert `#006828`, jaune `#FFBE00`, rouge `#EB0000`), complétées par le noir ;
 - bande tricolore courte (un tiers de la largeur), centrée en bas de page, comme sur les documents des ministères ;
 - mise en page reprise du modèle « site internet ministère » : logo en haut à gauche, barre de rubriques grise.
 
-L'en-tête porte le logo d'AgriFon (`public/img/logo-agrifon.svg`) : le micro de l'icône de l'application, au-dessus d'une bande tricolore, suivi du nom AgriFon. L'application n'affiche ni armoiries ni nom de ministère.
+L'en-tête porte le logo d'AgriFon (`site/img/logo-agrifon.svg`) : le micro de l'icône de l'application, au-dessus d'une bande tricolore, suivi du nom AgriFon. L'application n'affiche ni armoiries ni nom de ministère.
 
 ## Arborescence
 
@@ -275,7 +277,7 @@ data/
   communes.json     les 77 communes du Bénin
   solutions.json    sources, gestes, problèmes et traitements proposés après un signalement
   pesticides.json   produits de la liste COAHP et interdits nationaux
-public/
+site/
   index.html        application (accueil, prix, signalement)
   conseiller.html   écran conseiller
   css/, js/, fonts/, img/, icons/
@@ -308,4 +310,4 @@ Les 130 tests couvrent la protection contre les robots (agents refusés ou admis
 
 ## Licence
 
-Le code est sous licence MIT (voir [LICENSE](LICENSE)). Les prix sont ceux du PAM, sous licence [CC BY-IGO](https://creativecommons.org/licenses/by/3.0/igo/), cités comme source dans l'application. La police Montserrat est distribuée sous licence SIL Open Font License ([public/fonts/OFL.txt](public/fonts/OFL.txt)). Les extraits audio de `public/voix` sont produits avec la voix de synthèse fon FongLab et suivent la licence de son modèle, [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
+Le code est sous licence MIT (voir [LICENSE](LICENSE)). Les prix sont ceux du PAM, sous licence [CC BY-IGO](https://creativecommons.org/licenses/by/3.0/igo/), cités comme source dans l'application. La police Montserrat est distribuée sous licence SIL Open Font License ([site/fonts/OFL.txt](site/fonts/OFL.txt)). Les extraits audio de `site/voix` sont produits avec la voix de synthèse fon FongLab et suivent la licence de son modèle, [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).

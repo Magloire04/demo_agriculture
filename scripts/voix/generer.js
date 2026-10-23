@@ -1,4 +1,4 @@
-// Génère les extraits audio de public/voix avec l'API de synthèse fon FongLab
+// Génère les extraits audio de site/voix avec l'API de synthèse fon FongLab
 // (https://tts.princespecial.me). L'API sert une seule voix, A1, apprise sur une
 // lecture de la Bible, sous licence CC BY-NC 4.0. Quota du compte : 50 000
 // caractères par mois ; la liste complète des extraits en compte environ 12 000.
@@ -8,7 +8,7 @@
 //   node scripts/voix/generer.js --refaire 1a2b….mp3     ces extraits seulement
 //   node scripts/voix/generer.js --graine 2 --refaire …  autre rendu des mêmes textes
 //   node scripts/voix/generer.js --point --refaire …     point final ajouté aux textes qui n'en ont pas
-//   node scripts/voix/generer.js --tout --dossier essai  ailleurs que dans public/voix
+//   node scripts/voix/generer.js --tout --dossier essai  ailleurs que dans site/voix
 //
 // Adresse et clé de l'API dans .env : FONGLAB_TTS_URL, FONGLAB_TTS_API_KEY. À
 // lancer sur un poste où ffmpeg est installé (conversion du WAV en MP3). Sans
@@ -37,7 +37,7 @@ function options() {
     refaire,
     graine,
     point: args.includes('--point'),
-    dossier: path.resolve(RACINE, valeur('--dossier', path.join('public', 'voix'))),
+    dossier: path.resolve(RACINE, valeur('--dossier', path.join('site', 'voix'))),
   };
 }
 

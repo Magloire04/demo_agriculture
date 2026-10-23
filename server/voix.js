@@ -1,5 +1,5 @@
 // Réponses à voix haute. Chaque phrase fon est dite par une suite d'extraits audio
-// préparés à l'avance dans public/voix, un par morceau de phrase (voir le champ
+// préparés à l'avance dans site/voix, un par morceau de phrase (voir le champ
 // « voix » de data/reponses.json). Le nom d'un fichier se déduit du texte qu'il
 // dit : un enregistrement humain peut remplacer un extrait de synthèse sans
 // toucher au code.

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -203,7 +203,7 @@ test('une erreur de l’API devient un message lisible', async (t) => {
   assert.equal(corps.erreur_fon, lire('reponses.json').phrases.erreur_reessayer.fon);
 });
 
-test('fichiers statiques, sans sortir du dossier public', async (t) => {
+test('fichiers statiques, sans sortir du dossier site', async (t) => {
   const url = await demarrer(t, { asr: fausseAsr() });
   const accueil = await fetch(`${url}/`);
   assert.equal(accueil.status, 200);
@@ -263,4 +263,12 @@ test('client ASR : une seule requête à la fois vers l’API', async () => {
   });
   await Promise.all([1, 2, 3].map(() => asr.marche(Buffer.from('x'), 'audio/webm')));
   assert.equal(maximum, 1);
+});
+
+test('aucun dossier public/ : Passenger le servirait sans passer par le serveur ni par sa protection', async (t) => {
+  const racine = new URL('../', import.meta.url);
+  assert.equal(existsSync(new URL('public', racine)), false);
+  assert.equal(existsSync(new URL('site/index.html', racine)), true);
+  const url = await demarrer(t, { asr: fausseAsr() });
+  assert.equal((await fetch(`${url}/js/app.js`)).status, 200);
 });

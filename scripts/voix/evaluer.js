@@ -4,7 +4,7 @@
 // à l'identique, 1 : rien de commun). Sert à comparer deux voix de synthèse et à
 // repérer les extraits à regénérer avec une autre graine.
 //
-//   node scripts/voix/evaluer.js                              extraits de public/voix
+//   node scripts/voix/evaluer.js                              extraits de site/voix
 //   node scripts/voix/evaluer.js --dossier essai --json r.json  autre dossier, détail en JSON
 //   node scripts/voix/evaluer.js --fichiers 1a2b….mp3 …          ces extraits seulement
 //
@@ -29,7 +29,7 @@ function options() {
   const fichiers = i < 0 ? [] : args.slice(i + 1).filter((a) => !a.startsWith('--'))
     .map((a) => path.basename(a).replace(/(\.mp3)?$/, '.mp3'));
   return {
-    dossier: path.resolve(RACINE, valeur('--dossier', path.join('public', 'voix'))),
+    dossier: path.resolve(RACINE, valeur('--dossier', path.join('site', 'voix'))),
     json: valeur('--json', null),
     fichiers,
   };

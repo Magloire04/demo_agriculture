@@ -1,4 +1,4 @@
-// Serveur de la démo : sert la PWA (dossier public/) et relaie les enregistrements
+// Serveur de la démo : sert la PWA (dossier site/) et relaie les enregistrements
 // vers l'API de reconnaissance vocale, dont les identifiants ne quittent pas le serveur.
 
 import { createReadStream } from 'node:fs';
@@ -112,8 +112,8 @@ const PHRASES_ERREUR = {
 // `maxEnAttente` : demandes vocales en attente de l'API au-delà desquelles on refuse,
 // dont `maxEnAttenteParVisiteur` au plus pour un même visiteur.
 export function creerApplication({
-  asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierPublic = path.join(RACINE, 'public'),
-  voix = creerVoix(path.join(dossierPublic, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
+  asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierSite = path.join(RACINE, 'site'),
+  voix = creerVoix(path.join(dossierSite, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
   maxEnAttenteParVisiteur = 4,
 }) {
   // Noms de marchés transmis à l'API pour l'aider à les reconnaître (50 au plus).
@@ -307,8 +307,8 @@ export function creerApplication({
     }
     if (relatif === '/') relatif = '/index.html';
     if (relatif === '/conseiller') relatif = '/conseiller.html';
-    const chemin = path.join(dossierPublic, path.normalize(relatif));
-    if (!chemin.startsWith(dossierPublic + path.sep)) throw new ErreurHttp(404, 'Fichier introuvable.', 'introuvable');
+    const chemin = path.join(dossierSite, path.normalize(relatif));
+    if (!chemin.startsWith(dossierSite + path.sep)) throw new ErreurHttp(404, 'Fichier introuvable.', 'introuvable');
     const ext = path.extname(chemin);
     const cache = ['.woff2', '.png'].includes(ext) ? 'public, max-age=604800' : 'no-cache';
     return envoyerFichier(req, res, chemin, cache);
