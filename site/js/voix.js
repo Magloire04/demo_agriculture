@@ -37,16 +37,24 @@ async function charger(id, suivi, essai) {
   }
   if (reponse.status === 202 && essai + 1 < ESSAIS_MAX) {
     const delai = Number(reponse.headers.get('Retry-After')) || 10;
-    setTimeout(() => charger(id, suivi, essai + 1), delai * 1000);
+    // Plus de nouvelle demande quand la réponse a quitté l'écran : pas de données pour rien.
+    setTimeout(() => (suivi.actif() ? charger(id, suivi, essai + 1) : changerEtat(suivi, 'abandon')), delai * 1000);
     return changerEtat(suivi, 'attente');
   }
   changerEtat(suivi, 'abandon');
 }
 
-// Demande la phrase entière en arrière-plan, une seule fois par identifiant.
-export function prechargerPhrase(id) {
-  if (!id || phrases.has(id)) return;
-  const suivi = { etat: 'demande', url: null, abonnes: [] };
+// Demande la phrase entière en arrière-plan. Une phrase prête ou en route n'est pas
+// redemandée ; une phrase abandonnée (réseau coupé, inconnue du serveur, trop
+// attendue) l'est quand la réponse s'affiche de nouveau. `actif` dit si la réponse
+// est encore à l'écran.
+export function prechargerPhrase(id, { actif = () => true } = {}) {
+  if (!id) return;
+  const existant = phrases.get(id);
+  if (existant) existant.actif = actif;
+  if (existant && existant.etat !== 'abandon') return;
+  const suivi = existant ?? { etat: 'demande', url: null, abonnes: [], actif };
+  suivi.etat = 'demande';
   phrases.set(id, suivi);
   charger(id, suivi, 0);
 }

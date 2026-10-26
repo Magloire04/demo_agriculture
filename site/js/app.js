@@ -260,20 +260,26 @@ const MENTION_JML = 'Voix de synthèse JML (OmniVoice, licence CC BY-NC 4.0), en
 const MENTION_FONGLAB = 'Voix de synthèse FongLab (licence CC BY-NC 4.0), en attente de relecture par un locuteur.';
 
 // Bouton pour écouter la réponse en fongbé : la phrase entière (`phrase`, demandée dès
-// l'affichage) si elle est prête, sinon les extraits audio s'ils existent tous.
+// l'affichage) si elle est prête, sinon les extraits audio s'ils existent tous. Un
+// voix.js plus ancien, resté dans le cache du téléphone, ne sait dire que les extraits.
 function lecture(extraits, phrase = null) {
-  if (!voix || (!extraits && !phrase)) return null;
-  if (phrase) voix.prechargerPhrase(phrase);
-  const mention = el('p', { class: 'lecture-mention' }, phrase ? MENTION_JML : MENTION_FONGLAB);
+  const entiere = Boolean(phrase && typeof voix?.lireReponse === 'function');
+  if (!voix || (!extraits && !entiere)) return null;
+  const mention = el('p', { class: 'lecture-mention' }, entiere ? MENTION_JML : MENTION_FONGLAB);
   // La mention nomme la voix qui joue, dès le début de la lecture.
-  const lire = (etiquette) => voix.lireReponse({ phrase, extraits }, {
-    surAttente: () => etiquette('Je prépare la voix…'),
-    surLecture: (jouee) => {
-      etiquette('Arrêter');
-      mention.textContent = jouee === 'nouvelle' ? MENTION_JML : MENTION_FONGLAB;
-    },
-  });
-  return el('div', { class: 'lecture' }, boutonLecture('Écouter en fongbé', lire), mention);
+  const lire = entiere
+    ? (etiquette) => voix.lireReponse({ phrase, extraits }, {
+      surAttente: () => etiquette('Je prépare la voix…'),
+      surLecture: (jouee) => {
+        etiquette('Arrêter');
+        mention.textContent = jouee === 'nouvelle' ? MENTION_JML : MENTION_FONGLAB;
+      },
+    })
+    : () => voix.lireExtraits(extraits);
+  const bloc = el('div', { class: 'lecture' }, boutonLecture('Écouter en fongbé', lire), mention);
+  // Plus de nouvelle demande du son une fois la réponse retirée de l'écran.
+  if (entiere) voix.prechargerPhrase(phrase, { actif: () => bloc.isConnected });
+  return bloc;
 }
 
 function erreurDans(zone) {
