@@ -461,6 +461,8 @@ export async function demarrer() {
   // Réglages du back office : SOLUTIONS_BROUILLON n'en est que la valeur de départ.
   const reglages = await creerReglages(path.join(dossierDonnees, 'reglages.json'), { solutionsBrouillon: env.SOLUTIONS_BROUILLON === '1' });
   const mesures = creerMesures(path.join(dossierDonnees, 'mesures'));
+  // Voix en phrases entières : coupée en simulation, avec VOIX_PHRASES=0 ou sans identifiants.
+  const synthese = creerSyntheseDepuisEnv(env, dossierDonnees, { simulation: asr.simulation });
   const admin = creerAdmin({
     empreinte: env.ADMIN_MDP_EMPREINTE || '',
     sessions: creerSessions(),
@@ -468,9 +470,8 @@ export async function demarrer() {
     version: lireVersion(RACINE),
     dossierAudio: path.join(dossierDonnees, 'audio'),
     importerPrix: () => lancerImportPrix(RACINE),
+    synthese,
   });
-  // Voix en phrases entières : coupée en simulation, avec VOIX_PHRASES=0 ou sans identifiants.
-  const synthese = creerSyntheseDepuisEnv(env, dossierDonnees, { simulation: asr.simulation });
   if (synthese) {
     const purger = () => synthese.purger().catch((e) => console.error(`Réserve de voix : ${e.message}`));
     purger();

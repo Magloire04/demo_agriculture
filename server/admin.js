@@ -116,7 +116,7 @@ export function creerSessions({ dureeMs = 600_000, maintenant = Date.now } = {})
 export function creerAdmin({
   empreinte, sessions, mesures = null, reglages = null, registre = null, releves = null, asr = null, version = null,
   dossierAudio = null, importerPrix = null, attendre = (ms) => new Promise((r) => setTimeout(r, ms)),
-  verifier = verifierSansBloquer,
+  verifier = verifierSansBloquer, synthese = null,
 }) {
   // 3 essais faux depuis une même adresse (un même /64 en IPv6) la bloquent 10
   // minutes. Jamais de blocage commun, qui enfermerait l'administrateur dehors :
@@ -176,6 +176,8 @@ export function creerAdmin({
       prix: { importe_le: prix.importe_le ?? null, derniere_date: prix.derniere_date ?? null },
       stockage: { messages_vocaux: messages, octets },
       version,
+      // Réserve de la voix des phrases entières ; null si elle est coupée.
+      voix: synthese ? await synthese.etat() : null,
     };
   }
 
