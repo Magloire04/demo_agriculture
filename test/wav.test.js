@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { test } from 'node:test';
 import { assembler, ecrireWav, lireWav, reechantillonner } from '../server/wav.js';
 
@@ -57,6 +58,21 @@ test('24 kHz vers 16 kHz : longueur, amplitude et fréquence gardées pour 1 kHz
 test('24 kHz vers 16 kHz : 10 kHz est coupé, sans repliement', () => {
   const sortie = reechantillonner(sinus(10000, 24000, 1), 24000, 16000);
   assert.ok(efficace(sortie.subarray(500, 15500)) < 0.05 * efficace(sinus(10000, 24000, 1)));
+});
+
+test('rééchantillonnage : sortie inchangée (empreinte relevée avant l’accélération)', () => {
+  const entree = Int16Array.from({ length: 2400 }, (_, i) => Math.round(8000 * Math.sin((2 * Math.PI * 1000 * i) / 24000) + 4000 * Math.sin((2 * Math.PI * 3000 * i) / 24000)));
+  const sortie = reechantillonner(entree, 24000, 16000);
+  assert.equal(sortie.length, 1600);
+  assert.equal(createHash('sha1').update(Buffer.from(sortie.buffer)).digest('hex'), '6687c586e3df945026190ace786bb1cf6174a322');
+});
+
+test('rééchantillonnage : 30 s de son en moins de 400 ms, pour ne pas figer le serveur', () => {
+  const long = new Int16Array(24000 * 30).map((_, i) => Math.round(8000 * Math.sin(i / 7)));
+  const debut = performance.now();
+  reechantillonner(long, 24000, 16000);
+  const duree = performance.now() - debut;
+  assert.ok(duree < 400, `${Math.round(duree)} ms`);
 });
 
 test('assembler met un silence entre deux sons', () => {

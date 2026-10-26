@@ -69,19 +69,36 @@ export function reechantillonner(echantillons, de, vers) {
     const fenetre = 0.42 + 0.5 * Math.cos((Math.PI * d) / DEMI_LARGEUR) + 0.08 * Math.cos((2 * Math.PI * d) / DEMI_LARGEUR);
     return sinc * fenetre;
   };
+  // Les poids ne dépendent que du décalage fractionnaire (n·de mod vers) : calculés
+  // une fois par décalage (2 seulement de 24 à 16 kHz), puis réutilisés. Sans cela, le
+  // calcul figeait le serveur près d'une seconde pour 30 s de son.
+  const poidsParDecalage = new Map();
+  const poidsDe = (reste) => {
+    let poids = poidsParDecalage.get(reste);
+    if (!poids) {
+      poids = new Float64Array(2 * DEMI_LARGEUR);
+      let total = 0;
+      for (let j = 0; j < poids.length; j++) {
+        poids[j] = noyau(reste / vers - (j - DEMI_LARGEUR + 1));
+        total += poids[j];
+      }
+      // Les poids sont ramenés à 1 : un son constant garde son niveau.
+      for (let j = 0; j < poids.length; j++) poids[j] /= total;
+      poidsParDecalage.set(reste, poids);
+    }
+    return poids;
+  };
   const sortie = new Int16Array(Math.round((echantillons.length * vers) / de));
   for (let n = 0; n < sortie.length; n++) {
-    const t = (n * de) / vers;
-    const centre = Math.floor(t);
+    const centre = Math.floor((n * de) / vers);
+    const poids = poidsDe((n * de) % vers);
+    const premier = centre - DEMI_LARGEUR + 1;
     let somme = 0;
-    let poids = 0;
-    for (let k = centre - DEMI_LARGEUR + 1; k <= centre + DEMI_LARGEUR; k++) {
-      const h = noyau(t - k);
-      poids += h;
-      if (k >= 0 && k < echantillons.length) somme += echantillons[k] * h;
+    for (let j = 0; j < poids.length; j++) {
+      const k = premier + j;
+      if (k >= 0 && k < echantillons.length) somme += echantillons[k] * poids[j];
     }
-    // Les poids sont ramenés à 1 : un son constant garde son niveau.
-    sortie[n] = Math.max(-32768, Math.min(32767, Math.round(somme / poids)));
+    sortie[n] = Math.max(-32768, Math.min(32767, Math.round(somme)));
   }
   return sortie;
 }
