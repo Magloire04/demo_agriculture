@@ -162,15 +162,19 @@ npm run importer-prix
 
 ### Réponse à voix haute
 
-Le bouton « Écouter en fongbé » dit la réponse avec des extraits audio préparés à l'avance (`site/voix`, 577 fichiers MP3, 12 Mo). Le champ `voix` de `data/reponses.json` reprend chaque phrase fon, coupée en morceaux par `|` : « È nɔ sa gbadé kilo ɖokpó yí | 90 | ɖo Glazoué axi mɛ. ». Le serveur rend la liste des fichiers à enchaîner, et le téléphone les lit l'un après l'autre (`site/js/voix.js`). S'il manque un seul extrait, le bouton n'apparaît pas. Le serveur regarde le dossier à chaque réponse : un extrait ajouté, remplacé ou retiré compte tout de suite, sans redémarrage.
+Le bouton « Écouter en fongbé » dit la réponse d'un seul tenant, avec la voix `homme2` de l'application JML Traduction (OmniVoice affiné sur le fon, licence CC BY-NC 4.0, usage non commercial). Pour chaque réponse, le serveur compose le texte à dire (les morceaux de voix décrits plus bas, mis bout à bout, montants en toutes lettres) et renvoie son identifiant (`voix_phrase`). Le téléphone demande aussitôt le son à `GET /api/voix/<identifiant>.wav`, pendant que l'agriculteur lit la réponse. Le serveur le prend dans sa réserve (`stockage/voix-phrases/`) ou le fait synthétiser par la route `https://51-159-167-70.sslip.io/app/api/tts-fon-p1`, avec les identifiants de la reconnaissance vocale (`ASR_ID`, `ASR_MDP`) : une synthèse à la fois, un texte long coupé entre deux phrases en morceaux de 300 caractères au plus, puis le son ramené de 24 à 16 kHz. Seuls les textes produits par AgriFon peuvent être synthétisés. À l'appui, si le son n'est pas encore arrivé, le téléphone attend 5 secondes au plus, puis joue les anciens extraits ; si le serveur a déjà répondu « pas encore prête », il les joue aussitôt. La mention sous le bouton nomme la voix jouée.
+
+Cette route sert d'abord à l'application JML Traduction et peut changer sans prévenir : son adresse et la voix se règlent dans `.env` (`VOIX_URL`, `VOIX_NOM`), et `VOIX_PHRASES=0` coupe la nouvelle voix, comme le mode simulation. Après un échec du labo, le serveur ne l'appelle plus pendant 5 minutes. Un son non réécouté depuis 30 jours est effacé, et la réserve est plafonnée à 300 Mo. Après chaque déploiement, `scripts/deployer.sh` lance en arrière-plan `scripts/voix/preparer-phrases.js`, qui prépare les phrases fixes : accusés de réception pour chaque commune, produit non compris, marché compris sans produit (journal dans `stockage/voix-phrases/preparation.log`). Le back office montre l'état de la réserve (« Voix fon (JML) » dans l'état des services).
+
+La voix de repli est faite d'extraits audio préparés à l'avance (`site/voix`, 577 fichiers MP3, 12 Mo). Le champ `voix` de `data/reponses.json` reprend chaque phrase fon, coupée en morceaux par `|` : « È nɔ sa gbadé kilo ɖokpó yí | 90 | ɖo Glazoué axi mɛ. ». Le serveur rend la liste des fichiers à enchaîner, et le téléphone les lit l'un après l'autre (`site/js/voix.js`). S'il manque un seul extrait, la réponse n'a pas de voix de repli. Le serveur regarde le dossier à chaque réponse : un extrait ajouté, remplacé ou retiré compte tout de suite, sans redémarrage.
 
 Les prix sont dits comme au marché, en kpɔ́nwun (25 F), ɖɔ̌la (5 F) et caki (1 000 F) : 90 F se dit « kpɔ́nwun atɔ̀n ɖɔ̌la atɔ̀n », 1 500 F « caki ɖokpó adaɖé » (`server/nombres-fon.js`, règles du guide de fon du Corps de la Paix, des dictionnaires fongbebenin.com et edutechbenin.com et de la presse traduite en fon). Le prix est arrondi à 5 F à l'oral, suivi de « mɔ̌ » (environ) quand on arrondit ; l'écran garde le prix exact.
 
-Les extraits actuels sont produits par la voix de synthèse fon FongLab (API `https://tts.princespecial.me`, voix A1 apprise sur une lecture de la Bible), dont le modèle est sous licence CC BY-NC 4.0 (usage non commercial). L'application le signale sous le bouton. Ils remplacent ceux de [MMS-TTS](https://huggingface.co/facebook/mms-tts-fon), la voix de Meta, sous la même licence.
+Les extraits sont produits par la voix de synthèse fon FongLab (API `https://tts.princespecial.me`, voix A1 apprise sur une lecture de la Bible), dont le modèle est sous licence CC BY-NC 4.0 (usage non commercial). L'application le signale sous le bouton. Ils remplacent ceux de [MMS-TTS](https://huggingface.co/facebook/mms-tts-fon), la voix de Meta, sous la même licence.
 
 Chaque extrait a été relu par la reconnaissance vocale JaimeMaLangue (`scripts/voix/evaluer.js` : distance d'édition entre le texte attendu et le texte entendu, sans tons ni accents). La version la mieux comprise a été gardée parmi celles produites avec la graine 0, avec un point final pour les 286 extraits qui n'ont pas de ponctuation, puis avec les graines 1 et 2 pour les 121 extraits encore mal compris. Sans point final, la voix avale souvent les textes courts. Écart moyen obtenu : 7,0 % sur les montants et 13,0 % sur les phrases, contre 8,8 % et 15,0 % pour les extraits MMS-TTS relus de la même façon (ceux-ci n'avaient eu d'autres graines que pour les 34 plus mal relus). « ɖɔ̌la wè » et « ɖɔ̌la tɛ́nnɛ » restent les montants les plus mal rendus. La voix reste à faire valider par des locuteurs.
 
-Pour remplacer la voix de synthèse par une voix humaine, faire enregistrer chaque texte de la liste et déposer le fichier sous le même nom : le nom d'un extrait se déduit du texte qu'il dit, aucun code n'est à modifier. La voix de synthèse ne connaît pas le « r » : le générateur le fait dire « l » (Palakou, kalotte), comme on le prononce en fon.
+Pour remplacer la voix de synthèse par une voix humaine, faire enregistrer chaque texte de la liste et déposer le fichier sous le même nom : le nom d'un extrait se déduit du texte qu'il dit, aucun code n'est à modifier. La voix de synthèse FongLab ne connaît pas le « r » : le générateur le fait dire « l » (Palakou, kalotte), comme on le prononce en fon. La voix des phrases entières reçoit le texte tel qu'il est écrit.
 
 ```bash
 node scripts/lister-voix.js --json liste.json   # textes à dire et noms de fichier, extraits manquants
@@ -212,6 +216,7 @@ Le locuteur corrige le fon affiché (doses en chiffres) et le texte dit par la v
 | `POST` | `/api/signalements/{référence}/prise-en-charge` | prise en charge (conseiller) |
 | `GET` | `/api/signalements/{référence}/audio` | message vocal (conseiller) |
 | `GET` | `/api/prix/base`, `/api/communes`, `/api/etat` | données de référence et état du service |
+| `GET` | `/api/voix/{identifiant}.wav` | voix d'une réponse en phrase entière : 200 (WAV 16 kHz), 202 tant qu'elle se prépare, 404 si l'identifiant n'a pas été émis |
 | `POST` | `/api/admin/connexion`, `/api/admin/deconnexion` | connexion au back office (corps `{ "mot_de_passe": "…" }`), déconnexion |
 | `GET` | `/api/admin/session`, `/tableau?jours=7`, `/appels?apres=`, `/refus?jours=14`, `/services`, `/reglages` | données du back office (session exigée) |
 | `POST` | `/api/admin/hors-service`, `/solutions-brouillon` (corps `{ "actif": true }`), `/prix/importer` | actions du back office (session exigée) |
@@ -282,6 +287,7 @@ scripts/
   lister-voix.js    extraits audio que les réponses peuvent dire, et ceux qui manquent
   voix/generer.js   génération des extraits avec l'API de synthèse fon FongLab (sur un poste)
   voix/evaluer.js   relecture des extraits par la reconnaissance vocale, écart avec le texte attendu
+  voix/preparer-phrases.js  voix des phrases fixes en phrases entières, lancée après chaque déploiement
   relecture-solutions.js  export et réimport CSV des solutions pour le locuteur (relecture/csv.js)
   admin-mot-de-passe.js   mot de passe du back office (empreinte dans .env, sur le serveur)
   pesticides/extraire_coahp.py  extraction de la liste COAHP vers data/pesticides.json (sur un poste)
@@ -293,7 +299,9 @@ server/
   releves.js        relevés de prix lus par le serveur, relus à chaque import
   reponses.js       phrases de réponse en français et en fongbé
   nombres-fon.js    prix dits en fon (kpɔ́nwun, ɖɔ̌la, caki)
-  voix.js           extraits audio à enchaîner pour dire une réponse
+  voix.js           extraits audio à enchaîner pour dire une réponse (voix de repli)
+  synthese.js       voix des réponses en phrases entières : appel au labo, réserve, purge
+  wav.js            lecture, écriture et passage à 16 kHz des sons WAV
   signalement.js    analyse et registre des signalements
   solutions.js      solutions proposées après un signalement
   saison.js         saison des pluies ou saison sèche d'un département
@@ -330,7 +338,7 @@ docs/captures/      captures d'écran du README
 npm test
 ```
 
-Les 195 tests couvrent le back office (mot de passe, sessions de 10 minutes, blocages, routes, mode hors service, solutions en brouillon), les mesures (visiteurs anonymes, journal sans donnée identifiante, refus, statistiques, purge à 90 jours, limites contre les faux identifiants), la protection contre les robots (agents refusés ou admis, adresse du visiteur, limites, origine des demandes, essais du code conseiller, plafonds), la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds, apport de chaque symptôme, gestes exclus par culture), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
+Les 231 tests couvrent la voix des phrases entières (texte à dire, découpage, appel au labo, réserve, attente, pause après échec, purge, préparation, route du son, passage à 16 kHz sans repliement), le back office (mot de passe, sessions de 10 minutes, blocages, routes, mode hors service, solutions en brouillon), les mesures (visiteurs anonymes, journal sans donnée identifiante, refus, statistiques, purge à 90 jours, limites contre les faux identifiants), la protection contre les robots (agents refusés ou admis, adresse du visiteur, limites, origine des demandes, essais du code conseiller, plafonds), la comparaison de texte, les prix dits en fon, les extraits audio des réponses, la lecture du fichier du PAM, le rechargement des prix, la réponse « prix du marché » dans les deux langues, l'analyse et l'enregistrement des signalements, les routes du serveur et le client de l'API (authentification, erreurs, une requête à la fois). Pour les solutions proposées, ils vérifient aussi la saison par département, le choix des solutions (cas net ou possible, mots déclencheurs, parties exigées, plafonds, apport de chaque symptôme, gestes exclus par culture), la règle d'autorisation des produits, la couverture des 171 combinaisons culture × symptôme, la présence de chaque morceau de voix et l'export CSV pour la relecture.
 
 ## Limites connues
 

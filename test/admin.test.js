@@ -216,7 +216,7 @@ test('script : écrit l’empreinte dans .env sans afficher le mot de passe, gar
 const lireData = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 const NAVIGATEUR = 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36';
 
-async function demarrerApplication(t, { importerPrix = async () => ({ ok: true, message: 'Prix importés.' }) } = {}) {
+async function demarrerApplication(t, { importerPrix = async () => ({ ok: true, message: 'Prix importés.' }), synthese = null } = {}) {
   const dossier = await mkdtemp(path.join(tmpdir(), 'agrifon-admin-app-'));
   t.after(() => rm(dossier, { recursive: true, force: true }));
   const asr = {
@@ -235,7 +235,7 @@ async function demarrerApplication(t, { importerPrix = async () => ({ ok: true, 
   await writeFile(path.join(dossier, 'audio', 'SIG-20261023-902.webm'), Buffer.alloc(500));
   const admin = creerAdmin({
     empreinte: EMPREINTE, sessions: creerSessions(), mesures, reglages, registre, releves, asr,
-    version: { commit: 'abc1234', demarre_le: '2026-10-23T08:00:00.000Z' }, dossierAudio: path.join(dossier, 'audio'), importerPrix,
+    version: { commit: 'abc1234', demarre_le: '2026-10-23T08:00:00.000Z' }, dossierAudio: path.join(dossier, 'audio'), importerPrix, synthese,
   });
   const gerer = creerApplication({
     asr, base: lireData('referentiel.json'), releves, lexique: lireData('lexique.json'), communes: lireData('communes.json').communes,
@@ -343,7 +343,14 @@ test('services : API, prix, messages vocaux, version', async (t) => {
     prix: { importe_le: '2026-10-21T06:00:00.000Z', derniere_date: '2026-09-15' },
     stockage: { messages_vocaux: 2, octets: 1500 },
     version: { commit: 'abc1234', demarre_le: '2026-10-23T08:00:00.000Z' },
+    voix: null,
   });
+});
+
+test('services : réserve de la voix des phrases entières', async (t) => {
+  const etat = { en_reserve: 3, octets: 120000, derniere_erreur: null, pause_jusqua: null };
+  const { avecSession } = await demarrerApplication(t, { synthese: { etat: async () => etat } });
+  assert.deepEqual((await (await avecSession('/api/admin/services')).json()).voix, etat);
 });
 
 test('refus : jours bornés à 90', async (t) => {

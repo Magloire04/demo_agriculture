@@ -236,6 +236,7 @@ function bilingue({ fr, fon }, classeFrancaisSeul = '') {
     el('p', { class: 'texte-fr', lang: 'fr' }, fr));
 }
 
+// `lire(etiquette)` peut changer le libellé du bouton pendant qu'il travaille.
 function boutonLecture(libelle, lire) {
   const texte = el('span', {}, libelle);
   const bouton = el('button', { type: 'button', class: 'bouton-secondaire bouton-ecouter' }, svg(ICONE_ECOUTER), texte);
@@ -244,7 +245,7 @@ function boutonLecture(libelle, lire) {
     bouton.classList.add('en-cours');
     texte.textContent = 'Arrêter';
     try {
-      await lire();
+      await lire((t) => { texte.textContent = t; });
       texte.textContent = libelle;
     } catch {
       texte.textContent = 'Lecture impossible';
@@ -255,12 +256,30 @@ function boutonLecture(libelle, lire) {
   return bouton;
 }
 
-// Bouton pour écouter la réponse en fongbé, si tous ses extraits audio existent.
-function lecture(extraits) {
-  if (!voix || !extraits) return null;
-  return el('div', { class: 'lecture' },
-    boutonLecture('Écouter en fongbé', () => voix.lireExtraits(extraits)),
-    el('p', { class: 'lecture-mention' }, 'Voix de synthèse FongLab (licence CC BY-NC 4.0), en attente de relecture par un locuteur.'));
+const MENTION_JML = 'Voix de synthèse JML (OmniVoice, licence CC BY-NC 4.0), en attente de relecture par un locuteur.';
+const MENTION_FONGLAB = 'Voix de synthèse FongLab (licence CC BY-NC 4.0), en attente de relecture par un locuteur.';
+
+// Bouton pour écouter la réponse en fongbé : la phrase entière (`phrase`, demandée dès
+// l'affichage) si elle est prête, sinon les extraits audio s'ils existent tous. Un
+// voix.js plus ancien, resté dans le cache du téléphone, ne sait dire que les extraits.
+function lecture(extraits, phrase = null) {
+  const entiere = Boolean(phrase && typeof voix?.lireReponse === 'function');
+  if (!voix || (!extraits && !entiere)) return null;
+  const mention = el('p', { class: 'lecture-mention' }, entiere ? MENTION_JML : MENTION_FONGLAB);
+  // La mention nomme la voix qui joue, dès le début de la lecture.
+  const lire = entiere
+    ? (etiquette) => voix.lireReponse({ phrase, extraits }, {
+      surAttente: () => etiquette('Je prépare la voix…'),
+      surLecture: (jouee) => {
+        etiquette('Arrêter');
+        mention.textContent = jouee === 'nouvelle' ? MENTION_JML : MENTION_FONGLAB;
+      },
+    })
+    : () => voix.lireExtraits(extraits);
+  const bloc = el('div', { class: 'lecture' }, boutonLecture('Écouter en fongbé', lire), mention);
+  // Plus de nouvelle demande du son une fois la réponse retirée de l'écran.
+  if (entiere) voix.prechargerPhrase(phrase, { actif: () => bloc.isConnected });
+  return bloc;
 }
 
 function erreurDans(zone) {
@@ -363,7 +382,7 @@ function texteSource(source) {
 function afficherPrix(r) {
   montrerResultat(zonePrix,
     vousAvezDit(r.transcription),
-    el('div', { class: 'reponse' }, bilingue({ fr: r.message, fon: r.message_fon }, 'reponse-message'), lecture(r.voix)),
+    el('div', { class: 'reponse' }, bilingue({ fr: r.message, fon: r.message_fon }, 'reponse-message'), lecture(r.voix, r.voix_phrase)),
     r.reponses.filter((x) => x.lignes.length > 0).map(carteProduit),
     r.statut === 'marche_seul' && carteMarche(r.marche, r.produits_du_marche),
     r.source && (r.reponses.some((x) => x.lignes.length > 0) || r.statut === 'marche_seul') && texteSource(r.source),
@@ -511,7 +530,7 @@ function sectionSolutions(solutions) {
     el('div', { class: 'solutions-titre' }, bilingue(solutions.titre)),
     ...solutions.problemes.map((p) => el('div', { class: 'solutions-probleme' }, bilingue(p))),
     ...elements,
-    lecture(solutions.voix),
+    lecture(solutions.voix, solutions.voix_phrase),
     el('div', { class: 'solutions-mention' }, bilingue(solutions.mention)));
 }
 
@@ -529,7 +548,7 @@ function afficherSignalement(s) {
       s.messages.titre.fon && el('p', { class: 'texte-fr', lang: 'fr' }, s.messages.titre.fr),
       el('p', { class: 'reference' }, 'Référence : ', el('strong', {}, s.reference)),
       bilingue(s.messages.recu),
-      lecture(s.voix),
+      lecture(s.voix, s.voix_phrase),
       el('ol', { class: 'etapes' }, el('li', { class: 'fait' }, `Reçu par le service à ${heure(s.recu_le)}`), etape)),
     el('dl', { class: 'recap' },
       ligneRecap('Culture', s.culture ? s.culture.nom : aPreciser('À préciser par le conseiller')),

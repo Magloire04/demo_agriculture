@@ -553,6 +553,14 @@ async function chargerRefus() {
   }
 }
 
+// Réserve de la voix des phrases entières : coupée, en pause après une erreur, ou active.
+function voixPhrases(v) {
+  if (!v) return ['coupée : anciens extraits seulement'];
+  const reserve = `${pluriel(v.en_reserve, 'phrase', 'phrases')} en réserve, ${taille(v.octets)}`;
+  if (v.pause_jusqua) return [el('span', { class: 'etat-ko' }, `en pause après une erreur jusqu'à ${heureCourte(v.pause_jusqua)}`), `, ${reserve}`];
+  return [el('span', { class: 'etat-ok' }, 'Active'), `, ${reserve}`];
+}
+
 async function chargerServices(action = false) {
   const liste = $('[data-services]');
   try {
@@ -566,6 +574,7 @@ async function chargerServices(action = false) {
         ? `importés le ${jourHeure(s.prix.importe_le)}, relevé le plus récent du ${jourLong(s.prix.derniere_date)}`
         : 'pas encore importés'),
       ...ligne('Messages vocaux', `${pluriel(s.stockage.messages_vocaux, 'message', 'messages')}, ${taille(s.stockage.octets)}`),
+      ...ligne('Voix fon (JML)', ...voixPhrases(s.voix)),
       ...ligne('Version en ligne', `code ${s.version.commit ?? 'inconnu'}, démarré le ${jourHeure(s.version.demarre_le)}`),
     );
   } catch (erreur) {

@@ -18,6 +18,7 @@ import { creerReglages } from './reglages.js';
 import { creerTextes } from './reponses.js';
 import { analyserSignalement, creerRegistre, destinataire } from './signalement.js';
 import { choisirSolutions, solutionsPubliables } from './solutions.js';
+import { creerSyntheseDepuisEnv, texteADire } from './synthese.js';
 import { creerVoix } from './voix.js';
 
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -90,11 +91,15 @@ const PRIX_COMPRIS = new Set(['ok', 'sans_prix', 'marche_seul']);
 // `mesures` : visites, journal des demandes vocales et refus (server/mesures.js).
 // `reglages` : site hors service, solutions en brouillon (server/reglages.js) ; sans
 // eux, le site est toujours en service et `solutions` est servi tel quel.
+// `synthese` : voix des réponses en phrases entières (server/synthese.js) ; sans elle,
+// seuls les anciens extraits sont proposés.
 export function creerApplication({
   asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierSite = path.join(RACINE, 'site'),
   voix = creerVoix(path.join(dossierSite, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
-  maxEnAttenteParVisiteur = 4, mesures = null, reglages = null, maxVisitesParAdresse = 200, admin = null,
+  maxEnAttenteParVisiteur = 4, mesures = null, reglages = null, maxVisitesParAdresse = 200, admin = null, synthese = null,
 }) {
+  // Identifiant de la phrase entière à dire, à côté des anciens extraits.
+  const voixPhrase = (morceaux) => (synthese && morceaux?.length ? synthese.enregistrer(texteADire(morceaux)) : null);
   // Nouveaux visiteurs comptés par adresse sur 24 heures : de faux identifiants
   // envoyés en masse depuis une adresse ne gonflent pas les chiffres.
   const visitesParAdresse = creerCompteur({ fenetreMs: 86_400_000, maximum: maxVisitesParAdresse });
@@ -232,7 +237,9 @@ export function creerApplication({
         reconnu: { produits: reponse.reponses.map((r) => r.produit.nom), marche: reponse.marche?.nom ?? null },
         resultat: PRIX_COMPRIS.has(reponse.statut) ? 'compris' : 'non_compris',
       });
-      return envoyerJson(res, 200, { ...reponse, voix: voix.fichiers(reponse.voix), simulation: asr.simulation });
+      return envoyerJson(res, 200, {
+        ...reponse, voix: voix.fichiers(reponse.voix), voix_phrase: voixPhrase(reponse.voix), simulation: asr.simulation,
+      });
     });
 
     if (m === 'POST' && p === '/api/signalements') return journaliser('signalement', async (note) => {
@@ -286,6 +293,7 @@ export function creerApplication({
         ? textes.phrase('signalement_recu_commune', { commune: commune.nom })
         : textes.phrase('signalement_recu_gps');
       const sansVoix = ({ fr, fon }) => ({ fr, fon });
+      const voixAccuse = textes.joindre([titre, recu]).voix;
       return envoyerJson(res, 201, {
         ...vuePublique(signalement),
         messages: {
@@ -294,8 +302,9 @@ export function creerApplication({
           attente: sansVoix(textes.phrase('signalement_attente')),
           pris: sansVoix(textes.phrase('signalement_pris')),
         },
-        voix: voix.fichiers(textes.joindre([titre, recu]).voix),
-        solutions: choisies ? { ...proposees, voix: voix.fichiers(morceaux) } : null,
+        voix: voix.fichiers(voixAccuse),
+        voix_phrase: voixPhrase(voixAccuse),
+        solutions: choisies ? { ...proposees, voix: voix.fichiers(morceaux), voix_phrase: voixPhrase(morceaux) } : null,
       });
     });
 
@@ -326,6 +335,15 @@ export function creerApplication({
         if (!chemin) throw new ErreurHttp(404, 'Audio introuvable.', 'introuvable');
         return envoyerFichier(req, res, chemin, 'private, no-store');
       }
+    }
+
+    // Voix d'une phrase entière : seulement pour un identifiant émis par AgriFon.
+    const son = p.match(/^\/api\/voix\/([0-9a-f]{16})\.wav$/);
+    if (son && (m === 'GET' || m === 'HEAD')) {
+      const resultat = synthese ? await synthese.obtenir(son[1]) : { etat: 'inconnu' };
+      if (resultat.etat === 'pret') return envoyerFichier(req, res, resultat.chemin, 'public, max-age=31536000, immutable');
+      if (resultat.etat === 'en_cours') return envoyerJson(res, 202, { pret: false }, 10);
+      throw new ErreurHttp(404, 'Voix introuvable.', 'introuvable');
     }
 
     throw new ErreurHttp(404, 'Adresse inconnue.', 'introuvable');
@@ -443,6 +461,8 @@ export async function demarrer() {
   // Réglages du back office : SOLUTIONS_BROUILLON n'en est que la valeur de départ.
   const reglages = await creerReglages(path.join(dossierDonnees, 'reglages.json'), { solutionsBrouillon: env.SOLUTIONS_BROUILLON === '1' });
   const mesures = creerMesures(path.join(dossierDonnees, 'mesures'));
+  // Voix en phrases entières : coupée en simulation, avec VOIX_PHRASES=0 ou sans identifiants.
+  const synthese = creerSyntheseDepuisEnv(env, dossierDonnees, { simulation: asr.simulation });
   const admin = creerAdmin({
     empreinte: env.ADMIN_MDP_EMPREINTE || '',
     sessions: creerSessions(),
@@ -450,10 +470,16 @@ export async function demarrer() {
     version: lireVersion(RACINE),
     dossierAudio: path.join(dossierDonnees, 'audio'),
     importerPrix: () => lancerImportPrix(RACINE),
+    synthese,
   });
+  if (synthese) {
+    const purger = () => synthese.purger().catch((e) => console.error(`Réserve de voix : ${e.message}`));
+    purger();
+    setInterval(purger, 86_400_000).unref();
+  }
   const gerer = creerApplication({
     asr, base, releves, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '',
-    solutions, mesures, reglages, admin,
+    solutions, mesures, reglages, admin, synthese,
   });
 
   // Un hébergeur peut fournir un socket (chemin) au lieu d'un numéro de port.
@@ -465,6 +491,9 @@ export async function demarrer() {
     console.log(`AgriFon : à l'écoute sur ${typeof port === 'number' ? `http://localhost:${port}` : port}`);
     if (asr.simulation) console.log('Mode SIMULATION : aucune requête envoyée à l’API, réponses factices.');
     else if (!asr.configure) console.warn('ASR_ID / ASR_MDP absents : la reconnaissance vocale renverra une erreur (voir .env.example).');
+    console.log(synthese
+      ? `Voix des réponses en phrases entières : voix ${synthese.voix}, anciens extraits en repli.`
+      : 'Voix des réponses : anciens extraits seulement (phrases entières coupées).');
     if (!solutionsPubliables(solutions, { SOLUTIONS_BROUILLON: reglages.lire().solutions_brouillon ? '1' : '0' })) {
       console.warn('Solutions après signalement non proposées : leur fon attend la relecture d’un locuteur (data/solutions.json, fon_a_relire). Pour une démonstration, activer les solutions en brouillon dans le back office.');
     }
