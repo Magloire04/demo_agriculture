@@ -69,7 +69,10 @@ selecteur restart --app-root="$DOSSIER_APP"
 
 etape "Voix des phrases fixes"
 # En arrière-plan : la préparation prend un quart d'heure environ ; le déploiement n'attend pas.
-NODE=$(command -v node || find "$HOME/nodevenv/$DOSSIER_APP" -path '*/bin/node' 2>/dev/null | sort -V | tail -1)
+# Le node de l'application (nodevenv) d'abord ; « || true » : une recherche vaine ne doit
+# pas arrêter le déploiement (set -euo pipefail).
+NODE=$(find "$HOME/nodevenv/$DOSSIER_APP" -path '*/bin/node' 2>/dev/null | sort -V | tail -1 || true)
+[ -n "$NODE" ] || NODE=$(command -v node || true)
 if [ -n "$NODE" ]; then
   mkdir -p "$RACINE/stockage/voix-phrases"
   (cd "$RACINE" && nohup "$NODE" scripts/voix/preparer-phrases.js </dev/null >>stockage/voix-phrases/preparation.log 2>&1 &)
