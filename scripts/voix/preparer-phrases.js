@@ -1,16 +1,19 @@
-// Prépare la voix des phrases fixes (accusés de réception de signalement pour chaque
-// commune, produit non compris, marché compris sans produit), pour qu'elles soient
-// dites aussitôt avec la voix des phrases entières. Lancé en arrière-plan par
-// scripts/deployer.sh après le redémarrage :
+// Prépare à l'avance la voix des phrases fixes (accusés de réception de signalement
+// pour chaque commune, produit non compris, marché compris sans produit) et des
+// réponses de prix sur un seul produit, pour qu'elles soient lues aussitôt avec la
+// voix des phrases entières. Lancé en arrière-plan par scripts/importer-prix.sh après
+// chaque import des prix (donc aussi à chaque déploiement) :
 //
 //   node scripts/voix/preparer-phrases.js
 //
 // Une phrase déjà en réserve n'est pas refaite. Une seule synthèse à la fois, avec une
-// pause entre deux, pour ne pas accaparer le GPU partagé du labo.
+// pause entre deux, pour ne pas accaparer le GPU partagé du labo ; une seule
+// préparation à la fois, la suivante attend la fin de celle en cours.
 
-import { readFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { phrasesProduits, reponseProduit } from '../../server/prix.js';
 import { creerTextes } from '../../server/reponses.js';
 import { creerSyntheseDepuisEnv, texteADire } from '../../server/synthese.js';
 
@@ -32,6 +35,53 @@ export function phrasesFixes({ reponses, base, communes, releves }) {
   return [...new Set(liste.filter(Boolean))];
 }
 
+// Toutes les réponses à une question sur un seul produit : sur un marché où il a un
+// prix (les plus demandées, d'abord), sans marché, puis sur un marché sans son prix.
+export function phrasesPrix({ reponses, base, releves }) {
+  const textes = creerTextes(reponses);
+  const dire = (reponse, marche) => texteADire(textes.joindre(phrasesProduits(textes, [reponse], marche)).voix ?? []);
+  const ici = [];
+  const ailleurs = [];
+  for (const produit of base.produits) {
+    for (const marche of [null, ...base.marches]) {
+      const reponse = reponseProduit(base, releves, produit, null, marche);
+      (reponse.ici ? ici : ailleurs).push(dire(reponse, marche));
+    }
+  }
+  return [...new Set([...ici, ...ailleurs].filter(Boolean))];
+}
+
+function processusVivant(pid) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (e) {
+    return e.code === 'EPERM'; // vivant, mais à un autre utilisateur
+  }
+}
+
+// Prend le verrou `chemin` (il contient le numéro du processus), en attendant qu'il se
+// libère s'il est pris. Le verrou d'un processus arrêté est repris. Rend la fonction
+// qui le libère.
+export async function attendreTour(chemin, { pid = process.pid, vivant = processusVivant, pauseMs = 30_000, surAttente = () => {} } = {}) {
+  for (;;) {
+    try {
+      await writeFile(chemin, String(pid), { flag: 'wx' });
+      return () => rm(chemin, { force: true });
+    } catch (e) {
+      if (e.code !== 'EEXIST') throw e;
+    }
+    // Vide : l'autre vient de le créer et n'a pas encore écrit son numéro.
+    const autre = Number(await readFile(chemin, 'utf8').catch(() => ''));
+    if (autre && !vivant(autre)) {
+      await rm(chemin, { force: true });
+      continue;
+    }
+    surAttente(autre);
+    await new Promise((ok) => setTimeout(ok, pauseMs));
+  }
+}
+
 async function lireJson(chemin) {
   return JSON.parse(await readFile(chemin, 'utf8'));
 }
@@ -45,23 +95,39 @@ async function principal() {
   const env = process.env;
   const dossierDonnees = path.resolve(RACINE, env.DOSSIER_DONNEES || 'stockage');
   const synthese = creerSyntheseDepuisEnv(env, dossierDonnees, { simulation: env.ASR_SIMULATION === '1' });
-  const date = new Date().toISOString();
+  const heure = () => new Date().toISOString();
   if (!synthese) {
-    console.log(`${date} voix des phrases fixes : rien à préparer (phrases entières coupées).`);
+    console.log(`${heure()} voix préparée à l'avance : rien à préparer (phrases entières coupées).`);
     return;
   }
-  const [reponses, base, { communes }] = await Promise.all(['reponses', 'referentiel', 'communes'].map((f) => lireJson(path.join(RACINE, 'data', `${f}.json`))));
-  const releves = await lireJson(path.join(dossierDonnees, 'releves-prix.json'))
-    .catch(() => lireJson(path.join(RACINE, 'data', 'releves-prix.json')));
-  const liste = phrasesFixes({ reponses, base, communes, releves });
-  const bilan = await synthese.preparer(liste, { pauseMs: 2000 });
-  console.log(`${new Date().toISOString()} voix des phrases fixes (${liste.length}) : ${bilan.faits} faites, ${bilan.deja} déjà prêtes, ${bilan.echecs} échecs`
-    + `${bilan.interrompu ? ', arrêt après trois échecs de suite' : ''}.`);
+  const dossierVoix = path.join(dossierDonnees, 'voix-phrases');
+  await mkdir(dossierVoix, { recursive: true });
+  let annonce = false;
+  const liberer = await attendreTour(path.join(dossierVoix, 'preparation.verrou'), {
+    surAttente: (pid) => {
+      if (!annonce) console.log(`${heure()} voix préparée à l'avance : attente de la préparation en cours (processus ${pid}).`);
+      annonce = true;
+    },
+  });
+  try {
+    // Lus une fois le tour venu : un import fait pendant l'attente est pris en compte.
+    const [reponses, base, { communes }] = await Promise.all(['reponses', 'referentiel', 'communes'].map((f) => lireJson(path.join(RACINE, 'data', `${f}.json`))));
+    const releves = await lireJson(path.join(dossierDonnees, 'releves-prix.json'))
+      .catch(() => lireJson(path.join(RACINE, 'data', 'releves-prix.json')));
+    const fixes = phrasesFixes({ reponses, base, communes, releves });
+    const prix = phrasesPrix({ reponses, base, releves });
+    const liste = [...new Set([...fixes, ...prix])];
+    const bilan = await synthese.preparer(liste, { pauseMs: 2000 });
+    console.log(`${heure()} voix préparée à l'avance (${fixes.length} phrases fixes, ${prix.length} prix) : ${bilan.faits} faites, ${bilan.deja} déjà prêtes, ${bilan.echecs} échecs`
+      + `${bilan.interrompu ? ', arrêt après trois échecs de suite' : ''}.`);
+  } finally {
+    await liberer();
+  }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   principal().catch((e) => {
-    console.error(`Voix des phrases fixes : ${e.message}`);
+    console.error(`Voix préparée à l'avance : ${e.message}`);
     process.exit(1);
   });
 }
