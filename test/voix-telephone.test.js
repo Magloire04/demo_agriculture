@@ -136,3 +136,28 @@ test('lecture à la suite : un son refusé par le navigateur arrête la suite', 
   await voix.lireSuite([lire('accuse'), lire('solutions')]);
   assert.deepEqual(lues, ['accuse']);
 });
+
+test('débloquer pendant une lecture l’arrête : l’extrait suivant ne part pas', async () => {
+  const lecture = voix.lireExtraits(['e1.mp3', 'e2.mp3']);
+  voix.debloquer();
+  await lecture;
+  await pause(120);
+  assert.ok(!lectures.includes('voix/e2.mp3'), lectures.join(', '));
+});
+
+test('un arrêt pendant « Je prépare la voix… » : rien n’est lu, la suite est annulée', async (t) => {
+  remplacerFetch(t, async () => new Response('{"pret":false}', { status: 202, headers: { 'Retry-After': '0.02' } }));
+  voix.prechargerPhrase('aaaa000000000006');
+  const avant = lectures.length;
+  const rendus = [];
+  const suite = voix.lireSuite([
+    async () => { rendus.push(await voix.lireReponse({ phrase: 'aaaa000000000006', extraits: ['f.mp3'] }, { attenteMs: 1000 })); },
+    async () => { rendus.push('solutions'); },
+  ]);
+  await pause(30);
+  voix.arreterLecture();
+  await suite;
+  await pause(50);
+  assert.deepEqual(rendus, [null]);
+  assert.ok(lectures.slice(avant).every((src) => src.startsWith('blob:')), lectures.slice(avant).join(', '));
+});

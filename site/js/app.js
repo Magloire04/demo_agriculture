@@ -205,7 +205,10 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
     }
   });
 
-  fichier.addEventListener('click', () => voix?.debloquer?.());
+  fichier.addEventListener('click', () => {
+    arreterLecture(); // et les réponses qui devaient suivre
+    voix?.debloquer?.();
+  });
   fichier.addEventListener('change', () => {
     arreterLecture();
     const choisi = fichier.files?.[0];

@@ -100,8 +100,10 @@ function wavSilence() {
 }
 
 // À appeler dans le geste de l'utilisateur (appui sur le micro) : la réponse qui
-// arrivera pourra être lue sans autre appui.
+// arrivera pourra être lue sans autre appui. Coupe d'abord la lecture en cours, dont
+// la fin du silence lancerait sinon l'extrait suivant.
 export function debloquer() {
+  couper();
   lecteur ??= new Audio();
   silence ??= URL.createObjectURL(wavSilence());
   lecteur.src = silence;
