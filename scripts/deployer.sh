@@ -10,9 +10,6 @@
 
 set -euo pipefail
 
-# Tout le script est dans ce bloc, lu en entier avant de s'exécuter : « git pull » peut
-# réécrire ce fichier en cours de route, bash lirait alors la suite dans la nouvelle version.
-{
 DOMAINE=${1:?"Usage : bash scripts/deployer.sh <domaine>"}
 RACINE=$(cd "$(dirname "$0")/.." && pwd)
 DOSSIER_APP=${RACINE#"$HOME"/} # cloudlinux-selector attend un chemin relatif au dossier personnel
@@ -29,7 +26,19 @@ command -v cloudlinux-selector >/dev/null ||
   echec "cloudlinux-selector introuvable. Créer l'application dans cPanel > Setup Node.js App (dossier $DOSSIER_APP, fichier de démarrage app.cjs)."
 
 etape "Mise à jour du code"
-git -C "$RACINE" pull --ff-only
+# git remplace ce fichier sans toucher à la version que bash est en train de lire : si
+# le code a changé, le script est relancé, pour que ses nouvelles étapes tournent dès
+# ce déploiement.
+if [ -z "${AGRIFON_CODE_A_JOUR:-}" ]; then
+  AVANT=$(git -C "$RACINE" rev-parse HEAD)
+  git -C "$RACINE" pull --ff-only
+  if [ "$(git -C "$RACINE" rev-parse HEAD)" != "$AVANT" ]; then
+    echo "Code mis à jour : suite du déploiement avec la nouvelle version de ce script."
+    AGRIFON_CODE_A_JOUR=1 exec bash "$RACINE/scripts/deployer.sh" "$@"
+  fi
+else
+  echo "Code à jour."
+fi
 
 etape "Configuration (.env)"
 if [ -f "$RACINE/.env" ]; then
@@ -80,4 +89,3 @@ for _ in 1 2 3 4 5; do
   sleep 3
 done
 echec "https://$DOMAINE/api/etat ne répond pas. Voir ~/$DOSSIER_APP/stderr.log et cPanel > Setup Node.js App."
-}
