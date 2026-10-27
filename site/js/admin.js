@@ -556,7 +556,7 @@ async function chargerRefus() {
 // Réserve de la voix des phrases entières : coupée, en pause après une erreur, ou active.
 function voixPhrases(v) {
   if (!v) return ['coupée : anciens extraits seulement'];
-  const reserve = `${pluriel(v.en_reserve, 'phrase', 'phrases')} en réserve, ${taille(v.octets)}`;
+  const reserve = `${pluriel(v.en_reserve, 'phrase', 'phrases')} en réserve, ${taille(v.octets)}${v.plafond_octets ? ` sur ${taille(v.plafond_octets)}` : ''}`;
   if (v.pause_jusqua) return [el('span', { class: 'etat-ko' }, `en pause après une erreur jusqu'à ${heureCourte(v.pause_jusqua)}`), `, ${reserve}`];
   return [el('span', { class: 'etat-ok' }, 'Active'), `, ${reserve}`];
 }
