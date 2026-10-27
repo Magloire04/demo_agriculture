@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { creerAdmin, creerSessions, empreinteMotDePasse, lireVersion, verifierMotDePasse } from '../server/admin.js';
+import { creerAdmin, creerSessions, empreinteMotDePasse, lancerPreparationVoix, lireVersion, verifierMotDePasse } from '../server/admin.js';
 import { creerApplication } from '../server/index.js';
 import { creerReglages } from '../server/reglages.js';
 import { creerTextes } from '../server/reponses.js';
@@ -370,4 +370,28 @@ test('version du code lue dans .git : branche, références groupées, ou rien',
   await writeFile(path.join(racine, '.git', 'refs', 'heads', 'main'), '0c6bc02eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee1\n');
   assert.equal(lireVersion(racine).commit, '0c6bc02');
   assert.match(lireVersion(racine).demarre_le, /^\d{4}-\d{2}-\d{2}T/);
+});
+
+// Un bash qui voit les fichiers de ce poste (pas celui de WSL depuis PowerShell).
+async function bashUtilisable(dossier) {
+  const temoin = path.join(dossier, 'temoin');
+  await writeFile(temoin, '');
+  return new Promise((ok) => {
+    execFile('bash', ['-c', 'test -f "$1" && echo oui', '_', temoin], (erreur, sortie) => ok(!erreur && sortie.trim() === 'oui'));
+  });
+}
+
+test('après un import du back office, la préparation de la voix est lancée avec le node du serveur', async (t) => {
+  const racine = await mkdtemp(path.join(tmpdir(), 'agrifon-preparation-'));
+  t.after(() => rm(racine, { recursive: true, force: true }));
+  if (!(await bashUtilisable(racine))) return t.skip('pas de bash utilisable sur ce poste');
+  await mkdir(path.join(racine, 'scripts', 'voix'), { recursive: true });
+  await writeFile(path.join(racine, 'scripts', 'voix', 'lancer-preparation.sh'), 'printf %s "$NODE" > lance-avec\n');
+  lancerPreparationVoix(racine);
+  let lance = null;
+  for (let i = 0; i < 50 && lance === null; i++) {
+    await new Promise((ok) => setTimeout(ok, 100));
+    lance = await readFile(path.join(racine, 'lance-avec'), 'utf8').catch(() => null);
+  }
+  assert.equal(lance, process.execPath);
 });

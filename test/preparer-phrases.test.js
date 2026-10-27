@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, rm } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-import { attendreTour, phrasesFixes, phrasesPrix } from '../scripts/voix/preparer-phrases.js';
+import { phrasesFixes, phrasesPrix } from '../scripts/voix/preparer-phrases.js';
 import { creerApplication } from '../server/index.js';
 import { creerTextes } from '../server/reponses.js';
 import { creerRegistre } from '../server/signalement.js';
@@ -91,31 +91,4 @@ test('le serveur et la préparation produisent le même identifiant pour un accu
   const r = await (await fetch(`${adresse}/api/signalements?commune=Bohicon`, { method: 'POST', headers: { 'Content-Type': 'audio/webm' }, body: 'audio' })).json();
   const fixe = phrasesFixes({ reponses, base, communes, releves }).find((p) => p.includes(' Bohicon '));
   assert.equal(r.voix_phrase, idPhrase(fixe, 'homme2'));
-});
-
-test('une seule préparation à la fois : la seconde attend la fin de la première', async (t) => {
-  const dossier = await mkdtemp(path.join(tmpdir(), 'agrifon-verrou-'));
-  t.after(() => rm(dossier, { recursive: true, force: true }));
-  const verrou = path.join(dossier, 'preparation.verrou');
-  const liberer = await attendreTour(verrou, { pid: 101, vivant: () => true });
-  const attentes = [];
-  let entree = false;
-  const seconde = attendreTour(verrou, { pid: 102, vivant: () => true, pauseMs: 5, surAttente: (pid) => attentes.push(pid) })
-    .then((l) => { entree = true; return l; });
-  await new Promise((ok) => setTimeout(ok, 50));
-  assert.equal(entree, false);
-  assert.deepEqual([...new Set(attentes)], [101]);
-  await liberer();
-  await (await seconde)();
-  assert.equal(entree, true);
-});
-
-test('le verrou d’une préparation arrêtée en cours de route est repris', async (t) => {
-  const dossier = await mkdtemp(path.join(tmpdir(), 'agrifon-verrou-'));
-  t.after(() => rm(dossier, { recursive: true, force: true }));
-  const verrou = path.join(dossier, 'preparation.verrou');
-  await writeFile(verrou, '999999');
-  const liberer = await attendreTour(verrou, { pid: 103, vivant: (pid) => pid !== 999999, pauseMs: 5 });
-  assert.equal(await readFile(verrou, 'utf8'), '103');
-  await liberer();
 });

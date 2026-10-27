@@ -1,16 +1,16 @@
 // Prépare à l'avance la voix des phrases fixes (accusés de réception de signalement
 // pour chaque commune, produit non compris, marché compris sans produit) et des
 // réponses de prix sur un seul produit, pour qu'elles soient lues aussitôt avec la
-// voix des phrases entières. Lancé en arrière-plan par scripts/importer-prix.sh après
-// chaque import des prix (donc aussi à chaque déploiement) :
+// voix des phrases entières. Lancé en arrière-plan après chaque import des prix (donc
+// aussi à chaque déploiement) par scripts/voix/lancer-preparation.sh, qui fait attendre
+// une préparation tant qu'une autre tourne :
 //
-//   node scripts/voix/preparer-phrases.js
+//   bash scripts/voix/lancer-preparation.sh
 //
 // Une phrase déjà en réserve n'est pas refaite. Une seule synthèse à la fois, avec une
-// pause entre deux, pour ne pas accaparer le GPU partagé du labo ; une seule
-// préparation à la fois, la suivante attend la fin de celle en cours.
+// pause entre deux, pour ne pas accaparer le GPU partagé du labo.
 
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { phrasesProduits, reponseProduit } from '../../server/prix.js';
@@ -51,37 +51,6 @@ export function phrasesPrix({ reponses, base, releves }) {
   return [...new Set([...ici, ...ailleurs].filter(Boolean))];
 }
 
-function processusVivant(pid) {
-  try {
-    process.kill(pid, 0);
-    return true;
-  } catch (e) {
-    return e.code === 'EPERM'; // vivant, mais à un autre utilisateur
-  }
-}
-
-// Prend le verrou `chemin` (il contient le numéro du processus), en attendant qu'il se
-// libère s'il est pris. Le verrou d'un processus arrêté est repris. Rend la fonction
-// qui le libère.
-export async function attendreTour(chemin, { pid = process.pid, vivant = processusVivant, pauseMs = 30_000, surAttente = () => {} } = {}) {
-  for (;;) {
-    try {
-      await writeFile(chemin, String(pid), { flag: 'wx' });
-      return () => rm(chemin, { force: true });
-    } catch (e) {
-      if (e.code !== 'EEXIST') throw e;
-    }
-    // Vide : l'autre vient de le créer et n'a pas encore écrit son numéro.
-    const autre = Number(await readFile(chemin, 'utf8').catch(() => ''));
-    if (autre && !vivant(autre)) {
-      await rm(chemin, { force: true });
-      continue;
-    }
-    surAttente(autre);
-    await new Promise((ok) => setTimeout(ok, pauseMs));
-  }
-}
-
 async function lireJson(chemin) {
   return JSON.parse(await readFile(chemin, 'utf8'));
 }
@@ -100,29 +69,15 @@ async function principal() {
     console.log(`${heure()} voix préparée à l'avance : rien à préparer (phrases entières coupées).`);
     return;
   }
-  const dossierVoix = path.join(dossierDonnees, 'voix-phrases');
-  await mkdir(dossierVoix, { recursive: true });
-  let annonce = false;
-  const liberer = await attendreTour(path.join(dossierVoix, 'preparation.verrou'), {
-    surAttente: (pid) => {
-      if (!annonce) console.log(`${heure()} voix préparée à l'avance : attente de la préparation en cours (processus ${pid}).`);
-      annonce = true;
-    },
-  });
-  try {
-    // Lus une fois le tour venu : un import fait pendant l'attente est pris en compte.
-    const [reponses, base, { communes }] = await Promise.all(['reponses', 'referentiel', 'communes'].map((f) => lireJson(path.join(RACINE, 'data', `${f}.json`))));
-    const releves = await lireJson(path.join(dossierDonnees, 'releves-prix.json'))
-      .catch(() => lireJson(path.join(RACINE, 'data', 'releves-prix.json')));
-    const fixes = phrasesFixes({ reponses, base, communes, releves });
-    const prix = phrasesPrix({ reponses, base, releves });
-    const liste = [...new Set([...fixes, ...prix])];
-    const bilan = await synthese.preparer(liste, { pauseMs: 2000 });
-    console.log(`${heure()} voix préparée à l'avance (${fixes.length} phrases fixes, ${prix.length} prix) : ${bilan.faits} faites, ${bilan.deja} déjà prêtes, ${bilan.echecs} échecs`
-      + `${bilan.interrompu ? ', arrêt après trois échecs de suite' : ''}.`);
-  } finally {
-    await liberer();
-  }
+  const [reponses, base, { communes }] = await Promise.all(['reponses', 'referentiel', 'communes'].map((f) => lireJson(path.join(RACINE, 'data', `${f}.json`))));
+  const releves = await lireJson(path.join(dossierDonnees, 'releves-prix.json'))
+    .catch(() => lireJson(path.join(RACINE, 'data', 'releves-prix.json')));
+  const fixes = phrasesFixes({ reponses, base, communes, releves });
+  const prix = phrasesPrix({ reponses, base, releves });
+  const liste = [...new Set([...fixes, ...prix])];
+  const bilan = await synthese.preparer(liste, { pauseMs: 2000 });
+  console.log(`${heure()} voix préparée à l'avance (${fixes.length} phrases fixes, ${prix.length} prix) : ${bilan.faits} faites, ${bilan.deja} déjà prêtes, ${bilan.echecs} échecs`
+    + `${bilan.interrompu ? ', arrêt après trois échecs de suite' : ''}.`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

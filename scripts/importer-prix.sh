@@ -31,7 +31,5 @@ node scripts/importer-prix.js || statut=$?
 
 # Voix des réponses préparée à l'avance, avec les nouveaux prix (ou ceux d'avant si
 # l'import a échoué). En arrière-plan : la première fois prend plus d'une heure.
-mkdir -p stockage/voix-phrases
-(nohup node scripts/voix/preparer-phrases.js </dev/null >>stockage/voix-phrases/preparation.log 2>&1 &)
-echo "Préparation de la voix lancée en arrière-plan (journal : stockage/voix-phrases/preparation.log)."
+bash scripts/voix/lancer-preparation.sh
 exit "$statut"
