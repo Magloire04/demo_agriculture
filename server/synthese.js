@@ -174,6 +174,8 @@ export function creerSynthese({
       for (const texte of liste) {
         const id = idPhrase(texte, voix);
         if (await present(id)) {
+          // Toujours dans la liste : servie ou non, elle échappe à la purge.
+          await toucher(id);
           bilan.deja++;
           continue;
         }
