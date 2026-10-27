@@ -235,6 +235,19 @@ test('préparation : une phrase déjà en réserve compte comme servie, la purge
   assert.deepEqual(await s.purger(), { effaces: 0 });
 });
 
+test('préparation arrêtée par une panne du labo : les phrases en réserve plus loin dans la liste restent protégées', async (t) => {
+  const d = await dossier(t);
+  const maintenant = Date.parse('2026-10-26T12:00:00Z');
+  const s = creerSynthese({ dossier: d, appeler: labo().appeler, voix: 'homme2', maintenant: () => maintenant });
+  const { chemin } = await s.obtenir(s.enregistrer('z.'));
+  const ancien = new Date(maintenant - 40 * 86_400_000);
+  await utimes(chemin, ancien, ancien);
+  const enPanne = creerSynthese({ dossier: d, appeler: labo({ echec: new Error('panne') }).appeler, voix: 'homme2', maintenant: () => maintenant });
+  const bilan = await enPanne.preparer(['a.', 'b.', 'c.', 'z.'], { pauseMs: 0 });
+  assert.equal(bilan.interrompu, true);
+  assert.equal((await stat(chemin)).mtimeMs, maintenant);
+});
+
 test('creerSyntheseDepuisEnv : null en simulation, avec VOIX_PHRASES=0 ou sans identifiants', async (t) => {
   const d = await dossier(t);
   const env = { ASR_ID: 'id', ASR_MDP: 'mdp' };
