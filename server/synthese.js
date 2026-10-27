@@ -71,7 +71,7 @@ export function creerAppelLabo({ url = URL_VOIX, identifiant, motDePasse, voix =
 
 export function creerSynthese({
   dossier, appeler, voix = VOIX_PAR_DEFAUT, attenteMs = 20_000, maxFile = 20, pauseEchecMs = 300_000,
-  maxOctets = 300 * 2 ** 20, joursConservation = 30, maxIdentifiants = 5000, silenceMs = 250, frequence = 16_000,
+  maxOctets = 500_000_000, joursConservation = 30, maxIdentifiants = 5000, silenceMs = 250, frequence = 16_000,
   maintenant = Date.now,
 }) {
   const textes = new Map(); // identifiant -> texte, du plus ancien au plus récent
@@ -259,6 +259,7 @@ export function creerSynthese({
       return {
         en_reserve: enReserve,
         octets,
+        plafond_octets: maxOctets,
         derniere_erreur: derniereErreur,
         pause_jusqua: pauseJusqua > maintenant() ? new Date(pauseJusqua).toISOString() : null,
       };

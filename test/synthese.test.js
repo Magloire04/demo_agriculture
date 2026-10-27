@@ -149,6 +149,7 @@ test('échec du labo : rien en réserve, pause, puis nouvel essai après la paus
   assert.deepEqual(l.recus, ['a.']);
   const etat = await s.etat();
   assert.equal(etat.en_reserve, 0);
+  assert.equal(etat.plafond_octets, 500_000_000); // 593 sons prêts le 27/10 pesaient 177 Mo
   assert.equal(etat.derniere_erreur.message, 'GPU indisponible');
   assert.equal(etat.pause_jusqua, '2026-10-26T12:05:00.000Z');
   horloge += 300_001;
