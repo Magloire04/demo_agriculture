@@ -26,7 +26,19 @@ command -v cloudlinux-selector >/dev/null ||
   echec "cloudlinux-selector introuvable. Créer l'application dans cPanel > Setup Node.js App (dossier $DOSSIER_APP, fichier de démarrage app.cjs)."
 
 etape "Mise à jour du code"
-git -C "$RACINE" pull --ff-only
+# git remplace ce fichier sans toucher à la version que bash est en train de lire : si
+# le code a changé, le script est relancé, pour que ses nouvelles étapes tournent dès
+# ce déploiement.
+if [ -z "${AGRIFON_CODE_A_JOUR:-}" ]; then
+  AVANT=$(git -C "$RACINE" rev-parse HEAD)
+  git -C "$RACINE" pull --ff-only
+  if [ "$(git -C "$RACINE" rev-parse HEAD)" != "$AVANT" ]; then
+    echo "Code mis à jour : suite du déploiement avec la nouvelle version de ce script."
+    AGRIFON_CODE_A_JOUR=1 exec bash "$RACINE/scripts/deployer.sh" "$@"
+  fi
+else
+  echo "Code à jour."
+fi
 
 etape "Configuration (.env)"
 if [ -f "$RACINE/.env" ]; then
@@ -61,25 +73,12 @@ else
   creer "" || creer "/" || echec "la création de l'application a été refusée (message ci-dessus)."
 fi
 
-etape "Prix réels"
+etape "Prix réels et voix des réponses"
+# importer-prix.sh lance aussi la préparation de la voix, en arrière-plan.
 bash "$RACINE/scripts/importer-prix.sh" || echo "Import des prix échoué : les prix précédents sont conservés."
 
 etape "Redémarrage"
 selecteur restart --app-root="$DOSSIER_APP"
-
-etape "Voix des phrases fixes"
-# En arrière-plan : la préparation prend un quart d'heure environ ; le déploiement n'attend pas.
-# Le node de l'application (nodevenv) d'abord ; « || true » : une recherche vaine ne doit
-# pas arrêter le déploiement (set -euo pipefail).
-NODE=$(find "$HOME/nodevenv/$DOSSIER_APP" -path '*/bin/node' 2>/dev/null | sort -V | tail -1 || true)
-[ -n "$NODE" ] || NODE=$(command -v node || true)
-if [ -n "$NODE" ]; then
-  mkdir -p "$RACINE/stockage/voix-phrases"
-  (cd "$RACINE" && nohup "$NODE" scripts/voix/preparer-phrases.js </dev/null >>stockage/voix-phrases/preparation.log 2>&1 &)
-  echo "Préparation lancée en arrière-plan (journal : stockage/voix-phrases/preparation.log)."
-else
-  echo "node introuvable : préparation des phrases fixes sautée."
-fi
 
 etape "Vérification"
 for _ in 1 2 3 4 5; do

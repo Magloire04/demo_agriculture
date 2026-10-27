@@ -75,16 +75,16 @@ export function trouverProduits(base, reponseApi) {
   return { trouves, sansPrix };
 }
 
-export function repondrePrix(base, releves, textes, reponseApi) {
-  const marche = trouverMarche(base, transcriptions(reponseApi));
-  const { trouves, sansPrix } = trouverProduits(base, reponseApi);
+// Prix d'un produit au marché demandé (`ici`, null sans marché) et sur tous les marchés.
+export function reponseProduit(base, releves, produit, entendu, marche) {
+  const lignes = lignesPrix(base, releves, produit);
+  const ici = marche ? lignes.find((l) => l.marche.id === marche.id) : null;
+  return { produit: versProduit(produit, entendu), ici: ici ?? null, lignes };
+}
 
-  const reponses = trouves.map(({ produit, entendu }) => {
-    const lignes = lignesPrix(base, releves, produit);
-    const ici = marche ? lignes.find((l) => l.marche.id === marche.id) : null;
-    return { produit: versProduit(produit, entendu), ici: ici ?? null, lignes };
-  });
-
+// Phrases de la réponse, produit par produit. La préparation des voix
+// (scripts/voix/preparer-phrases.js) s'en sert aussi : même texte, même son.
+export function phrasesProduits(textes, reponses, marche) {
   const phrases = [];
   for (const { produit, ici, lignes } of reponses) {
     const valeurs = { produit: { fr: produit.article, fon: produit.nom_fon }, unite: textes.unite(produit.unite) };
@@ -108,6 +108,15 @@ export function repondrePrix(base, releves, textes, reponseApi) {
         marche: { fr: nomMarche(min.marche), fon: min.marche.nom },
       }));
   }
+  return phrases;
+}
+
+export function repondrePrix(base, releves, textes, reponseApi) {
+  const marche = trouverMarche(base, transcriptions(reponseApi));
+  const { trouves, sansPrix } = trouverProduits(base, reponseApi);
+
+  const reponses = trouves.map(({ produit, entendu }) => reponseProduit(base, releves, produit, entendu, marche));
+  const phrases = phrasesProduits(textes, reponses, marche);
   for (const terme of sansPrix) phrases.push(textes.phrase('prix_sans_prix', { terme }));
 
   let statut = 'ok';

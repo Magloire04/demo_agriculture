@@ -163,6 +163,8 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
 
   bouton.addEventListener('click', async () => {
     arreterLecture(); // le micro ne doit pas enregistrer la réponse lue à voix haute
+    // Cet appui autorise le son : la réponse sera lue dès son arrivée, sans autre appui.
+    voix?.debloquer?.();
     if (racine.dataset.etat === 'analyse') return;
     if (session) {
       session.arreter();
@@ -203,6 +205,10 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
     }
   });
 
+  fichier.addEventListener('click', () => {
+    arreterLecture(); // et les réponses qui devaient suivre
+    voix?.debloquer?.();
+  });
   fichier.addEventListener('change', () => {
     arreterLecture();
     const choisi = fichier.files?.[0];
@@ -226,6 +232,22 @@ function montrerResultat(zone, ...contenu) {
   zone.hidden = false;
   zone.focus({ preventScroll: true });
   zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  lireDesLArrivee(zone);
+}
+
+// Bloc de lecture à l'écran → son lancement, pour lire la réponse dès son arrivée.
+const lancements = new WeakMap();
+
+// Lit les réponses affichées l'une après l'autre, sans appui : l'appui sur le micro a
+// débloqué le lecteur. Pas si la vue a changé pendant l'analyse ni si l'application
+// est passée en arrière-plan. Un voix.js plus ancien (cache) ne sait pas le faire.
+function lireDesLArrivee(zone) {
+  if (typeof voix?.lireSuite !== 'function' || zone.closest('[data-vue]')?.hidden || document.hidden) return;
+  const lectures = [...zone.querySelectorAll('.lecture')]
+    .map((bloc) => lancements.get(bloc))
+    .filter(Boolean)
+    .map((lancer) => () => lancer({ attenteMs: voix.ATTENTE_AUTO_MS }));
+  voix.lireSuite(lectures);
 }
 
 // Texte en fongbé (mis en avant) suivi du français ; le français seul si le fongbé manque.
@@ -236,39 +258,48 @@ function bilingue({ fr, fon }, classeFrancaisSeul = '') {
     el('p', { class: 'texte-fr', lang: 'fr' }, fr));
 }
 
-// `lire(etiquette)` peut changer le libellé du bouton pendant qu'il travaille.
+// `lire(etiquette, options)` peut changer le libellé du bouton pendant qu'il travaille.
+// `lancer(options)` démarre la lecture sans appui ; il rejette si elle échoue.
 function boutonLecture(libelle, lire) {
   const texte = el('span', {}, libelle);
   const bouton = el('button', { type: 'button', class: 'bouton-secondaire bouton-ecouter' }, svg(ICONE_ECOUTER), texte);
-  bouton.addEventListener('click', async () => {
-    if (bouton.classList.contains('en-cours')) return arreterLecture();
+  async function lancer(options = {}) {
     bouton.classList.add('en-cours');
     texte.textContent = 'Arrêter';
     try {
-      await lire((t) => { texte.textContent = t; });
-      texte.textContent = libelle;
-    } catch {
-      texte.textContent = 'Lecture impossible';
+      await lire((t) => { texte.textContent = t; }, options);
+      texte.textContent = 'Réécouter';
+    } catch (e) {
+      // Son refusé faute d'appui (fichier envoyé depuis un iPhone) : l'utilisateur appuiera.
+      texte.textContent = e?.name === 'NotAllowedError' ? libelle : 'Lecture impossible';
+      throw e;
     } finally {
       bouton.classList.remove('en-cours');
     }
+  }
+  bouton.addEventListener('click', () => {
+    const enCours = bouton.classList.contains('en-cours');
+    arreterLecture(); // y compris les réponses qui devaient suivre
+    if (!enCours) lancer().catch(() => {});
   });
-  return bouton;
+  return { bouton, lancer };
 }
 
 const MENTION_JML = 'Voix de synthèse JML (OmniVoice, licence CC BY-NC 4.0), en attente de relecture par un locuteur.';
 const MENTION_FONGLAB = 'Voix de synthèse FongLab (licence CC BY-NC 4.0), en attente de relecture par un locuteur.';
 
-// Bouton pour écouter la réponse en fongbé : la phrase entière (`phrase`, demandée dès
-// l'affichage) si elle est prête, sinon les extraits audio s'ils existent tous. Un
-// voix.js plus ancien, resté dans le cache du téléphone, ne sait dire que les extraits.
+// Lecture de la réponse en fongbé, dès son arrivée puis au bouton : la phrase entière
+// (`phrase`, demandée dès l'affichage) si elle est prête, sinon les extraits audio
+// s'ils existent tous. Un voix.js plus ancien, resté dans le cache du téléphone, ne
+// sait dire que les extraits.
 function lecture(extraits, phrase = null) {
   const entiere = Boolean(phrase && typeof voix?.lireReponse === 'function');
   if (!voix || (!extraits && !entiere)) return null;
   const mention = el('p', { class: 'lecture-mention' }, entiere ? MENTION_JML : MENTION_FONGLAB);
   // La mention nomme la voix qui joue, dès le début de la lecture.
   const lire = entiere
-    ? (etiquette) => voix.lireReponse({ phrase, extraits }, {
+    ? (etiquette, { attenteMs } = {}) => voix.lireReponse({ phrase, extraits }, {
+      attenteMs,
       surAttente: () => etiquette('Je prépare la voix…'),
       surLecture: (jouee) => {
         etiquette('Arrêter');
@@ -276,7 +307,9 @@ function lecture(extraits, phrase = null) {
       },
     })
     : () => voix.lireExtraits(extraits);
-  const bloc = el('div', { class: 'lecture' }, boutonLecture('Écouter en fongbé', lire), mention);
+  const { bouton, lancer } = boutonLecture('Écouter en fongbé', lire);
+  const bloc = el('div', { class: 'lecture' }, bouton, mention);
+  lancements.set(bloc, lancer);
   // Plus de nouvelle demande du son une fois la réponse retirée de l'écran.
   if (entiere) voix.prechargerPhrase(phrase, { actif: () => bloc.isConnected });
   return bloc;

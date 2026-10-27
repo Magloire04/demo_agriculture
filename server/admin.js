@@ -58,15 +58,23 @@ export function lireVersion(racine) {
   return { commit: /^[0-9a-f]{7,40}$/.test(commit ?? '') ? commit.slice(0, 7) : null, demarre_le: new Date().toISOString() };
 }
 
-// Import des prix du PAM, tel que le lance la tâche planifiée.
+// Import des prix du PAM, tel que le lance la tâche planifiée : puis la préparation de
+// la voix des réponses avec les nouveaux prix.
 export function lancerImportPrix(racine) {
   return new Promise((ok) => {
     execFile(process.execPath, [path.join('scripts', 'importer-prix.js')], { cwd: racine, timeout: 360_000 }, (erreur, sortie, sortieErreur) => {
       const lignes = (texte) => String(texte ?? '').trim().split('\n').filter(Boolean);
       if (erreur) return ok({ ok: false, message: lignes(sortieErreur).at(-1) ?? 'Import des prix échoué.' });
+      lancerPreparationVoix(racine);
       return ok({ ok: true, message: lignes(sortie)[0] ?? 'Prix importés.' });
     });
   });
+}
+
+// Préparation de la voix, avec le node du serveur : le script la détache et rend la
+// main aussitôt. Sans bash (poste de développement), rien n'est lancé.
+export function lancerPreparationVoix(racine) {
+  execFile('bash', ['scripts/voix/lancer-preparation.sh'], { cwd: racine, env: { ...process.env, NODE: process.execPath } }, () => {});
 }
 
 // Clé de blocage d'une adresse : l'IPv4 telle quelle, l'IPv6 ramenée à son /64,

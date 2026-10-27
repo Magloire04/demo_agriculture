@@ -170,10 +170,21 @@ export function creerSynthese({
     // échecs de suite, pour ne pas insister quand le labo est en panne.
     async preparer(liste, { pauseMs = 2000 } = {}) {
       const bilan = { faits: 0, deja: 0, echecs: 0, interrompu: false };
-      let echecsDeSuite = 0;
+      // D'abord celles déjà en réserve : toujours dans la liste, servies ou non, elles
+      // échappent à la purge, même si une panne du labo arrête la suite.
+      const manquantes = [];
       for (const texte of liste) {
         const id = idPhrase(texte, voix);
         if (await present(id)) {
+          await toucher(id);
+          bilan.deja++;
+        } else {
+          manquantes.push([texte, id]);
+        }
+      }
+      let echecsDeSuite = 0;
+      for (const [texte, id] of manquantes) {
+        if (await present(id)) { // faite entre-temps par le serveur, à la demande
           bilan.deja++;
           continue;
         }
