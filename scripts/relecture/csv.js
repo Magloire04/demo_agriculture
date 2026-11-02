@@ -15,7 +15,7 @@ function nomsSources(donnees, liste = []) {
 }
 
 // Lignes à relire, dans l'ordre du fichier de données.
-function lignes(donnees) {
+export function lignesSolutions(donnees) {
   const resultat = [];
   for (const [id, p] of Object.entries(donnees.phrases)) resultat.push({ cle: `phrases.${id}`, type: 'phrase', texte: p, source: '' });
   for (const [id, g] of Object.entries(donnees.gestes)) resultat.push({ cle: `gestes.${id}`, type: 'geste', texte: g, source: nomsSources(donnees, g.sources) });
@@ -31,7 +31,7 @@ function lignes(donnees) {
 }
 
 export function exporterCsv(donnees) {
-  const corps = lignes(donnees).map(({ cle, type, texte, source }) => [cle, type, texte.fr, texte.fon, texte.voix ?? '', source].map(cellule).join(';'));
+  const corps = lignesSolutions(donnees).map(({ cle, type, texte, source }) => [cle, type, texte.fr, texte.fon, texte.voix ?? '', source].map(cellule).join(';'));
   return `﻿${[COLONNES.map(cellule).join(';'), ...corps].join('\r\n')}\r\n`;
 }
 
@@ -60,7 +60,7 @@ function lireCsv(texte) {
   return rangees;
 }
 
-function cible(donnees, cle) {
+export function cibleSolutions(donnees, cle) {
   const [groupe, id, partie, sous] = cle.split('.');
   if (groupe === 'phrases' && !partie) return donnees.phrases[id];
   if (groupe === 'gestes' && !partie) return donnees.gestes[id];
@@ -86,7 +86,7 @@ export function importerCsv(texte, donnees) {
   if (manquantes.length) throw new Error(`Colonnes manquantes : ${manquantes.join(', ')} (attendu : ${COLONNES.join(';')})`);
   const col = Object.fromEntries(COLONNES.map((nom) => [nom, entete.indexOf(nom)]));
   for (const r of rangees) {
-    const t = cible(copie, r[col.cle]);
+    const t = cibleSolutions(copie, r[col.cle]);
     const nouveauPointInterrogation = (avant, apres) => (apres ?? '').includes('?') && !(avant ?? '').includes('?');
     if (t && (nouveauPointInterrogation(t.fon, r[col.fon]) || nouveauPointInterrogation(t.voix, r[col.voix]))) {
       throw new Error(ERREUR_ENCODAGE);
@@ -94,7 +94,7 @@ export function importerCsv(texte, donnees) {
   }
   for (const r of rangees) {
     const cle = r[col.cle];
-    const t = cible(copie, cle);
+    const t = cibleSolutions(copie, cle);
     if (!t) { alertes.push(`clé inconnue : ${cle}`); continue; }
     const fon = (r[col.fon] ?? '').trim();
     const voix = (r[col.voix] ?? '').trim();
