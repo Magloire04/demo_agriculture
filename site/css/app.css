@@ -697,7 +697,7 @@ select {
   font-weight: 700;
 }
 
-.vous-avez-dit {
+.phrase-dite {
   margin: 0;
   font-size: 0.875rem;
   color: var(--texte-doux);

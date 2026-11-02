@@ -36,7 +36,7 @@ export function analyserSignalement(lexique, communes, texte) {
   // Les noms de commune très courts (« Zè ») se confondraient avec des mots fon.
   const commune = reperer(motsTexte, communes.filter((c) => normaliser(c.nom).replace(/ /g, '').length >= 4), (c) => c.termes)[0];
   return {
-    culture: culture ? { id: culture.entree.id, nom: culture.entree.nom, entendu: culture.terme } : null,
+    culture: culture ? { id: culture.entree.id, nom: culture.entree.nom, nom_fon: culture.entree.nom_fon, entendu: culture.terme } : null,
     parties: parties.sort((a, b) => a.position - b.position).map((p) => ({ id: p.entree.id, libelle: p.entree.libelle })),
     symptomes: symptomes.sort((a, b) => a.position - b.position).map((s) => ({ id: s.entree.id, libelle: s.entree.libelle })),
     commune: commune ? { nom: commune.entree.nom, departement: commune.entree.departement } : null,

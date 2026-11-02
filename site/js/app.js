@@ -1,5 +1,6 @@
-import { appelerApi, ecrireMemoire, el, enregistrerServiceWorker, heure, lireMemoire, mois, nombre, svg } from './dom.js';
+import { appelerApi, ecrireMemoire, el, enregistrerServiceWorker, heure, lireMemoire, nombre, svg } from './dom.js';
 import { demarrerEnregistrement, enregistrementPossible } from './enregistreur.js';
+import { T } from './textes.js';
 
 const DUREE_MAX = 30; // secondes ; l'API accepte jusqu'à 60 s
 const DELAI_API = 100_000; // l'API demande de prévoir au moins 90 s
@@ -84,10 +85,10 @@ async function verifierServeur() {
       return;
     }
     if (asr.simulation) {
-      bandeau.textContent = 'Mode simulation : les réponses sont factices, aucune requête n’est envoyée à la reconnaissance vocale.';
+      bandeau.textContent = 'Mode simulation : les réponses sont factices, aucune requête n’est envoyée à la reconnaissance vocale.'; // français admis (jamais en ligne)
       bandeau.hidden = false;
     } else if (!asr.configure) {
-      bandeau.textContent = 'Reconnaissance vocale non configurée sur le serveur (identifiants manquants).';
+      bandeau.textContent = 'Reconnaissance vocale non configurée sur le serveur (identifiants manquants).'; // français admis (jamais en ligne)
       bandeau.classList.add('bandeau-erreur');
       bandeau.hidden = false;
     }
@@ -138,24 +139,24 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
     bouton.setAttribute('aria-pressed', String(nom === 'enregistrement'));
   }
 
-  function pret(texte = 'Appuyez pour parler') {
-    changer('pret', texte, 'Appuyer pour parler');
+  function pret(texte = T.micro_pret) {
+    changer('pret', texte, T.micro_pret);
     minuteur.textContent = '';
     bouton.style.setProperty('--niveau', 0);
   }
 
   async function analyser(audio) {
-    changer('analyse', 'Analyse de votre voix…', 'Analyse en cours');
+    changer('analyse', T.micro_analyse, T.micro_analyse);
     minuteur.textContent = '';
     const lent = setTimeout(() => {
-      etat.textContent = 'Le service est un peu lent, merci de patienter…';
+      etat.textContent = T.micro_lent;
     }, 10_000);
     try {
       await traiter(audio);
-      pret('Appuyez pour parler à nouveau');
+      pret(T.micro_encore);
     } catch (e) {
       afficherErreur(e);
-      pret('Appuyez pour réessayer');
+      pret(T.micro_reessayer);
     } finally {
       clearTimeout(lent);
     }
@@ -172,13 +173,11 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
     }
     if (racine.dataset.etat === 'enregistrement') return; // autorisation du micro en attente
     if (!enregistrementPossible()) {
-      pret(window.isSecureContext
-        ? "Ce navigateur ne permet pas d'enregistrer. Envoyez un fichier audio."
-        : "L'enregistrement demande une adresse sécurisée (https). Envoyez un fichier audio.");
+      pret(T.micro_non_disponible); // navigateur sans enregistrement, ou adresse non sécurisée
       return;
     }
     try {
-      changer('enregistrement', 'Autorisez le micro…', 'Terminer');
+      changer('enregistrement', T.micro_autoriser, T.micro_terminer);
       session = await demarrerEnregistrement({
         dureeMax: DUREE_MAX,
         surProgression: ({ secondes, niveau }) => {
@@ -186,22 +185,20 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
           bouton.style.setProperty('--niveau', niveau.toFixed(2));
         },
       });
-      etat.textContent = 'Je vous écoute… Appuyez pour terminer.';
+      etat.textContent = T.micro_ecoute;
       const { blob, duree } = await session.fin;
       session = null;
       if (duree < 1 || blob.size === 0) {
-        pret('Trop court : appuyez, parlez, puis appuyez de nouveau.');
+        pret(T.erreur_trop_court);
         return;
       }
       await analyser(blob);
     } catch (e) {
       session = null;
       if (e?.name === 'AbortError') return pret();
-      if (e?.name === 'NotAllowedError' || e?.name === 'SecurityError') {
-        return pret('Micro refusé : autorisez le micro dans le navigateur.');
-      }
-      if (e?.name === 'NotFoundError') return pret('Aucun micro trouvé sur cet appareil.');
-      pret("L'enregistrement n'a pas pu démarrer. Réessayez.");
+      if (e?.name === 'NotAllowedError' || e?.name === 'SecurityError') return pret(T.micro_refuse);
+      if (e?.name === 'NotFoundError') return pret(T.micro_absent);
+      pret(T.micro_impossible);
     }
   });
 
@@ -250,7 +247,12 @@ function lireDesLArrivee(zone) {
   voix.lireSuite(lectures);
 }
 
-// Texte en fongbé (mis en avant) suivi du français ; le français seul si le fongbé manque.
+// Texte en fon seul : le français reste dans l'API pour l'écran du conseiller.
+function texteFon(fon) {
+  return el('div', { class: 'bilingue' }, el('p', { class: 'texte-fon fon', lang: 'fon' }, fon || T.erreur_reessayer));
+}
+
+// Fon suivi du français : seulement pour les solutions, jusqu'à leur passage en fon seul.
 function bilingue({ fr, fon }, classeFrancaisSeul = '') {
   if (!fon) return el('p', { class: classeFrancaisSeul || null, lang: 'fr' }, fr);
   return el('div', { class: 'bilingue' },
@@ -265,13 +267,13 @@ function boutonLecture(libelle, lire) {
   const bouton = el('button', { type: 'button', class: 'bouton-secondaire bouton-ecouter' }, svg(ICONE_ECOUTER), texte);
   async function lancer(options = {}) {
     bouton.classList.add('en-cours');
-    texte.textContent = 'Arrêter';
+    texte.textContent = T.arreter;
     try {
       await lire((t) => { texte.textContent = t; }, options);
-      texte.textContent = 'Réécouter';
+      texte.textContent = T.reecouter;
     } catch (e) {
       // Son refusé faute d'appui (fichier envoyé depuis un iPhone) : l'utilisateur appuiera.
-      texte.textContent = e?.name === 'NotAllowedError' ? libelle : 'Lecture impossible';
+      texte.textContent = e?.name === 'NotAllowedError' ? libelle : T.lecture_impossible;
       throw e;
     } finally {
       bouton.classList.remove('en-cours');
@@ -285,8 +287,9 @@ function boutonLecture(libelle, lire) {
   return { bouton, lancer };
 }
 
-const MENTION_JML = 'Voix de synthèse JML (OmniVoice, licence CC BY-NC 4.0), en attente de relecture par un locuteur.';
-const MENTION_FONGLAB = 'Voix de synthèse FongLab (licence CC BY-NC 4.0), en attente de relecture par un locuteur.';
+// Crédits des voix de synthèse, exigés par leur licence : des noms, pas de phrase.
+const MENTION_JML = 'JML · OmniVoice · CC BY-NC 4.0';
+const MENTION_FONGLAB = 'FongLab · CC BY-NC 4.0';
 
 // Lecture de la réponse en fongbé, dès son arrivée puis au bouton : la phrase entière
 // (`phrase`, demandée dès l'affichage) si elle est prête, sinon les extraits audio
@@ -300,14 +303,14 @@ function lecture(extraits, phrase = null) {
   const lire = entiere
     ? (etiquette, { attenteMs } = {}) => voix.lireReponse({ phrase, extraits }, {
       attenteMs,
-      surAttente: () => etiquette('Je prépare la voix…'),
+      surAttente: () => etiquette(T.voix_preparation),
       surLecture: (jouee) => {
-        etiquette('Arrêter');
+        etiquette(T.arreter);
         mention.textContent = jouee === 'nouvelle' ? MENTION_JML : MENTION_FONGLAB;
       },
     })
     : () => voix.lireExtraits(extraits);
-  const { bouton, lancer } = boutonLecture('Écouter en fongbé', lire);
+  const { bouton, lancer } = boutonLecture(T.ecouter, lire);
   const bloc = el('div', { class: 'lecture' }, bouton, mention);
   lancements.set(bloc, lancer);
   // Plus de nouvelle demande du son une fois la réponse retirée de l'écran.
@@ -315,13 +318,29 @@ function lecture(extraits, phrase = null) {
   return bloc;
 }
 
-function erreurDans(zone) {
-  return (e) => montrerResultat(zone, el('div', { class: 'message-erreur', role: 'alert' }, bilingue({ fr: e.message, fon: e.fon })));
+// Message fon d'une erreur, d'après son code : jamais le message français du serveur.
+const ERREURS = {
+  audio_trop_court: 'erreur_trop_court',
+  audio_trop_long: 'erreur_trop_long',
+  audio_illisible: 'erreur_illisible',
+  service_sature: 'erreur_sature',
+  trop_de_demandes: 'erreur_sature',
+  hors_service: 'hors_service',
+  connexion: 'erreur_connexion',
+};
+
+function messageErreur(e) {
+  const cle = ERREURS[e?.code];
+  return (cle && T[cle]) || e?.fon || T.erreur_reessayer;
 }
 
-function vousAvezDit(texte) {
+function erreurDans(zone) {
+  return (e) => montrerResultat(zone, el('div', { class: 'message-erreur', role: 'alert' }, texteFon(messageErreur(e))));
+}
+
+function phraseDite(texte) {
   if (!texte) return null;
-  return el('p', { class: 'vous-avez-dit' }, 'Vous avez dit : ', el('span', { class: 'fon', lang: 'fon' }, `« ${texte} »`));
+  return el('p', { class: 'phrase-dite' }, `${T.vous_avez_dit} : `, el('span', { class: 'fon', lang: 'fon' }, `« ${texte} »`));
 }
 
 function boutonRecommencer(libelle, micro) {
@@ -345,14 +364,23 @@ function nomMarche(marche) {
   return marche.nom === marche.ville ? marche.nom : `${marche.nom} (${marche.ville})`;
 }
 
+// Mois d'un relevé en chiffres (09/2026) : se lit en fon comme en français.
+function moisChiffres(jour) {
+  const [annee, moisNum] = jour.split('-');
+  return `${moisNum}/${annee}`;
+}
+
+// Nom du produit : son nom fon (tous les produits en ont un).
+const nomProduit = (produit) => produit.nom_fon || produit.nom;
+
 // Évolution par rapport au relevé précédent (en général le mois d'avant).
 function tendance({ prix, precedent, date_precedente: datePrecedente }) {
   if (precedent === null) return null;
-  const depuis = `depuis ${mois(datePrecedente)}`;
+  const depuis = moisChiffres(datePrecedente);
   const ecart = prix - precedent;
-  if (ecart > 0) return el('p', { class: 'tendance tendance-hausse' }, `▲ +${nombre(ecart)} F ${depuis}`);
-  if (ecart < 0) return el('p', { class: 'tendance tendance-baisse' }, `▼ −${nombre(-ecart)} F ${depuis}`);
-  return el('p', { class: 'tendance' }, `Stable ${depuis}`);
+  if (ecart > 0) return el('p', { class: 'tendance tendance-hausse' }, `▲ +${nombre(ecart)} F · ${depuis}`);
+  if (ecart < 0) return el('p', { class: 'tendance tendance-baisse' }, `▼ −${nombre(-ecart)} F · ${depuis}`);
+  return el('p', { class: 'tendance' }, `→ · ${depuis}`);
 }
 
 // Mois de référence d'une liste de relevés : le plus récent.
@@ -362,7 +390,7 @@ function moisReference(lignes) {
 
 // Mois du relevé, affiché seulement s'il diffère du mois de référence.
 function moisSiAncien(ligne, reference) {
-  return ligne.date.slice(0, 7) === reference ? null : el('small', {}, `relevé de ${mois(ligne.date)}`);
+  return ligne.date.slice(0, 7) === reference ? null : el('small', {}, moisChiffres(ligne.date));
 }
 
 function carteProduit({ produit, ici, lignes }) {
@@ -372,54 +400,48 @@ function carteProduit({ produit, ici, lignes }) {
     el('li', { class: ici && ligne.marche.id === ici.marche.id ? 'ici' : null },
       el('span', {},
         nomMarche(ligne.marche),
-        i === 0 ? el('span', { class: 'badge' }, 'le moins cher') : null,
+        i === 0 ? el('span', { class: 'badge fon', lang: 'fon' }, T.moins_cher) : null,
         el('small', {}, ligne.marche.departement)),
       el('span', { class: 'valeur' }, `${nombre(ligne.prix)} F`, moisSiAncien(ligne, reference)))));
 
   return el('article', { class: 'carte' },
     el('div', { class: 'carte-entete' },
       el('span', { class: 'emoji', 'aria-hidden': 'true' }, produit.emoji),
-      el('h2', {}, produit.nom, nomFon(produit) && el('span', { class: 'nom-fon fon', lang: 'fon' }, nomFon(produit)))),
+      el('h2', { class: 'fon', lang: 'fon' }, nomProduit(produit))),
     ici && el('div', { class: 'prix-principal' },
       el('p', {}, el('span', { class: 'montant' }, nombre(ici.prix)), el('span', { class: 'devise' }, `F CFA / ${unite}`)),
-      el('p', { class: 'prix-lieu' }, `Marché ${nomMarche(ici.marche)} · ${ici.marche.departement} · prix moyen de ${mois(ici.date)}`),
+      el('p', { class: 'prix-lieu' }, `${nomMarche(ici.marche)} · ${ici.marche.departement} · ${moisChiffres(ici.date)}`),
       tendance(ici)),
     ici
-      ? el('details', { class: 'comparer' }, el('summary', {}, 'Comparer avec les autres marchés'), liste)
+      ? el('details', { class: 'comparer' }, el('summary', { class: 'fon', lang: 'fon' }, T.comparer), liste)
       : liste);
-}
-
-// Nom fon affiché à côté du nom français, sauf s'il est le même mot (carotte).
-function nomFon(produit) {
-  return produit.nom_fon && produit.nom_fon.toLowerCase() !== produit.nom.toLowerCase() ? produit.nom_fon : null;
 }
 
 function carteMarche(marche, produits) {
   const reference = moisReference(produits);
   return el('article', { class: 'carte' },
-    el('div', { class: 'carte-entete' }, el('h2', {}, `Marché ${nomMarche(marche)}`)),
+    el('div', { class: 'carte-entete' }, el('h2', {}, nomMarche(marche))),
     el('ul', { class: 'liste-prix' }, produits.map((ligne) =>
       el('li', {},
-        el('span', {}, el('span', { 'aria-hidden': 'true' }, `${ligne.produit.emoji} `), ligne.produit.nom,
-          nomFon(ligne.produit) && el('small', { class: 'fon', lang: 'fon' }, nomFon(ligne.produit))),
+        el('span', { class: 'fon', lang: 'fon' }, el('span', { 'aria-hidden': 'true' }, `${ligne.produit.emoji} `), nomProduit(ligne.produit)),
         el('span', { class: 'valeur' }, `${nombre(ligne.prix)} F / ${ligne.produit.unite}`, moisSiAncien(ligne, reference))))));
 }
 
+// Source des prix : le sigle et la licence (CC BY-IGO demande de citer le PAM).
 function texteSource(source) {
   return el('p', { class: 'source' },
-    'Prix de détail moyens relevés chaque mois. Source : ',
-    el('a', { href: source.url, target: '_blank', rel: 'noopener' }, source.nom),
-    `, jeu « ${source.jeu} », licence ${source.licence}.`);
+    el('span', { 'aria-hidden': 'true' }, 'ⓘ '),
+    el('a', { href: source.url, target: '_blank', rel: 'noopener' }, `${source.nom.split(' (')[0]} · ${source.licence}`));
 }
 
 function afficherPrix(r) {
   montrerResultat(zonePrix,
-    vousAvezDit(r.transcription),
-    el('div', { class: 'reponse' }, bilingue({ fr: r.message, fon: r.message_fon }, 'reponse-message'), lecture(r.voix, r.voix_phrase)),
+    phraseDite(r.transcription),
+    el('div', { class: 'reponse' }, texteFon(r.message_fon), lecture(r.voix, r.voix_phrase)),
     r.reponses.filter((x) => x.lignes.length > 0).map(carteProduit),
     r.statut === 'marche_seul' && carteMarche(r.marche, r.produits_du_marche),
     r.source && (r.reponses.some((x) => x.lignes.length > 0) || r.statut === 'marche_seul') && texteSource(r.source),
-    boutonRecommencer('Poser une autre question', microPrix));
+    boutonRecommencer(T.autre_question, microPrix));
 }
 
 brancherMicro(microPrix, {
@@ -439,26 +461,24 @@ let communesChargees = false;
 
 function demanderPosition() {
   if (!('geolocation' in navigator)) {
-    etatGps.textContent = 'Position indisponible sur cet appareil.';
+    etatGps.textContent = T.gps_indisponible;
     boutonGps.hidden = true;
     return;
   }
-  etatGps.textContent = 'Recherche de la position…';
+  etatGps.textContent = T.gps_recherche;
   delete etatGps.dataset.ok;
   boutonGps.disabled = true;
   navigator.geolocation.getCurrentPosition(
     ({ coords }) => {
       position = { lat: coords.latitude, lon: coords.longitude, precision: coords.accuracy };
-      etatGps.textContent = `Position partagée (± ${nombre(Math.round(coords.accuracy))} m)`;
+      etatGps.textContent = `${T.gps_partagee} (± ${nombre(Math.round(coords.accuracy))} m)`;
       etatGps.dataset.ok = '';
-      boutonGps.textContent = 'Actualiser';
+      boutonGps.textContent = T.gps_actualiser;
       boutonGps.disabled = false;
     },
     (erreur) => {
       position = null;
-      etatGps.textContent = erreur.code === erreur.PERMISSION_DENIED
-        ? 'Position refusée : choisissez la commune.'
-        : 'Position introuvable : choisissez la commune.';
+      etatGps.textContent = erreur.code === erreur.PERMISSION_DENIED ? T.gps_refusee : T.gps_introuvable;
       boutonGps.disabled = false;
     },
     { enableHighAccuracy: true, timeout: 15_000, maximumAge: 60_000 },
@@ -498,12 +518,12 @@ async function entrerSignalement() {
   }
 }
 
+// Lieu du champ : la commune (nom propre) et, si elle a été partagée, la précision GPS.
 function texteLieu({ gps, commune }) {
   const morceaux = [];
-  if (commune) morceaux.push(`${commune.nom} (${commune.departement})${commune.source === 'entendue' ? ', entendu dans votre message' : ''}`);
-  else morceaux.push('Commune non précisée');
-  morceaux.push(gps ? `position GPS transmise${gps.precision ? ` (± ${nombre(Math.round(gps.precision))} m)` : ''}` : 'position GPS non partagée');
-  return morceaux.join(' · ');
+  if (commune) morceaux.push(`${commune.nom} (${commune.departement})`);
+  if (gps) morceaux.push(`📍${gps.precision ? ` ± ${nombre(Math.round(gps.precision))} m` : ''}`);
+  return morceaux.length ? morceaux.join(' · ') : aPreciser(T.a_preciser);
 }
 
 function aPreciser(texte) {
@@ -516,8 +536,8 @@ function ligneRecap(titre, valeur) {
 
 function etapePriseEnCharge(statut, messages) {
   return statut.statut === 'pris_en_charge'
-    ? el('li', { class: 'fait' }, bilingue({ ...messages.pris, fr: `${messages.pris.fr.replace(/\.$/, '')} (${heure(statut.pris_en_charge_le)}).` }))
-    : el('li', {}, bilingue(messages.attente));
+    ? el('li', { class: 'fait' }, texteFon(`${messages.pris.fon} · ${heure(statut.pris_en_charge_le)}`))
+    : el('li', {}, texteFon(messages.attente.fon));
 }
 
 let suivi = 0;
@@ -553,13 +573,13 @@ function sectionSolutions(solutions) {
   const elements = solutions.elements.map((e) => {
     const traitement = e.type === 'traitement';
     return el('div', { class: `solution${traitement ? ' solution-traitement' : ''}` },
-      traitement && el('span', { class: 'solution-etiquette' }, 'Traitement documenté'),
+      traitement && el('span', { class: 'solution-etiquette fon', lang: 'fon' }, T.traitement),
       bilingue(e),
       traitement && e.securite && el('div', { class: 'solution-securite' }, bilingue(e.securite)),
       el('p', { class: 'solution-source' }, e.sources.map(texteSourceSolution).join(' · ')),
-      e.video && el('a', { class: 'solution-video', href: e.video.url, target: '_blank', rel: 'noopener' }, 'Voir la vidéo en fon (Access Agriculture)'));
+      e.video && el('a', { class: 'solution-video', href: e.video.url, target: '_blank', rel: 'noopener' }, `${T.video} · Access Agriculture`));
   });
-  return el('section', { class: 'solutions', 'aria-label': 'Solutions proposées' },
+  return el('section', { class: 'solutions', 'aria-label': T.solutions },
     el('div', { class: 'solutions-titre' }, bilingue(solutions.titre)),
     ...solutions.problemes.map((p) => el('div', { class: 'solutions-probleme' }, bilingue(p))),
     ...elements,
@@ -567,29 +587,26 @@ function sectionSolutions(solutions) {
     el('div', { class: 'solutions-mention' }, bilingue(solutions.mention)));
 }
 
+// Accusé de réception en fon. Le récapitulatif garde la culture et le lieu ; ce qui est
+// observé se lit dans la phrase dite, affichée plus bas.
 function afficherSignalement(s) {
-  const observe = s.symptomes.length
-    ? [s.symptomes.map((x) => x.libelle).join(' · '), s.parties.length ? ` (${s.parties.map((p) => p.libelle).join(', ')})` : '']
-    : aPreciser(`À préciser par le conseiller${s.parties.length ? ` (${s.parties.map((p) => p.libelle).join(', ')})` : ''} : il reçoit votre message vocal.`);
   const etape = etapePriseEnCharge(s, s.messages);
   etape.dataset.etape = '';
 
   montrerResultat(zoneSignalement,
     el('div', { class: 'confirmation', 'data-reference': s.reference },
       el('p', { class: 'confirmation-titre' }, el('span', { class: 'coche' }, svg(ICONE_COCHE)),
-        s.messages.titre.fon ? el('span', { class: 'fon', lang: 'fon' }, s.messages.titre.fon) : s.messages.titre.fr),
-      s.messages.titre.fon && el('p', { class: 'texte-fr', lang: 'fr' }, s.messages.titre.fr),
-      el('p', { class: 'reference' }, 'Référence : ', el('strong', {}, s.reference)),
-      bilingue(s.messages.recu),
+        el('span', { class: 'fon', lang: 'fon' }, s.messages.titre.fon || T.recu_a)),
+      el('p', { class: 'reference', 'aria-label': `${T.reference} ${s.reference}` }, el('span', { 'aria-hidden': 'true' }, '# '), el('strong', {}, s.reference)),
+      texteFon(s.messages.recu.fon),
       lecture(s.voix, s.voix_phrase),
-      el('ol', { class: 'etapes' }, el('li', { class: 'fait' }, `Reçu par le service à ${heure(s.recu_le)}`), etape)),
+      el('ol', { class: 'etapes' }, el('li', { class: 'fait' }, texteFon(`${T.recu_a} · ${heure(s.recu_le)}`)), etape)),
     el('dl', { class: 'recap' },
-      ligneRecap('Culture', s.culture ? s.culture.nom : aPreciser('À préciser par le conseiller')),
-      ligneRecap('Ce qui est observé', observe),
-      ligneRecap('Lieu', texteLieu(s.localisation))),
+      ligneRecap(T.culture, s.culture ? el('span', { class: 'fon', lang: 'fon' }, s.culture.nom_fon || s.culture.nom) : aPreciser(T.a_preciser)),
+      ligneRecap(T.lieu, texteLieu(s.localisation))),
     sectionSolutions(s.solutions),
-    vousAvezDit(s.transcription),
-    boutonRecommencer('Faire un autre signalement', microSignalement));
+    phraseDite(s.transcription),
+    boutonRecommencer(T.autre_signalement, microSignalement));
   suivreStatut(s, s.messages);
 }
 

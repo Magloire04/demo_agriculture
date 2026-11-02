@@ -43,8 +43,12 @@ export async function appelerApi(chemin, { delaiMs = 15000, ...options } = {}) {
   try {
     reponse = await fetch(chemin, { ...options, signal: controle.signal });
   } catch (e) {
-    if (e.name === 'AbortError') throw new Error('Le service ne répond pas. Réessayez.');
-    throw new Error('Pas de connexion internet. Vérifiez la connexion et réessayez.');
+    // Le code choisit le message fon côté agriculteur ; le français reste pour le conseiller.
+    const erreur = e.name === 'AbortError'
+      ? new Error('Le service ne répond pas. Réessayez.')
+      : new Error('Pas de connexion internet. Vérifiez la connexion et réessayez.');
+    erreur.code = e.name === 'AbortError' ? 'delai' : 'connexion';
+    throw erreur;
   } finally {
     clearTimeout(minuterie);
   }
