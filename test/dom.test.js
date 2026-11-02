@@ -22,3 +22,12 @@ test('erreur du serveur : son code et son fon', async (t) => {
   remplacerFetch(t, async () => Response.json({ erreur: 'Trop court.', code: 'audio_trop_court', erreur_fon: 'Xó hwe.' }, { status: 422 }));
   await assert.rejects(appelerApi('api/prix'), (e) => e.code === 'audio_trop_court' && e.fon === 'Xó hwe.' && e.statut === 422);
 });
+
+test('les unités s’affichent en symboles : kg et L, pour chaque produit', async () => {
+  const { uniteCourte } = await import('../site/js/dom.js');
+  assert.equal(uniteCourte('litre'), 'L');
+  assert.equal(uniteCourte('kg'), 'kg');
+  const { readFileSync } = await import('node:fs');
+  const { produits } = JSON.parse(readFileSync(new URL('../data/referentiel.json', import.meta.url), 'utf8'));
+  for (const p of produits) assert.ok(['kg', 'L'].includes(uniteCourte(p.unite)), `${p.id} : ${p.unite}`);
+});

@@ -1,4 +1,4 @@
-import { appelerApi, ecrireMemoire, el, enregistrerServiceWorker, heure, lireMemoire, nombre, svg } from './dom.js';
+import { appelerApi, ecrireMemoire, el, enregistrerServiceWorker, heure, lireMemoire, nombre, svg, uniteCourte } from './dom.js';
 import { demarrerEnregistrement, enregistrementPossible } from './enregistreur.js';
 import { T } from './textes.js';
 
@@ -394,7 +394,7 @@ function moisSiAncien(ligne, reference) {
 }
 
 function carteProduit({ produit, ici, lignes }) {
-  const unite = produit.unite;
+  const unite = uniteCourte(produit.unite);
   const reference = moisReference(lignes);
   const liste = el('ol', { class: 'liste-prix' }, lignes.map((ligne, i) =>
     el('li', { class: ici && ligne.marche.id === ici.marche.id ? 'ici' : null },
@@ -424,7 +424,7 @@ function carteMarche(marche, produits) {
     el('ul', { class: 'liste-prix' }, produits.map((ligne) =>
       el('li', {},
         el('span', { class: 'fon', lang: 'fon' }, el('span', { 'aria-hidden': 'true' }, `${ligne.produit.emoji} `), nomProduit(ligne.produit)),
-        el('span', { class: 'valeur' }, `${nombre(ligne.prix)} F / ${ligne.produit.unite}`, moisSiAncien(ligne, reference))))));
+        el('span', { class: 'valeur' }, `${nombre(ligne.prix)} F / ${uniteCourte(ligne.produit.unite)}`, moisSiAncien(ligne, reference))))));
 }
 
 // Source des prix : le sigle et la licence (CC BY-IGO demande de citer le PAM).

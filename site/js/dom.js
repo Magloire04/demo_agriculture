@@ -23,6 +23,10 @@ export function svg(contenu, viewBox = '0 0 24 24') {
 
 export const nombre = (n) => new Intl.NumberFormat('fr-FR').format(n);
 
+// Unité d'un prix en symbole international : se lit en fon comme en français.
+const UNITES = { kg: 'kg', litre: 'L' };
+export const uniteCourte = (unite) => UNITES[unite] ?? unite;
+
 export function heure(iso) {
   return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 }
