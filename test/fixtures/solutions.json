@@ -18,7 +18,7 @@
     "retirer-feuilles": { "fr": "Retirer les feuilles malades.", "fon": "retirer fon", "voix": "retirer fon", "sources": [{ "id": "s-autre" }] },
     "bruler": { "fr": "Brûler les parties malades.", "fon": "bruler fon", "voix": "bruler fon | loin du champ", "sources": [{ "id": "s-autre" }] },
     "ramasser": { "fr": "Ramasser les chenilles à la main.", "fon": "ramasser fon", "voix": "ramasser fon", "sources": [{ "id": "s-autre" }] },
-    "visiter": { "fr": "Visiter le champ deux fois par semaine.", "fon": "visiter fon", "voix": "visiter fon", "sources": [{ "id": "s-benin", "detail": "fiche M-11" }] },
+    "visiter": { "illustration": "observer-montrer", "fr": "Visiter le champ deux fois par semaine.", "fon": "visiter fon", "voix": "visiter fon", "sources": [{ "id": "s-benin", "detail": "fiche M-11" }] },
     "arracher": { "fr": "Arracher les plants très déformés.", "fon": "arracher fon", "voix": "arracher fon", "sources": [{ "id": "s-autre" }] },
     "mais-special": { "fr": "Geste propre au maïs.", "fon": "mais fon", "voix": "mais fon", "sources": [{ "id": "s-benin" }] }
   },
@@ -41,6 +41,7 @@
       "probleme": { "fr": "les foreurs des gousses", "fon": "foreurs fon" },
       "gestes": ["visiter"],
       "traitement": {
+        "illustration": "neem-feuilles",
         "type": "preparation",
         "fr": "Extrait de neem : 15 kg de feuilles par hectare.",
         "fon": "neem fon 15 kg",

@@ -118,3 +118,10 @@ test('morceaux : du titre à la mention, tous dans la liste des extraits', () =>
   for (const m of s.morceaux) assert.ok(liste.has(texteVoix(m)), m);
   assert.ok(liste.has('foreurs fon') && liste.has('loin du champ'));
 });
+
+test('un élément porte l’illustration de son geste ou de son traitement', () => {
+  const s = choisir(analyse('haricot', ['feuilles_mangees'], ['fruits']));
+  assert.equal(s.elements[0].illustration, 'neem-feuilles');
+  assert.equal(s.elements.find((e) => e.id === 'visiter').illustration, 'observer-montrer');
+  assert.ok(s.elements.filter((e) => e.id !== 'visiter' && e.type === 'geste').every((e) => !('illustration' in e)));
+});

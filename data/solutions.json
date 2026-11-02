@@ -366,7 +366,8 @@
         {
           "id": "aa-pepiniere-oignon"
         }
-      ]
+      ],
+      "illustration": "rigoles"
     },
     "retirer-bruler": {
       "fr": "Couper les feuilles malades et les brûler loin du champ.",
@@ -380,7 +381,8 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 77"
         }
-      ]
+      ],
+      "illustration": "couper-bruler"
     },
     "pas-compost-malade": {
       "fr": "Ne pas mettre les plants malades au compost.",
@@ -412,7 +414,8 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 45 et 49"
         }
-      ]
+      ],
+      "illustration": "observer-montrer"
     },
     "pailler": {
       "fr": "Couvrir le sol d'herbe sèche pour garder l'humidité.",
@@ -488,7 +491,8 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 49 et 71"
         }
-      ]
+      ],
+      "illustration": "couper-bruler"
     },
     "recolter-secher": {
       "fr": "Récolter sans blesser les produits, puis bien les sécher au soleil.",
@@ -519,7 +523,8 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 58 et 64"
         }
-      ]
+      ],
+      "illustration": "observer-montrer"
     },
     "semences-saines": {
       "fr": "À la prochaine saison, semer des graines prises sur des plants sains.",
@@ -572,7 +577,8 @@
           "id": "inrab-recueil-2020",
           "detail": "fiche D-20"
         }
-      ]
+      ],
+      "illustration": "striga-arracher"
     },
     "mais-cla-cornet": {
       "fr": "Écraser avec les doigts les pontes et les jeunes chenilles dans le cornet du maïs, plutôt que de traiter.",
@@ -582,7 +588,8 @@
         {
           "id": "fao-cla-2018"
         }
-      ]
+      ],
+      "illustration": "ecraser-cornet"
     },
     "striga-arrachage-collectif": {
       "fr": "S'organiser avec les voisins pour arracher le striga dans tous les champs avant qu'il fasse ses graines.",
@@ -592,7 +599,8 @@
         {
           "id": "aa-striga-ensemble"
         }
-      ]
+      ],
+      "illustration": "striga-arracher"
     },
     "varietes-tolerantes-striga": {
       "fr": "À la prochaine saison, semer une variété tolérante au striga : le conseiller indique laquelle.",
@@ -614,7 +622,8 @@
           "id": "fao-coton",
           "detail": "p. 34"
         }
-      ]
+      ],
+      "illustration": "ecraser-cornet"
     },
     "coton-detruire-tiges": {
       "fr": "Après la récolte, arracher et détruire les tiges de cotonnier.",
@@ -635,7 +644,8 @@
         {
           "id": "aa-tri-semences"
         }
-      ]
+      ],
+      "illustration": "tri-semences"
     },
     "riz-conserver-semences": {
       "fr": "Bien sécher les semences de riz au soleil avant de les conserver dans un récipient fermé.",
@@ -669,7 +679,8 @@
           "id": "fao-manioc-2013",
           "detail": "p. 78"
         }
-      ]
+      ],
+      "illustration": "arracher-bruler-enterrer"
     },
     "manioc-boutures-saines": {
       "fr": "Planter des boutures prises sur des plants sans symptômes.",
@@ -717,7 +728,8 @@
         {
           "id": "pw-pourridie-manioc"
         }
-      ]
+      ],
+      "illustration": "outils-javel"
     },
     "manioc-rotation-cereales": {
       "fr": "Pendant au moins 3 saisons, cultiver du maïs, du mil ou du sorgho à cet endroit.",
@@ -749,7 +761,8 @@
           "id": "fao-pertes-apres-recolte",
           "detail": "section 11.1"
         }
-      ]
+      ],
+      "illustration": "igname-cicatriser"
     },
     "igname-trier": {
       "fr": "Trier souvent les tubercules stockés et retirer ceux qui pourrissent.",
@@ -781,7 +794,8 @@
         {
           "id": "inrab-brab-2022-bananier"
         }
-      ]
+      ],
+      "illustration": "plantain-enfouir-replanter"
     },
     "plantain-rejets-sains": {
       "fr": "À la prochaine plantation, utiliser des rejets sains.",
@@ -801,7 +815,8 @@
         {
           "id": "pw-cercosporiose-ghana"
         }
-      ]
+      ],
+      "illustration": "ecartement-plantain"
     },
     "plantain-effeuiller": {
       "fr": "Couper les feuilles très tachées avec un outil propre et les brûler.",
@@ -814,7 +829,8 @@
         {
           "id": "pw-cercosporiose-ghana"
         }
-      ]
+      ],
+      "illustration": "couper-bruler"
     },
     "anacarde-tailler": {
       "fr": "Tailler les branches mortes et les sortir du champ.",
@@ -869,7 +885,8 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 58"
         }
-      ]
+      ],
+      "illustration": "pieges-jaunes"
     },
     "tomate-arracher-viroses": {
       "fr": "Arracher les plants à feuilles petites, jaunes et en cuillère, et les sortir du champ.",
@@ -879,7 +896,8 @@
         {
           "id": "aa-tylcv"
         }
-      ]
+      ],
+      "illustration": "arracher-sortir"
     },
     "tomate-varietes-tylcv": {
       "fr": "À la prochaine saison, planter BENTO 02 (tolérante) ou BENTO 04 (résistante au virus).",
@@ -901,7 +919,8 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 45"
         }
-      ]
+      ],
+      "illustration": "arracher-sortir"
     },
     "tomate-hybrides-fletrissement": {
       "fr": "À la prochaine saison, planter un hybride résistant au flétrissement bactérien : BENTO 06 (Padma) ou BENTO 08 (Thorgal).",
@@ -1300,7 +1319,8 @@
             "id": "inrab-recueil-2020",
             "detail": "fiche M-11, p. 221"
           }
-        ]
+        ],
+        "illustration": "neem-feuilles"
       },
       "sources": [
         {
@@ -1346,7 +1366,8 @@
             "id": "fao-coton",
             "detail": "tableau des substances naturelles, p. 36 du PDF"
           }
-        ]
+        ],
+        "illustration": "neem-amande"
       },
       "sources": [
         {
@@ -1559,7 +1580,8 @@
             "id": "inrab-recueil-2020",
             "detail": "fiche C-8, p. 48"
           }
-        ]
+        ],
+        "illustration": "spinosad"
       },
       "sources": [
         {
@@ -1654,7 +1676,8 @@
             "id": "inrab-recueil-2020",
             "detail": "fiche C-23, p. 63"
           }
-        ]
+        ],
+        "illustration": "jus-ail"
       },
       "sources": [
         {
@@ -1696,7 +1719,8 @@
             "id": "inrab-recueil-2020",
             "detail": "fiche C-23, p. 63"
           }
-        ]
+        ],
+        "illustration": "jus-ail"
       },
       "sources": [
         {
