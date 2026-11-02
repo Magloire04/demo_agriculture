@@ -92,3 +92,21 @@ test('un fichier réécrit garde sa mise en forme', () => {
     assert.equal(formaterComme(texte, JSON.parse(texte)), texte, f);
   }
 });
+
+test('voix qui perd une marque : ligne refusée, donnée inchangée', () => {
+  const d = donnees();
+  const { fon, voix } = d.reponses.phrases.prix_ici;
+  const { donnees: apres, alertes } = corriger(d, 'reponses:phrases.prix_ici', fon, voix.replace('{prix}', ''));
+  assert.equal(alertes.length, 1);
+  assert.match(alertes[0], /\{prix\}.*reponses:phrases\.prix_ici/);
+  assert.equal(apres.reponses.phrases.prix_ici.voix, voix);
+});
+
+test('marque ajoutée ou mal tapée : ligne refusée', () => {
+  const d = donnees();
+  const { fon } = d.reponses.phrases.prix_ici;
+  const { donnees: apres, alertes } = corriger(d, 'reponses:phrases.prix_ici', `${fon} {prixx}`);
+  assert.equal(alertes.length, 1);
+  assert.match(alertes[0], /\{prixx\}/);
+  assert.equal(apres.reponses.phrases.prix_ici.fon, fon);
+});

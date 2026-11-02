@@ -69,17 +69,21 @@ export function appliquerRelecture(donnees, lignes) {
     const fon = (fonRecu ?? '').normalize('NFC').trim();
     if (!fon) { alertes.push(`fon vide, valeur précédente gardée : ${id}`); continue; }
     if (nom) { nom.nom_fon = fon; continue; }
-    const perdues = marquesDe(texte.fon).filter((m) => !fon.includes(m));
-    if (perdues.length) { alertes.push(`marque perdue ${perdues.join(', ')}, ligne refusée : ${id}`); continue; }
+    const voixAPart = typeof texte.voix === 'string' && voixARelire(texte) !== null;
+    const voix = voixAPart && typeof voixRecue === 'string' && voixRecue.trim() ? voixRecue.normalize('NFC').trim() : texte.voix;
+    // Les marques doivent rester les mêmes, dans le fon comme dans la voix : une marque
+    // perdue ou mal tapée ({prixx}) casserait la phrase que le serveur remplit.
+    const ecarts = [[texte.fon, fon], ...(voixAPart ? [[texte.voix, voix]] : [])].flatMap(([avant, apres]) => [
+      ...marquesDe(avant).filter((m) => !marquesDe(apres).includes(m)).map((m) => `marque perdue ${m}`),
+      ...marquesDe(apres).filter((m) => !marquesDe(avant).includes(m)).map((m) => `marque inconnue ${m}`),
+    ]);
+    if (ecarts.length) { alertes.push(`${[...new Set(ecarts)].join(', ')}, ligne refusée : ${id}`); continue; }
     const fonChange = fon !== texte.fon;
-    if (typeof texte.voix === 'string') {
-      if (voixARelire(texte) === null) {
-        if (fonChange) texte.voix = fon;
-      } else {
-        const voix = typeof voixRecue === 'string' && voixRecue.trim() ? voixRecue.normalize('NFC').trim() : texte.voix;
-        if (fonChange && voix === texte.voix) alertes.push(`voix à revoir : ${id}`);
-        texte.voix = voix;
-      }
+    if (voixAPart) {
+      if (fonChange && voix === texte.voix) alertes.push(`voix à revoir : ${id}`);
+      texte.voix = voix;
+    } else if (typeof texte.voix === 'string' && fonChange) {
+      texte.voix = fon;
     }
     texte.fon = fon;
   }
