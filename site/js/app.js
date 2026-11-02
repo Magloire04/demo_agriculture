@@ -554,10 +554,9 @@ function suivreStatut(s, messages) {
   }, 5000);
 }
 
-// Source d'un conseil : le nom de l'éditeur et du document, des noms propres.
-function texteSourceSolution({ nom, detail }) {
-  return `${nom}${detail ? `, ${detail}` : ''}`;
-}
+// Sources d'un conseil : leurs sigles seulement (INRAB, FAO…), sans doublon. Les titres
+// des documents, souvent en français, restent pour l'écran du conseiller.
+const sigles = (sources) => [...new Set(sources.map((s) => s.sigle))].join(' · ');
 
 // Solutions proposées après le signalement, en fon seul : problème probable, traitement
 // documenté éventuel, gestes, puis la mention « à confirmer avec un conseiller ». Les
@@ -571,7 +570,7 @@ function sectionSolutions(solutions) {
       e.illustration && el('img', { class: 'solution-image', src: `img/conseils/${e.illustration}.svg`, alt: '', loading: 'lazy', width: 336 }),
       texteFon(e.fon),
       traitement && e.securite && el('div', { class: 'solution-securite' }, texteFon(e.securite.fon)),
-      el('p', { class: 'solution-source' }, el('span', { 'aria-hidden': 'true' }, 'ⓘ '), e.sources.map(texteSourceSolution).join(' · ')),
+      el('p', { class: 'solution-source' }, el('span', { 'aria-hidden': 'true' }, 'ⓘ '), sigles(e.sources)),
       e.video && el('a', { class: 'solution-video', href: e.video.url, target: '_blank', rel: 'noopener' }, `${T.video} · Access Agriculture`));
   });
   return el('section', { class: 'solutions', 'aria-label': T.solutions },

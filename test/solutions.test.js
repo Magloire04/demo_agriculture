@@ -33,7 +33,7 @@ test('cas nette : problème « probablement », traitement en premier', () => {
   assert.deepEqual(s.elements[0].reserves, ['Pulvérisateur à très bas volume.']);
   assert.deepEqual(s.elements[0].securite, { fr: 'Porter des gants.', fon: 'gants fon' });
   assert.deepEqual(s.elements[0].video, { url: 'https://www.accessagriculture.org/exemple', titre: 'Vidéo de test' });
-  assert.deepEqual(s.elements[0].sources, [{ id: 's-benin', nom: 'INRAB, Recueil de test', detail: 'fiche M-11', url: 'https://exemple.bj/recueil.pdf' }]);
+  assert.deepEqual(s.elements[0].sources, [{ id: 's-benin', nom: 'INRAB, Recueil de test', sigle: 'INRAB', detail: 'fiche M-11', url: 'https://exemple.bj/recueil.pdf' }]);
   assert.equal(s.mention.fr, 'À confirmer avec un conseiller.');
   assert.equal(s.titre.fr, 'En attendant le conseiller, vous pouvez :');
   assert.equal(s.version, 'test-1');

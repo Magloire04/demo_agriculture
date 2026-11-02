@@ -4,6 +4,7 @@
   "sources": {
     "inrab-recueil-2020": {
       "editeur": "INRAB",
+      "sigle": "INRAB",
       "titre": "Recueil des technologies agricoles prometteuses développées par le système national de recherche agricole",
       "nature": "fiche",
       "annee": 2020,
@@ -13,6 +14,7 @@
     },
     "iita-inrab-maraichage-2010": {
       "editeur": "IITA et INRAB",
+      "sigle": "IITA · INRAB",
       "titre": "Integrated pest management in vegetable production: a guide for extension workers in West Africa",
       "nature": "guide",
       "annee": 2010,
@@ -22,6 +24,7 @@
     },
     "fao-cla-2018": {
       "editeur": "FAO",
+      "sigle": "FAO",
       "titre": "Gestion intégrée de la chenille légionnaire d'automne sur le maïs : guide pour les champs-écoles des producteurs en Afrique",
       "nature": "guide",
       "annee": 2018,
@@ -31,6 +34,7 @@
     },
     "fao-pertes-apres-recolte": {
       "editeur": "FAO",
+      "sigle": "FAO",
       "titre": "Prevention of post-harvest food losses: fruits, vegetables and root crops",
       "nature": "guide",
       "annee": 1989,
@@ -40,6 +44,7 @@
     },
     "aa-compost-striga": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Composting to beat striga",
       "nature": "video",
       "annee": null,
@@ -49,6 +54,7 @@
     },
     "aa-gombo": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Taking care of okra",
       "nature": "video",
       "annee": null,
@@ -58,6 +64,7 @@
     },
     "aa-pepiniere-oignon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Onion nursery",
       "nature": "video",
       "annee": null,
@@ -67,6 +74,7 @@
     },
     "aa-mildiou-tomate": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Managing tomato late blight",
       "nature": "video",
       "annee": null,
@@ -76,6 +84,7 @@
     },
     "aa-tuteurage-tomate": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Staking tomato plants",
       "nature": "video",
       "annee": null,
@@ -85,6 +94,7 @@
     },
     "aa-paillage": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Mulch for a better soil and crop",
       "nature": "video",
       "annee": null,
@@ -94,6 +104,7 @@
     },
     "aa-chenille-legionnaire": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Killing fall armyworms naturally",
       "nature": "video",
       "annee": null,
@@ -103,6 +114,7 @@
     },
     "aa-rotation-legumineuses": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Crop rotation with legumes",
       "nature": "video",
       "annee": null,
@@ -112,6 +124,7 @@
     },
     "fao-coton": {
       "editeur": "FAO",
+      "sigle": "FAO",
       "titre": "Gestion intégrée de la production et des déprédateurs du coton : guide du facilitateur pour les champs-écoles des producteurs",
       "nature": "guide",
       "annee": null,
@@ -121,6 +134,7 @@
     },
     "aa-cla-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Killing fall armyworms naturally (version fon)",
       "nature": "video",
       "annee": null,
@@ -130,6 +144,7 @@
     },
     "aa-striga-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Integrated approach against striga (version fon)",
       "nature": "video",
       "annee": null,
@@ -139,6 +154,7 @@
     },
     "aa-striga-ensemble": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Joining hands against striga",
       "nature": "video",
       "annee": null,
@@ -148,6 +164,7 @@
     },
     "aa-tri-semences": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Seed sorting by flotation",
       "nature": "video",
       "annee": null,
@@ -157,6 +174,7 @@
     },
     "aa-semences-riz": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Rice seed preservation",
       "nature": "video",
       "annee": null,
@@ -166,6 +184,7 @@
     },
     "fao-manioc-2013": {
       "editeur": "FAO",
+      "sigle": "FAO",
       "titre": "Produire plus avec moins : le manioc",
       "nature": "guide",
       "annee": 2013,
@@ -175,6 +194,7 @@
     },
     "pw-mosaique-manioc": {
       "editeur": "CABI Plantwise",
+      "sigle": "CABI Plantwise",
       "titre": "Mosaïque africaine du manioc : liste verte (Pest Management Decision Guide)",
       "nature": "fiche",
       "annee": 2016,
@@ -184,6 +204,7 @@
     },
     "pw-pourridie-manioc": {
       "editeur": "CABI Plantwise",
+      "sigle": "CABI Plantwise",
       "titre": "Pourriture des racines du manioc, Ghana (Pest Management Decision Guide)",
       "nature": "fiche",
       "annee": 2016,
@@ -193,6 +214,7 @@
     },
     "pw-cercosporiose-ghana": {
       "editeur": "CABI Plantwise",
+      "sigle": "CABI Plantwise",
       "titre": "Cercosporiose noire du bananier, Ghana (Pest Management Decision Guide)",
       "nature": "fiche",
       "annee": 2014,
@@ -202,6 +224,7 @@
     },
     "pw-cercosporiose-rdc": {
       "editeur": "CABI Plantwise",
+      "sigle": "CABI Plantwise",
       "titre": "Cercosporiose noire du bananier, RDC (fiche en français)",
       "nature": "fiche",
       "annee": 2014,
@@ -211,6 +234,7 @@
     },
     "inrab-brab-2022-bananier": {
       "editeur": "INRAB",
+      "sigle": "INRAB",
       "titre": "Vodounou et al., bunchy top du bananier au Sud-Bénin, BRAB vol. 32 n° 1",
       "nature": "article",
       "annee": 2022,
@@ -220,6 +244,7 @@
     },
     "inrab-brab-2021-palmier": {
       "editeur": "INRAB",
+      "sigle": "INRAB",
       "titre": "Koussinou et al., fusariose du palmier à huile, BRAB vol. 31 n° 1",
       "nature": "article",
       "annee": 2021,
@@ -229,6 +254,7 @@
     },
     "aa-mosaique-manioc-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "La mosaïque du manioc (version fon)",
       "nature": "video",
       "annee": null,
@@ -238,6 +264,7 @@
     },
     "aa-rejets-sains-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Rejets de bananier sains (version fon)",
       "nature": "video",
       "annee": null,
@@ -247,6 +274,7 @@
     },
     "aa-fourmis-tisserandes-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Fourmis tisserandes dans les vergers (version fon)",
       "nature": "video",
       "annee": null,
@@ -256,6 +284,7 @@
     },
     "infonet-anacarde": {
       "editeur": "Infonet-Biovision (hébergé par Access Agriculture)",
+      "sigle": "Infonet-Biovision",
       "titre": "Cashew",
       "nature": "fiche",
       "annee": null,
@@ -265,6 +294,7 @@
     },
     "aa-tylcv": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Managing tomato leaf curl virus",
       "nature": "video",
       "annee": null,
@@ -274,6 +304,7 @@
     },
     "aa-maladies-oignon-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Managing onion diseases (version fon)",
       "nature": "video",
       "annee": null,
@@ -283,6 +314,7 @@
     },
     "aa-champ-oignon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Installing an onion field",
       "nature": "video",
       "annee": null,

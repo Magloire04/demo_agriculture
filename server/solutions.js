@@ -17,7 +17,7 @@ function sourcesDe(donnees, liste = []) {
   return liste.map(({ id, detail = null }) => {
     const s = donnees.sources[id];
     if (!s) throw new Error(`Source inconnue : ${id}`);
-    return { id, nom: `${s.editeur}, ${s.titre}`, detail, url: s.url };
+    return { id, nom: `${s.editeur}, ${s.titre}`, sigle: s.sigle ?? s.editeur, detail, url: s.url };
   });
 }
 
