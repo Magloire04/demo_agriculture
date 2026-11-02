@@ -563,7 +563,7 @@ function suivreStatut(s, messages) {
 }
 
 function texteSourceSolution({ nom, detail }) {
-  return `Source : ${nom}${detail ? `, ${detail}` : ''}`;
+  return `${nom}${detail ? `, ${detail}` : ''}`;
 }
 
 // Solutions proposées après le signalement : problème probable, traitement
@@ -576,7 +576,7 @@ function sectionSolutions(solutions) {
       traitement && el('span', { class: 'solution-etiquette fon', lang: 'fon' }, T.traitement),
       bilingue(e),
       traitement && e.securite && el('div', { class: 'solution-securite' }, bilingue(e.securite)),
-      el('p', { class: 'solution-source' }, e.sources.map(texteSourceSolution).join(' · ')),
+      el('p', { class: 'solution-source' }, el('span', { 'aria-hidden': 'true' }, 'ⓘ '), e.sources.map(texteSourceSolution).join(' · ')),
       e.video && el('a', { class: 'solution-video', href: e.video.url, target: '_blank', rel: 'noopener' }, `${T.video} · Access Agriculture`));
   });
   return el('section', { class: 'solutions', 'aria-label': T.solutions },

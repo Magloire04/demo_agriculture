@@ -2,11 +2,29 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-// Petits mots qui trahissent une phrase française. Pas « un » : « Un » est aussi du fon.
-const MARQUEURS = new Set('le la les de du des une et pour avec votre vous est pas au aux dans sur par ou ce cette son vos'.split(' '));
 const lire = (f) => readFileSync(new URL(`../${f}`, import.meta.url), 'utf8');
 const mots = (texte) => texte.toLowerCase().split(/[^\p{L}]+/u).filter(Boolean);
+
+// Mots qui trahissent du français : les petits mots d'une phrase (pas « un », qui est
+// aussi du fon), les mots de 4 lettres ou plus du français de l'interface et des
+// réponses, sauf ceux que le fon emploie aussi (« kilo »), et quelques mots des
+// anciens libellés.
+function marqueurs() {
+  const { textes } = JSON.parse(lire('data/interface.json'));
+  const { phrases, unites } = JSON.parse(lire('data/reponses.json'));
+  const tous = [...Object.values(textes), ...Object.values(phrases), ...Object.values(unites)];
+  const sansMarques = (t) => (t ?? '').replace(/\{[a-z_]+\}/g, ' '); // {commune} n'est pas un mot fon
+  const enFon = new Set(tous.flatMap((t) => mots(sansMarques(t.fon))));
+  const longs = tous.flatMap((t) => mots(sansMarques(t.fr))).filter((m) => m.length >= 4 && !enFon.has(m));
+  const petits = 'le la les de du des une et pour avec votre vous est pas au aux dans sur par ou ce cette son vos'.split(' ');
+  return new Set([...petits, ...longs, 'stable', 'depuis', 'source', 'relevé', 'lieu']);
+}
+const MARQUEURS = marqueurs();
 const francais = (texte) => mots(texte).filter((m) => MARQUEURS.has(m));
+// Une chaîne de code n'est pas un texte affiché : un seul mot en minuscules sans accent
+// (clé, sélecteur), ou des noms de classes à tiret séparés par des espaces.
+const estDuCode = (valeur) => /^[a-z0-9_\-.:#[\]=/*]*$/.test(valeur)
+  || valeur.trim().split(/\s+/).every((m) => /^[a-z0-9_]+(-[a-z0-9_]+)+$/.test(m));
 
 // Textes vus par l'agriculteur dans une page : texte des éléments et étiquettes.
 function textesDePage(html) {
@@ -83,12 +101,21 @@ test('aucun mot français dans les pages de l’agriculteur', () => {
 });
 
 test('aucune chaîne française affichée par app.js', () => {
-  const fautives = chainesDe(lire('site/js/app.js')).filter(({ valeur }) => francais(valeur).length > 0);
+  const fautives = chainesDe(lire('site/js/app.js')).filter(({ valeur }) => !estDuCode(valeur) && francais(valeur).length > 0);
   assert.deepEqual(fautives.map(({ ligne, valeur }) => `ligne ${ligne} : ${valeur}`), []);
 });
 
+test('le contrôle repère aussi les libellés français courts, jamais le fon de l’interface', () => {
+  for (const libelle of ['Réécouter', 'Arrêter', 'Lecture impossible', 'Écouter en fongbé', 'Terminer', 'Actualiser', 'Analyse en cours',
+    'Stable depuis août 2026', 'Marché Dantokpa', 'Commune non précisée', 'Traitement documenté', 'Solutions proposées', 'Référence : ',
+    'Culture', 'Lieu', 'Faire un autre signalement', 'F CFA / litre']) {
+    assert.notDeepEqual(francais(libelle), [], libelle);
+  }
+  for (const { fon } of Object.values(JSON.parse(lire('data/interface.json')).textes)) assert.deepEqual(francais(fon), [], fon);
+});
+
 test('le contrôle repère bien une phrase française', () => {
-  assert.deepEqual(francais('Appuyez pour parler'), ['pour']);
+  assert.ok(francais('Appuyez pour parler').includes('pour'));
   assert.deepEqual(francais('Un ma se nǔ ɔ sín nyǐkɔ ǎ.'), []);
   assert.deepEqual(chainesDe("const a = 'Comparer avec les autres'; // un commentaire avec le mot de\nconst b = `x ${'pour'} y`;").map((c) => c.valeur), ['Comparer avec les autres', 'pour', 'x  y']);
 });
