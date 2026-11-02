@@ -58,7 +58,7 @@ test('site coupé : l’accueil rend la page d’attente en 503 avec Retry-After
     assert.match(rep.headers.get('content-type'), /^text\/html/);
     assert.match(rep.headers.get('content-security-policy'), /default-src 'self'/);
     const corps = await rep.text();
-    assert.ok(corps.includes(FON) && corps.includes(FR), adresse);
+    assert.ok(corps.includes(FON) && !corps.includes(FR), adresse); // fon seul, plus de français
     assert.ok(!/<script(?![^>]*\bsrc=)/.test(corps), 'aucun script en ligne dans la page d’attente');
   }
 });

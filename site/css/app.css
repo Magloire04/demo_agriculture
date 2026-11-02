@@ -419,11 +419,23 @@ main:focus {
   color: var(--texte-doux);
 }
 
+/* Envoi d'un fichier audio : une icône seule, son nom fon en étiquette (title, aria-label). */
 .lien-fichier {
-  font-size: 0.8125rem;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--bordure);
+  border-radius: 50%;
+  background: var(--blanc);
   color: var(--vert);
-  text-decoration: underline;
   cursor: pointer;
+}
+
+.lien-fichier svg {
+  width: 22px;
+  height: 22px;
 }
 
 .lien-fichier input {
