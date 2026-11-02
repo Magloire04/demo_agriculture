@@ -44,7 +44,7 @@ Les étiquettes lues par les lecteurs d'écran (`aria-label`, `alt`, `title`) pa
 - **Réponse de prix** : la phrase fon reste, la traduction française disparaît. La carte garde sa mise en page actuelle et retire ses mots français :
   - le produit est nommé par son nom fon (`nom_fon` de `data/referentiel.json`, présent pour les 33 produits) ;
   - « Marché X · département · prix moyen de septembre 2026 » devient « X · département · 09/2026 » ;
-  - l'évolution devient une flèche et un pourcentage, sans mot (« Stable » devient une flèche horizontale) ;
+  - l'évolution garde sa flèche et son écart en francs (« ▲ +12 F »), la date passe en chiffres (« 08/2026 ») et « Stable » devient une flèche horizontale ; le badge « le moins cher » et « relevé de … » passent en fon et en chiffres ; le titre « Marché X » de la carte d'un marché devient « X » ;
   - « Comparer avec les autres marchés » passe en fon ;
   - la ligne de source devient le lien `PAM · CC BY-IGO`, précédé d'une icône : la licence des relevés du PAM demande cette attribution (choix de Claude).
 - **Accusé de signalement** : le titre et le message sont déjà en fon. La référence et l'heure de réception restent, sans libellé français, avec une icône. Le récapitulatif garde la culture (nom fon : premier terme `fon` de la culture dans `data/lexique.json`) et la commune ; la ligne des symptômes disparaît, la phrase dite par l'agriculteur restant affichée. Les étapes « reçu » et « pris en charge » sont déjà en fon dans `data/reponses.json`.
