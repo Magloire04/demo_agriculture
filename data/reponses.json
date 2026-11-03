@@ -13,8 +13,8 @@
   "phrases": {
     "prix_ici": {
       "fr": "{au_marche}, {produit} coûte {prix} F CFA {unite}.",
-      "fon": "È nɔ sa {produit} {unite} yí {prix} F CFA ɖo {marche} axi mɛ.",
-      "voix": "È nɔ sa {produit} {unite} yí | {prix} | ɖo {marche} axi mɛ."
+      "fon": "È nɔ sa {produit} {unite} yí {prix} F CFA ɖo {marche} sin axi mɛ.",
+      "voix": "È nɔ sa {produit} {unite} yí | {prix} | ɖo {marche} sin axi mɛ."
     },
     "prix_fourchette": {
       "fr": "{produit} coûte de {min} à {max} F CFA {unite} selon les marchés. Le moins cher : {marche}.",
@@ -28,8 +28,8 @@
     },
     "prix_absent": {
       "fr": "Pas de prix relevé pour {produit} {au_marche}.",
-      "fon": "Mǐ ko tuun {produit} sín akwɛ́ ɖo {marche} axi mɛ ǎ.",
-      "voix": "Mǐ ko tuun {produit} sín akwɛ́ | ɖo {marche} axi mɛ ǎ."
+      "fon": "Mǐ ko tuun {produit} sín akwɛ́ ɖo {marche} sin axi mɛ ǎ.",
+      "voix": "Mǐ ko tuun {produit} sín akwɛ́ | ɖo {marche} sin axi mɛ ǎ."
     },
     "prix_inconnu": {
       "fr": "Pas encore de prix relevé pour {produit}.",
@@ -38,13 +38,13 @@
     },
     "prix_marche_seul": {
       "fr": "Je n'ai pas compris le produit. Voici les prix relevés {au_marche}.",
-      "fon": "Un ma se nǔ ɔ sín nyǐkɔ ǎ. Ɖo {marche} axi mɛ ɔ, nǔ lɛ́ sín akwɛ́ ɖíe.",
-      "voix": "Un ma se nǔ ɔ sín nyǐkɔ ǎ. | Ɖo {marche} axi mɛ ɔ, nǔ lɛ́ sín akwɛ́ ɖíe."
+      "fon": "Un se nǔ ɔ sín nyǐkɔ ǎ. Ɖo {marche} sin axi mɛ ɔ, nǔ lɛ́ sín akwɛ́ ɖíe.",
+      "voix": "Un se nǔ ɔ sín nyǐkɔ ǎ. | Ɖo {marche} sin axi mɛ ɔ, nǔ lɛ́ sín akwɛ́ ɖíe."
     },
     "prix_non_compris": {
       "fr": "Je n'ai pas reconnu de produit. Dites le nom du produit, puis le marché.",
-      "fon": "Un ma se nǔ ɖěbǔ sín nyǐkɔ ǎ. Mi kɛnklɛ́n bo ɖɔ nǔ ɔ sín nyǐkɔ. Énɛ́ gúdo ɔ, mi ɖɔ axi ɔ sín nyǐkɔ.",
-      "voix": "Un ma se nǔ ɖěbǔ sín nyǐkɔ ǎ. | Mi kɛnklɛ́n bo ɖɔ nǔ ɔ sín nyǐkɔ. | Énɛ́ gúdo ɔ, mi ɖɔ axi ɔ sín nyǐkɔ."
+      "fon": "Un se nǔ ɖěbǔ sín nyǐkɔ ǎ. Mi kɛnklɛ́n bo ɖɔ nǔ ɔ sín nyǐkɔ. Énɛ́ gúdo ɔ, mi ɖɔ axi ɔ sín nyǐkɔ.",
+      "voix": "Un se nǔ ɖěbǔ sín nyǐkɔ ǎ. | Mi kɛnklɛ́n bo ɖɔ nǔ ɔ sín nyǐkɔ. | Énɛ́ gúdo ɔ, mi ɖɔ axi ɔ sín nyǐkɔ."
     },
     "prix_sans_prix": {
       "fr": "Le prix de « {terme} » n'est pas encore dans la base.",
@@ -75,15 +75,15 @@
     },
     "erreur_reessayer": {
       "fr": "Le service ne répond pas. Réessayez dans une minute.",
-      "fon": "Mǐ ma sixú yí gbe nú mi din ǎ. Mi lɛ́ tɛ́n kpɔ́n ɖo cɛ́jú ɖokpó mɛ."
+      "fon": "Mǐ sixú yí gbe nú mi din ǎ. Mi lɛ́ tɛ́n kpɔ́n ɖo cɛ́jú ɖokpó mɛ."
     },
     "erreur_trop_court": {
       "fr": "L'enregistrement est trop court. Appuyez, parlez, puis appuyez de nouveau.",
-      "fon": "Xó e mi ɖɔ é hwe gli dín. Mi zìn d’é jí, mi ɖɔ xó, bo lɛ́ zìn d’é jí."
+      "fon": "Xó e mi ɖɔ é hwe gli dín. Mi lɛvɔ ɖɔ"
     },
     "hors_service": {
       "fr": "AgriFon est momentanément hors service. Revenez un peu plus tard.",
-      "fon": "Mǐ ma sixú yí gbe nú mi din ǎ."
+      "fon": "Mǐ sixú yí gbe nú mi din ǎ."
     }
   }
 }

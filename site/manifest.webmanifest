@@ -1,7 +1,7 @@
 {
   "name": "AgriFon",
   "short_name": "AgriFon",
-  "description": "Mi ɖɔ xó ɖo fɔ̀ngbè mɛ, AgriFon na yí gbe nú mi.",
+  "description": "Mi ɖɔ xó ɖo fɔ̀ngbè mɛ, mon ɔ na yí gbe nú mi.",
   "lang": "fon",
   "dir": "ltr",
   "id": "./",
@@ -19,7 +19,7 @@
     { "src": "icons/icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ],
   "shortcuts": [
-    { "name": "Axi mɛ akwɛ́", "url": "./#/prix", "icons": [{ "src": "icons/icone-192.png", "sizes": "192x192" }] },
-    { "name": "Ɖɔ àzɔn", "url": "./#/signalement", "icons": [{ "src": "icons/icone-192.png", "sizes": "192x192" }] }
+    { "name": "Axi mɛ kwɛ́", "url": "./#/prix", "icons": [{ "src": "icons/icone-192.png", "sizes": "192x192" }] },
+    { "name": "Biɔ nu tuntun", "url": "./#/signalement", "icons": [{ "src": "icons/icone-192.png", "sizes": "192x192" }] }
   ]
 }

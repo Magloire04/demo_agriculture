@@ -78,7 +78,7 @@ test('POST /api/prix : la voix est donnée seulement si tous ses extraits existe
 
   const toutes = { fichiers: (morceaux) => morceaux.map(fichierVoix) };
   const r = await (await envoyer(`${await demarrer(t, { asr: fausseAsr(), voix: toutes })}/api/prix`)).json();
-  const attendus = ['È nɔ sa gbadé kilo ɖokpó yí', 'kpɔ́nwun atɔ̀n', 'ɖɔ̌la atɔ̀n', 'ɖo Glazoué axi mɛ.'].map(fichierVoix);
+  const attendus = ['È nɔ sa gbadé kilo ɖokpó yí', 'kpɔ́nwun atɔ̀n', 'ɖɔ̌la atɔ̀n', 'ɖo Glazoué sin axi mɛ.'].map(fichierVoix);
   assert.deepEqual(r.voix, attendus);
 });
 

@@ -22,7 +22,7 @@ test('produit et marché : prix relevé dans ce marché, avec sa date et le rele
     { prix: 90, date: '2026-09-15', precedent: 95, date_precedente: '2026-08-15' },
   );
   assert.equal(r.message, `Au marché de Glazoué, le maïs coûte 90${NB}F${NB}CFA le kilo.`);
-  assert.equal(r.message_fon, `È nɔ sa gbadé kilo ɖokpó yí 90${NB}F${NB}CFA ɖo Glazoué axi mɛ.`);
+  assert.equal(r.message_fon, `È nɔ sa gbadé kilo ɖokpó yí 90${NB}F${NB}CFA ɖo Glazoué sin axi mɛ.`);
   assert.equal(r.reponses[0].produit.nom_fon, 'gbadé');
   assert.equal(r.reponses[0].produit.pam, undefined);
   assert.equal(r.marche.pam, undefined);
@@ -67,7 +67,7 @@ test('marché sans relevé (Lokossa) : on le dit, puis on donne les autres march
   assert.equal(r.marche.id, 'lokossa');
   assert.equal(r.reponses[0].ici, null);
   assert.equal(r.message, `Pas de prix relevé pour le maïs au marché de Lokossa. Le maïs coûte de 90 à 160${NB}F${NB}CFA le kilo selon les marchés. Le moins cher : Glazoué.`);
-  assert.ok(r.message_fon.startsWith('Mǐ ko tuun gbadé sín akwɛ́ ɖo Lokossa axi mɛ ǎ.'));
+  assert.ok(r.message_fon.startsWith('Mǐ ko tuun gbadé sín akwɛ́ ɖo Lokossa sin axi mɛ ǎ.'));
 });
 
 test('produit sans aucun relevé : pas de prix inventé', () => {
@@ -75,7 +75,7 @@ test('produit sans aucun relevé : pas de prix inventé', () => {
   assert.equal(r.reponses[0].produit.id, 'sorgho');
   assert.deepEqual(r.reponses[0].lignes, []);
   assert.equal(r.message, 'Pas encore de prix relevé pour le sorgho.');
-  assert.equal(r.message_fon, 'Mǐ ko tuun abɔ̀ sín akwɛ́ ǎ.');
+  assert.equal(r.message_fon, 'Mǐ ko tuun likun sín akwɛ́ ǎ.');
 });
 
 test('marché seul : les prix de ce marché, ou une nouvelle demande s’il n’en a aucun', () => {
@@ -106,7 +106,7 @@ test('produit hors référentiel et phrase incomprise', () => {
 
 test('chaque réponse a sa version fongbé, y compris l’huile au litre', () => {
   const huile = repondrePrix({ transcription: 'amivɔvɔ dantɔkpa', produits: [produit('amivɔvɔ')] });
-  assert.equal(huile.message_fon, `È nɔ sa amivɔvɔ lǐtli ɖokpó yí 1${' '}000${NB}F${NB}CFA ɖo Dantokpa axi mɛ.`);
+  assert.equal(huile.message_fon, `È nɔ sa amivɔvɔ lǐtli ɖokpó yí 1${' '}000${NB}F${NB}CFA ɖo Dantokpa sin axi mɛ.`);
   for (const transcription of ['axi glazuwe', 'blabla']) {
     assert.ok(repondrePrix({ transcription, produits: [] }).message_fon);
   }

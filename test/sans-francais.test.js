@@ -8,7 +8,7 @@ const mots = (texte) => texte.toLowerCase().split(/[^\p{L}]+/u).filter(Boolean);
 // Mots qui trahissent du français : les petits mots d'une phrase (pas « un », qui est
 // aussi du fon), les mots de 4 lettres ou plus du français de l'interface et des
 // réponses, sauf ceux que le fon emploie aussi (« kilo »), et quelques mots des
-// anciens libellés.
+// anciens libellés. Un nom propre (AgriFon) n'est pas un mot français.
 function marqueurs() {
   const { textes } = JSON.parse(lire('data/interface.json'));
   const { phrases, unites } = JSON.parse(lire('data/reponses.json'));
@@ -17,7 +17,8 @@ function marqueurs() {
   const enFon = new Set(tous.flatMap((t) => mots(sansMarques(t.fon))));
   const longs = tous.flatMap((t) => mots(sansMarques(t.fr))).filter((m) => m.length >= 4 && !enFon.has(m));
   const petits = 'le la les de du des une et pour avec votre vous est pas au aux dans sur par ou ce cette son vos'.split(' ');
-  return new Set([...petits, ...longs, 'stable', 'depuis', 'source', 'relevé', 'lieu']);
+  const nomsPropres = new Set(['agrifon']);
+  return new Set([...petits, ...longs.filter((m) => !nomsPropres.has(m)), 'stable', 'depuis', 'source', 'relevé', 'lieu']);
 }
 const MARQUEURS = marqueurs();
 const francais = (texte) => mots(texte).filter((m) => MARQUEURS.has(m));

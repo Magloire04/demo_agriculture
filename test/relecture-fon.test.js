@@ -28,7 +28,7 @@ test('export : une ligne par texte, cinq parties, voix nulle quand elle répète
   assert.equal(ligne(lignes, 'reponses:phrases.prix_ici').voix, d.reponses.phrases.prix_ici.voix);
   assert.deepEqual(ligne(lignes, 'reponses:phrases.prix_ici').marques, ['{produit}', '{unite}', '{prix}', '{marche}']);
   assert.deepEqual(ligne(lignes, 'produits:mais'), { id: 'produits:mais', partie: 'Produits', fr: 'Maïs', fon: 'gbadé', voix: null, marques: [] });
-  assert.equal(ligne(lignes, 'cultures:coton').fon, 'kanfun');
+  assert.equal(ligne(lignes, 'cultures:coton').fon, 'avɔkanfun');
   assert.equal(ligne(lignes, 'interface:accueil').voix, null);
 });
 

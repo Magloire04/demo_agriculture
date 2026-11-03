@@ -73,7 +73,7 @@ test('prix : voix_phrase, et le labo reçoit le texte entier en minuscule au mil
   assert.match(corps.voix_phrase, HEX);
   assert.equal(corps.voix, null); // anciens extraits absents ici : inchangé
   assert.equal((await fetch(`${url}/api/voix/${corps.voix_phrase}.wav`)).status, 200);
-  assert.deepEqual(l.recus, ['È nɔ sa gbadé kilo ɖokpó yí kpɔ́nwun atɔ̀n ɖɔ̌la atɔ̀n ɖo Glazoué axi mɛ.']);
+  assert.deepEqual(l.recus, ['È nɔ sa gbadé kilo ɖokpó yí kpɔ́nwun atɔ̀n ɖɔ̌la atɔ̀n ɖo Glazoué sin axi mɛ.']);
 });
 
 test('son : 200 audio/wav immuable, en 16 kHz', async (t) => {

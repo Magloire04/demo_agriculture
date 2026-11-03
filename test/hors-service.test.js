@@ -13,7 +13,7 @@ import { creerVoix } from '../server/voix.js';
 
 const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 const FR = 'AgriFon est momentanément hors service. Revenez un peu plus tard.';
-const FON = 'Mǐ ma sixú yí gbe nú mi din ǎ.';
+const FON = 'Mǐ sixú yí gbe nú mi din ǎ.';
 
 const fausseAsr = {
   configure: true,

@@ -27,8 +27,8 @@ test('phrases fixes : chaque commune, le GPS, produit non compris, chaque march�
   const titre = textes.phrase('signalement_transmis');
   assert.ok(liste.includes(texteADire(textes.joindre([titre, textes.phrase('signalement_recu_commune', { commune: 'Bohicon' })]).voix)));
   assert.ok(liste.includes(texteADire(textes.joindre([titre, textes.phrase('signalement_recu_gps')]).voix)));
-  assert.ok(liste.includes('Un ma se nǔ ɖěbǔ sín nyǐkɔ ǎ. Mi kɛnklɛ́n bo ɖɔ nǔ ɔ sín nyǐkɔ. Énɛ́ gúdo ɔ, mi ɖɔ axi ɔ sín nyǐkɔ.'));
-  assert.ok(liste.includes('Un ma se nǔ ɔ sín nyǐkɔ ǎ. Ɖo Dantokpa axi mɛ ɔ, nǔ lɛ́ sín akwɛ́ ɖíe.'));
+  assert.ok(liste.includes('Un se nǔ ɖěbǔ sín nyǐkɔ ǎ. Mi kɛnklɛ́n bo ɖɔ nǔ ɔ sín nyǐkɔ. Énɛ́ gúdo ɔ, mi ɖɔ axi ɔ sín nyǐkɔ.'));
+  assert.ok(liste.includes('Un se nǔ ɔ sín nyǐkɔ ǎ. Ɖo Dantokpa sin axi mɛ ɔ, nǔ lɛ́ sín akwɛ́ ɖíe.'));
   assert.ok(!liste.some((p) => p.includes('Lokossa axi')));
 });
 
