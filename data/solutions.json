@@ -1050,10 +1050,10 @@
       "aerer"
     ],
     "fletrissement": [
-      "observer-collet",
       "pailler",
       "arroser",
-      "drainer"
+      "drainer",
+      "pas-compost-malade"
     ],
     "ravageurs": [
       "visiter",

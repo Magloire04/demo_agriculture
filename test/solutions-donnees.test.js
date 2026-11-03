@@ -224,3 +224,14 @@ test('références croisées', () => {
     assert.ok(['nette', 'possible'].includes(c.certitude), `cas ${c.id} : certitude`);
   }
 });
+
+// « Regarder le pied des plants fanés » n’est pas un geste à faire (note d’Elisée à la
+// relecture) : il n’est plus proposé pour un flétrissement, où « ne pas mettre les
+// plants malades au compost » le remplace comme second geste valable en toute saison.
+test('un flétrissement propose des gestes à faire, plus « observer le collet »', () => {
+  for (const culture of lexique.cultures.map((c) => c.id)) {
+    const gestes = signaler(culture, ['fletrissement'])?.elements.filter((e) => e.type === 'geste').map((e) => e.id) ?? [];
+    assert.ok(!gestes.includes('observer-collet'), `${culture} : ${gestes.join(', ')}`);
+    assert.ok(gestes.includes('pas-compost-malade'), `${culture} : ${gestes.join(', ')}`);
+  }
+});
