@@ -244,3 +244,14 @@ test('le fon écrit Ɖ et ɖ, jamais Ð ni ð', () => {
     assert.deepEqual([...texte.matchAll(/.{0,20}[\u00d0\u00f0].{0,10}/g)].map((m) => m[0].trim()), [], f);
   }
 });
+
+// « abɔ̀ » n'est plus le sorgho (likun) et le mil se dit abɔkún (relecture d'Elisée).
+test('les conseils nomment le sorgho likun et le mil abɔkún, plus jamais abɔ̀', () => {
+  const textes = [
+    ...Object.entries(donnees.gestes).map(([id, g]) => [`geste ${id}`, g]),
+    ...donnees.cas.flatMap((c) => [[`cas ${c.id}`, c.probleme], [`traitement ${c.id}`, c.traitement]]),
+  ].filter(([, t]) => t);
+  for (const [ou, t] of textes) {
+    for (const champ of ['fon', 'voix']) assert.ok(!/(^|[\s,.|])abɔ̀?([\s,.|]|$)/.test(t[champ] ?? ''), `${ou} : ${t[champ]}`);
+  }
+});

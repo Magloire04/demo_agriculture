@@ -691,8 +691,8 @@
     },
     "rotation-cereale": {
       "fr": "À la prochaine saison, cultiver une céréale (maïs, sorgho) à cet endroit.",
-      "fon": "Xwè e ja é ɔ, mi ná dó gbadé alǒ abɔ̀ ɖo fí ɔ.",
-      "voix": "Xwè e ja é ɔ, mi ná dó gbadé alǒ abɔ̀ ɖo fí ɔ.",
+      "fon": "Xwè e ja é ɔ, mi ná dó gbadé alǒ likun ɖo fí ɔ.",
+      "voix": "Xwè e ja é ɔ, mi ná dó gbadé alǒ likun ɖo fí ɔ.",
       "sources": [
         {
           "id": "aa-rotation-legumineuses"
@@ -730,8 +730,8 @@
     },
     "manioc-rotation": {
       "fr": "À la prochaine saison, cultiver du sorgho ou du niébé à cet endroit.",
-      "fon": "Xwè e ja é ɔ, mi ná dó abɔ̀ alǒ ayikun ɖo fí ɔ.",
-      "voix": "Xwè e ja é ɔ, mi ná dó abɔ̀ alǒ ayikun ɖo fí ɔ.",
+      "fon": "Xwè e ja é ɔ, mi ná dó likun alǒ ayikun ɖo fí ɔ.",
+      "voix": "Xwè e ja é ɔ, mi ná dó likun alǒ ayikun ɖo fí ɔ.",
       "sources": [
         {
           "id": "pw-mosaique-manioc"
@@ -765,8 +765,8 @@
     },
     "manioc-rotation-cereales": {
       "fr": "Pendant au moins 3 saisons, cultiver du maïs, du mil ou du sorgho à cet endroit.",
-      "fon": "Nù xwè 3 mon ɔ, mi dó gbadé, likún alǒ abɔ̀ ɖo fí ɔ.",
-      "voix": "Nù xwè atɔ̀n mon ɔ, mi dó gbadé, likún alǒ abɔ̀ ɖo fí ɔ.",
+      "fon": "Nù xwè 3 mon ɔ, mi dó gbadé, abɔkún alǒ likun ɖo fí ɔ.",
+      "voix": "Nù xwè atɔ̀n mon ɔ, mi dó gbadé, abɔkún alǒ likun ɖo fí ɔ.",
       "sources": [
         {
           "id": "pw-pourridie-manioc"

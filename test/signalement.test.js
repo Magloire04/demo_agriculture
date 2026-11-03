@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
 import { analyserSignalement, creerRegistre } from '../server/signalement.js';
+import { distance, normaliser } from '../server/texte.js';
 
 const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 const lexique = lire('lexique.json');
@@ -97,5 +98,15 @@ test('la culture reconnue porte son nom fon', () => {
 test('chaque nom fon affiché d’une culture est reconnu comme cette culture', () => {
   for (const c of lexique.cultures) {
     assert.equal(analyserSignalement(lexique, communes, `${c.nom_fon} ce ama jaunissent`).culture?.id, c.id, `« ${c.nom_fon} »`);
+  }
+});
+
+// Une culture et le produit du même nom (prix) se disent pareil : Elisée a relu
+// sorgho = likun, mil = abɔkún. Une lettre d'écart reste la même graphie (azin, aziín).
+test('une culture porte le même nom fon que le produit du même nom', () => {
+  const { produits } = lire('referentiel.json');
+  for (const c of lexique.cultures) {
+    const p = produits.find((x) => x.id === c.id);
+    if (p) assert.ok(distance(normaliser(c.nom_fon), normaliser(p.nom_fon)) <= 1, `${c.id} : ${c.nom_fon} / ${p.nom_fon}`);
   }
 });
