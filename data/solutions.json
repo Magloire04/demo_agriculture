@@ -528,8 +528,8 @@
     },
     "recolter-secher": {
       "fr": "Récolter sans blesser les produits, puis bien les sécher au soleil.",
-      "fon": "Hwenu e mi ɖo nǔ ɖe wɛ ɔ, mi ma gbá yě ǎ. Énɛ́ gúdo ɔ, mi sá yě dó hwe mɛ ganji.",
-      "voix": "Hwenu e mi ɖo nǔ ɖe wɛ ɔ, mi ma gbá yě ǎ. | Énɛ́ gúdo ɔ, mi sá yě dó hwe mɛ ganji.",
+      "fon": "Hwenu e mi ɖo nǔ kun lɛ ya wɛ ɔ, mi ma gbá yě ǒ. Énɛ́ gúdo ɔ, mi xiyà yě dó hwesivɔ nu",
+      "voix": "Hwenu e mi ɖo nǔ kun lɛ ya wɛ ɔ, mi ma gbá yě ǒ. | Énɛ́ gúdo ɔ, mi xiyà yě dó hwesivɔ nu",
       "sources": [
         {
           "id": "fao-pertes-apres-recolte",
@@ -579,8 +579,8 @@
     },
     "rotation-legumineuse": {
       "fr": "À la prochaine saison, cultiver du niébé, de l'arachide ou du soja à cet endroit.",
-      "fon": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ sɔja ɖo fí ɔ.",
-      "voix": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ sɔja ɖo fí ɔ.",
+      "fon": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ soja ɖo fí ɔ.",
+      "voix": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ soja ɖo fí ɔ.",
       "sources": [
         {
           "id": "aa-rotation-legumineuses"
@@ -636,8 +636,8 @@
     },
     "varietes-tolerantes-striga": {
       "fr": "À la prochaine saison, semer une variété tolérante au striga : le conseiller indique laquelle.",
-      "fon": "Xwè e ja é ɔ, mi ná dó kwín e striga ma nɔ wa nǔ ɖé é. Glegán ɔ ná xlɛ́ mi.",
-      "voix": "Xwè e ja é ɔ, mi ná dó kwín e striga ma nɔ wa nǔ ɖé é. | Glegán ɔ ná xlɛ́ mi.",
+      "fon": "Xwè e ja é ɔ, mi ná dó kwín e striga ma nɔ wa nǔ ɖé nan é. Glegán ɔ ná xlɛ́ mi.",
+      "voix": "Xwè e ja é ɔ, mi ná dó kwín e striga ma nɔ wa nǔ ɖé nan é. | Glegán ɔ ná xlɛ́ mi.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -647,8 +647,8 @@
     },
     "coton-ecraser-chenilles-cornet": {
       "fr": "Écraser les chenilles cachées dans les feuilles enroulées en cornet.",
-      "fon": "Mi zìn wànvú e ɖo ama e wlí lɛ́ mɛ é lɛ́.",
-      "voix": "Mi zìn wànvú e ɖo ama e wlí lɛ́ mɛ é lɛ́.",
+      "fon": "Mi hu wànvú e ɖo ama e mlan lɛ́ mɛ é.",
+      "voix": "Mi hu wànvú e ɖo ama e mlan lɛ́ mɛ é.",
       "sources": [
         {
           "id": "fao-coton",
@@ -659,8 +659,8 @@
     },
     "coton-detruire-tiges": {
       "fr": "Après la récolte, arracher et détruire les tiges de cotonnier.",
-      "fon": "Ðo nǔ ɖe gúdo ɔ, mi ɖe kanfun sín atínkàn lɛ́ bo zé yě dó myɔ̌ mɛ.",
-      "voix": "Ðo nǔ ɖe gúdo ɔ, mi ɖe kanfun sín atínkàn lɛ́ bo zé yě dó myɔ̌ mɛ.",
+      "fon": "Ɖo nǔ yiya gúdo ɔ, mi ɖe avɔkanfun sín atínkàn lɛ́ bo zé yě dó myɔ̌ mɛ.",
+      "voix": "Ɖo nǔ yiya gúdo ɔ, mi ɖe avɔkanfun sín atínkàn lɛ́ bo zé yě dó myɔ̌ mɛ.",
       "sources": [
         {
           "id": "fao-coton",
@@ -670,8 +670,8 @@
     },
     "riz-tri-semences": {
       "fr": "À la prochaine saison, trier les semences dans l'eau et retirer celles qui flottent ou sont tachées.",
-      "fon": "Xwè e ja é ɔ, mi zé mɔ̌likún kwín lɛ́ dó sìn mɛ, bo ɖe é e nɔ sìn jí lɛ́ kpo é e ɖo wuntun lɛ́ kpo.",
-      "voix": "Xwè e ja é ɔ, mi zé mɔ̌likún kwín lɛ́ dó sìn mɛ, | bo ɖe é e nɔ sìn jí lɛ́ kpo é e ɖo wuntun lɛ́ kpo.",
+      "fon": "Xwè e ja é ɔ, mi zé mɔ̌likún kwín lɛ́ dó sìn mɛ, bo ɖe é nɔ sìn jí lɛ́ kpo é ɖo wuntun lɛ́ kpo.",
+      "voix": "Xwè e ja é ɔ, mi zé mɔ̌likún kwín lɛ́ dó sìn mɛ, | bo ɖe é nɔ sìn jí lɛ́ kpo é ɖo wuntun lɛ́ kpo.",
       "sources": [
         {
           "id": "aa-tri-semences"
@@ -681,8 +681,8 @@
     },
     "riz-conserver-semences": {
       "fr": "Bien sécher les semences de riz au soleil avant de les conserver dans un récipient fermé.",
-      "fon": "Mi sá mɔ̌likún kwín lɛ́ dó hwe mɛ ganji cóbɔ mi ná bɛ́ yě dó nǔ e è sú nu tɔn é mɛ.",
-      "voix": "Mi sá mɔ̌likún kwín lɛ́ dó hwe mɛ ganji | cóbɔ mi ná bɛ́ yě dó nǔ e è sú nu tɔn é mɛ.",
+      "fon": "Mi sá mɔ̌likún kwín lɛ́ dó hwe nu ganji cóbɔ mi ná bɛ́ yě dó nǔ e ɖo nu su é mɛ.",
+      "voix": "Mi sá mɔ̌likún kwín lɛ́ dó hwe nu ganji | cóbɔ mi ná bɛ́ yě dó nǔ e ɖo nu su é mɛ.",
       "sources": [
         {
           "id": "aa-semences-riz"
@@ -701,8 +701,8 @@
     },
     "manioc-arracher-bruler-tot": {
       "fr": "Arracher tôt les plants à feuilles déformées en mosaïque, puis les brûler ou les enterrer.",
-      "fon": "Mi ɖe fɛnnyɛ e sín ama wunwun lɛ́ zǎn, bo zé yě dó myɔ̌ mɛ alǒ ɖi yě.",
-      "voix": "Mi ɖe fɛnnyɛ e sín ama wunwun lɛ́ zǎn, | bo zé yě dó myɔ̌ mɛ alǒ ɖi yě.",
+      "fon": "Mi ɖe fɛnnyɛ e sín aman gblé lɛ, bo zé yě dó myɔ̌ mɛ alǒ mi ɖi yě.",
+      "voix": "Mi ɖe fɛnnyɛ e sín aman gblé lɛ, | bo zé yě dó myɔ̌ mɛ alǒ mi ɖi yě.",
       "sources": [
         {
           "id": "pw-mosaique-manioc"
@@ -740,8 +740,8 @@
     },
     "manioc-terrain-sain": {
       "fr": "Planter sur un terrain qui ne garde pas l'eau, et ne pas prendre de boutures dans un champ atteint.",
-      "fon": "Mi dó fɛnnyɛ ɖo ayǐ e ma nɔ hɛn sìn ǎ é jí, bo ma sɛ́n fɛnnyɛ́ntín ɖo gle e àzɔn ɔ ɖe é mɛ ǎ.",
-      "voix": "Mi dó fɛnnyɛ ɖo ayǐ e ma nɔ hɛn sìn ǎ é jí, | bo ma sɛ́n fɛnnyɛ́ntín ɖo gle e àzɔn ɔ ɖe é mɛ ǎ.",
+      "fon": "Mi dó fɛnnyɛ ɖo ayǐ e ma nɔ hɛn sìn ǎ é jí, bo ma sɛ́n fɛnnyɛ́ntín ɖo gle e àzɔn ɔ ɖe é mɛ ò.",
+      "voix": "Mi dó fɛnnyɛ ɖo ayǐ e ma nɔ hɛn sìn ǎ é jí, | bo ma sɛ́n fɛnnyɛ́ntín ɖo gle e àzɔn ɔ ɖe é mɛ ò.",
       "sources": [
         {
           "id": "pw-pourridie-manioc"
@@ -754,8 +754,8 @@
     },
     "manioc-outils-javel": {
       "fr": "Laver les outils à l'eau de Javel diluée à 10 % après chaque plant malade.",
-      "fon": "Mi klɔ́ azɔ̌wanu lɛ́ kpo javɛ́li sìn kpo ɖo fɛnnyɛ e jɛ àzɔn é ɖokpo ɖokpo gúdo.",
-      "voix": "Mi klɔ́ azɔ̌wanu lɛ́ kpo javɛ́li sìn kpo ɖo fɛnnyɛ e jɛ àzɔn é ɖokpo ɖokpo gúdo.",
+      "fon": "Mi klɔ́ azɔ̌wanu lɛ́ kpo javɛ́li sìn kpo azɔ miton gúdo.",
+      "voix": "Mi klɔ́ azɔ̌wanu lɛ́ kpo javɛ́li sìn kpo azɔ miton gúdo.",
       "sources": [
         {
           "id": "pw-pourridie-manioc"
@@ -765,8 +765,8 @@
     },
     "manioc-rotation-cereales": {
       "fr": "Pendant au moins 3 saisons, cultiver du maïs, du mil ou du sorgho à cet endroit.",
-      "fon": "Xwè 3 ɔ, mi ná dó gbadé, likún alǒ abɔ̀ ɖo fí ɔ.",
-      "voix": "Xwè atɔ̀n ɔ, mi ná dó gbadé, likún alǒ abɔ̀ ɖo fí ɔ.",
+      "fon": "Nù xwè 3 mon ɔ, mi dó gbadé, likún alǒ abɔ̀ ɖo fí ɔ.",
+      "voix": "Nù xwè atɔ̀n mon ɔ, mi dó gbadé, likún alǒ abɔ̀ ɖo fí ɔ.",
       "sources": [
         {
           "id": "pw-pourridie-manioc"
@@ -775,8 +775,8 @@
     },
     "manioc-couper-bruler-infestes": {
       "fr": "Couper et brûler les parties couvertes de cochenilles, sans pulvériser d'insecticide sur les feuilles.",
-      "fon": "Mi sɛ́n fí e wànvú wewe lɛ́ ɖe é bo zé dó myɔ̌ mɛ. Mi ma fún nǔ ɖé dó ama lɛ́ jí ǎ.",
-      "voix": "Mi sɛ́n fí e wànvú wewe lɛ́ ɖe é bo zé dó myɔ̌ mɛ. | Mi ma fún nǔ ɖé dó ama lɛ́ jí ǎ.",
+      "fon": "Mi sɛ́n fí e wànvú wewe lɛ́ ɖe é bo zé dó myɔ̌ mɛ. Mi ma fún nǔ ɖé dó ama lɛ́ jí ǒ.",
+      "voix": "Mi sɛ́n fí e wànvú wewe lɛ́ ɖe é bo zé dó myɔ̌ mɛ. | Mi ma fún nǔ ɖé dó ama lɛ́ jí ǒ.",
       "sources": [
         {
           "id": "fao-manioc-2013",
@@ -786,8 +786,8 @@
     },
     "igname-cure": {
       "fr": "Après la récolte, garder les tubercules sans blessure 1 à 4 jours sous une bâche, à l'abri, pour qu'ils cicatrisent.",
-      "fon": "Ðo tɛvi ɖe gúdo ɔ, mi bɛ́ tɛvi e ma gbá ǎ lɛ́ dó bàshi glɔ́ azǎn 1 jɛ 4.",
-      "voix": "Ðo tɛvi ɖe gúdo ɔ, mi bɛ́ tɛvi e ma gbá ǎ lɛ́ dó bàshi glɔ́ azǎn ɖokpó jɛ ɛnɛ̀.",
+      "fon": "Ɖo tɛvi yiyà gúdo ɔ, mi bɛ́ tɛvi e ma gbá ǎ lɛ́ dó bàshi glɔ́ azǎn 1 jɛ 4.",
+      "voix": "Ɖo tɛvi yiyà gúdo ɔ, mi bɛ́ tɛvi e ma gbá ǎ lɛ́ dó bàshi glɔ́ azǎn ɖokpó jɛ ɛnɛ̀.",
       "sources": [
         {
           "id": "fao-pertes-apres-recolte",
@@ -798,8 +798,8 @@
     },
     "igname-trier": {
       "fr": "Trier souvent les tubercules stockés et retirer ceux qui pourrissent.",
-      "fon": "Mi nɔ kpɔ́n tɛvi e mi bɛ́ lɛ́ hwenu bǐ, bo ɖe é e jɛ̀ vǎ lɛ́.",
-      "voix": "Mi nɔ kpɔ́n tɛvi e mi bɛ́ lɛ́ hwenu bǐ, bo ɖe é e jɛ̀ vǎ lɛ́.",
+      "fon": "Mi nɔ kpɔ́n tɛvi e mi bɛ́ lɛ́ hwebǐ nu, bo ɖe é e jɛ̀ vǎ lɛ́.",
+      "voix": "Mi nɔ kpɔ́n tɛvi e mi bɛ́ lɛ́ hwebǐ nu, bo ɖe é e jɛ̀ vǎ lɛ́.",
       "sources": [
         {
           "id": "fao-pertes-apres-recolte",
@@ -852,8 +852,8 @@
     },
     "plantain-effeuiller": {
       "fr": "Couper les feuilles très tachées avec un outil propre et les brûler.",
-      "fon": "Mi sɛ́n ama e wuntun ganji lɛ́ kpo azɔ̌wanu e klɔ́ é kpo, bo zé yě dó myɔ̌ mɛ.",
-      "voix": "Mi sɛ́n ama e wuntun ganji lɛ́ kpo azɔ̌wanu e klɔ́ é kpo, | bo zé yě dó myɔ̌ mɛ.",
+      "fon": "Mi sɛ́n ama e ɖo wuntun ganji lɛ́ kpo azɔ̌wanu e é klɔ́ é kpo, bo zé yě dó myɔ̌ mɛ.",
+      "voix": "Mi sɛ́n ama e ɖo wuntun ganji lɛ́ kpo azɔ̌wanu e é klɔ́ é kpo, | bo zé yě dó myɔ̌ mɛ.",
       "sources": [
         {
           "id": "pw-cercosporiose-rdc"
@@ -876,8 +876,8 @@
     },
     "anacarde-fourmis-tisserandes": {
       "fr": "Protéger les fourmis tisserandes dans les arbres : elles chassent les punaises.",
-      "fon": "Mi ma hu zǐn e nɔ tá ama lɛ́ dó ɖokpo ɖo atín lɛ́ jí lɛ́ ǎ : yě nɔ nya nùvíɖogbɛ̀ lɛ́.",
-      "voix": "Mi ma hu zǐn e nɔ tá ama lɛ́ dó ɖokpo ɖo atín lɛ́ jí lɛ́ ǎ. | Yě nɔ nya nùvíɖogbɛ̀ lɛ́.",
+      "fon": "Mi ma hu azǐnzɛn e nɔ ɖo atín lɛ́ jí ɔ ǒ : yě nɔ nya nùvíɖogbɛ̀ lɛ́.",
+      "voix": "Mi ma hu azǐnzɛn e nɔ ɖo atín lɛ́ jí ɔ ǒ. | Yě nɔ nya nùvíɖogbɛ̀ lɛ́.",
       "sources": [
         {
           "id": "aa-fourmis-tisserandes-fon"
@@ -886,8 +886,8 @@
     },
     "palmier-replanter-tolerants": {
       "fr": "Remplacer les palmiers morts par des plants tolérants, produits par la station de recherche de Pobè.",
-      "fon": "Mi ɖe dɛtin e kú lɛ́, bo dó dɛtin yɔ̌yɔ́ e àzɔn ɔ ma nɔ wa nǔ ɖé é, e è nɔ wlí ɖo Pobè é.",
-      "voix": "Mi ɖe dɛtin e kú lɛ́, | bo dó dɛtin yɔ̌yɔ́ e àzɔn ɔ ma nɔ wa nǔ ɖé é, e è nɔ wlí ɖo Pobè é.",
+      "fon": "Mi ɖe dɛtin e kú lɛ́, bo dó dɛtin yɔ̌yɔ́ e àzɔn ɔ ma nɔ wa nǔ ɖé nan é, e è nɔ mon ɖo Pobè é.",
+      "voix": "Mi ɖe dɛtin e kú lɛ́, | bo dó dɛtin yɔ̌yɔ́ e àzɔn ɔ ma nɔ wa nǔ ɖé nan é, e è nɔ mon ɖo Pobè é.",
       "sources": [
         {
           "id": "inrab-brab-2021-palmier"
@@ -978,8 +978,8 @@
     },
     "oignon-planches-surelevees": {
       "fr": "En saison des pluies, cultiver l'oignon sur des planches surélevées.",
-      "fon": "Ðo jɔhɔn xwe mɛ ɔ, mi dó ayoma ɖo ayǐ e mi kplá bɔ é jɛ jǐ é jí.",
-      "voix": "Ðo jɔhɔn xwe mɛ ɔ, mi dó ayoma ɖo ayǐ e mi kplá bɔ é jɛ jǐ é jí.",
+      "fon": "Ɖo jɔhɔn xwe mɛ ɔ, mi dó ayoma ɖo ayǐ e mi kplá bɔ é jɛ jǐ é jí.",
+      "voix": "Ɖo jɔhɔn xwe mɛ ɔ, mi dó ayoma ɖo ayǐ e mi kplá bɔ é jɛ jǐ é jí.",
       "sources": [
         {
           "id": "aa-maladies-oignon-fon"

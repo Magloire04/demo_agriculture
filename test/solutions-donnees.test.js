@@ -235,3 +235,12 @@ test('un flétrissement propose des gestes à faire, plus « observer le collet 
     assert.ok(gestes.includes('pas-compost-malade'), `${culture} : ${gestes.join(', ')}`);
   }
 });
+
+// Ð (U+00D0, lettre islandaise) ressemble à Ɖ (U+0189) mais n'est pas du fon : la voix
+// de synthèse ne la lit pas comme Ɖ.
+test('le fon écrit Ɖ et ɖ, jamais Ð ni ð', () => {
+  for (const f of ['interface.json', 'reponses.json', 'solutions.json', 'lexique.json', 'referentiel.json']) {
+    const texte = readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8');
+    assert.deepEqual([...texte.matchAll(/.{0,20}[\u00d0\u00f0].{0,10}/g)].map((m) => m[0].trim()), [], f);
+  }
+});
