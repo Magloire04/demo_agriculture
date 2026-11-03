@@ -71,7 +71,7 @@ test('marché sans relevé (Lokossa) : on le dit, puis on donne les autres march
 });
 
 test('produit sans aucun relevé : pas de prix inventé', () => {
-  const r = repondrePrix({ transcription: 'abɔ̀ glazuwé', produits: [produit('abɔ̀')] });
+  const r = repondrePrix({ transcription: 'likun glazuwé', produits: [produit('likun')] });
   assert.equal(r.reponses[0].produit.id, 'sorgho');
   assert.deepEqual(r.reponses[0].lignes, []);
   assert.equal(r.message, 'Pas encore de prix relevé pour le sorgho.');
@@ -133,5 +133,16 @@ test('l’instantané livré avec le code est cohérent avec le référentiel', 
       assert.ok(Number.isInteger(r.prix) && r.prix > 0, `${produitId} @ ${marcheId}`);
       assert.match(r.date, /^\d{4}-\d{2}-\d{2}$/);
     }
+  }
+});
+
+// Le nom fon affiché (relu par Elisée) est aussi celui que l'agriculteur dit : il doit
+// désigner ce produit, et seulement lui ou un produit du même nom (riz local et importé).
+test('chaque nom fon affiché est reconnu comme son produit, entendu par le lexique de l’API ou dans la phrase', () => {
+  for (const p of base.produits.filter((x) => x.nom_fon !== x.nom.toLowerCase())) {
+    const parApi = repondrePrix({ transcription: p.nom_fon, produits: [produit(p.nom_fon)] });
+    assert.equal(parApi.reponses[0]?.produit.id, p.id, `« ${p.nom_fon} » par l’API`);
+    const dansLaPhrase = repondrePrix({ transcription: `${p.nom_fon} glazuwé`, produits: [] });
+    assert.equal(dansLaPhrase.reponses[0]?.produit.id, p.id, `« ${p.nom_fon} » dans la phrase`);
   }
 });

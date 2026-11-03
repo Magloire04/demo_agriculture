@@ -398,7 +398,7 @@
       "emoji": "🌾",
       "unite": "kg",
       "termes_fon": [
-        "abɔ̀"
+        "likun"
       ],
       "termes_fr": [
         "sorgho"
@@ -496,7 +496,9 @@
       "article": "la farine de blé",
       "emoji": "🍞",
       "unite": "kg",
-      "termes_fon": [],
+      "termes_fon": [
+        "yovo línfín"
+      ],
       "termes_fr": [
         "farine",
         "farine de blé"
@@ -513,7 +515,7 @@
       "emoji": "🌾",
       "unite": "kg",
       "termes_fon": [
-        "likún"
+        "abɔkún"
       ],
       "termes_fr": [
         "mil",
@@ -643,6 +645,7 @@
       "emoji": "🥬",
       "unite": "kg",
       "termes_fon": [
+        "màn",
         "amà",
         "gbòmá",
         "amavivɛ́"
