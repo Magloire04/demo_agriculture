@@ -65,8 +65,9 @@ test('chaque morceau que disent les réponses figure dans la liste des extraits 
     for (const morceau of r.voix) assert.ok(liste.has(texteVoix(morceau)), `${d.transcription} : ${morceau}`);
   }
   assert.ok(avecVoix > 400, `${avecVoix} réponses avec voix`);
-  for (const c of communes) {
-    for (const morceau of textes.phrase('signalement_recu_commune', { commune: c.nom }).voix) assert.ok(liste.has(texteVoix(morceau)), morceau);
+  // L’accusé de signalement s’affiche sans être dit : aucune phrase du suivi n’a de voix.
+  for (const id of Object.keys(reponses.phrases).filter((k) => k.startsWith('signalement_'))) {
+    assert.equal(textes.phrase(id, { commune: 'Bohicon' }).voix, null, id);
   }
 });
 

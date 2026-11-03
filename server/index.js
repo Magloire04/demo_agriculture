@@ -292,8 +292,8 @@ export function creerApplication({
       const recu = commune
         ? textes.phrase('signalement_recu_commune', { commune: commune.nom })
         : textes.phrase('signalement_recu_gps');
+      // L'accusé s'affiche sans être lu : seules les solutions sont dites.
       const sansVoix = ({ fr, fon }) => ({ fr, fon });
-      const voixAccuse = textes.joindre([titre, recu]).voix;
       return envoyerJson(res, 201, {
         ...vuePublique(signalement),
         messages: {
@@ -302,8 +302,6 @@ export function creerApplication({
           attente: sansVoix(textes.phrase('signalement_attente')),
           pris: sansVoix(textes.phrase('signalement_pris')),
         },
-        voix: voix.fichiers(voixAccuse),
-        voix_phrase: voixPhrase(voixAccuse),
         solutions: choisies ? { ...proposees, voix: voix.fichiers(morceaux), voix_phrase: voixPhrase(morceaux) } : null,
       });
     });

@@ -1,9 +1,9 @@
-// Prépare à l'avance la voix des phrases fixes (accusés de réception de signalement
-// pour chaque commune, produit non compris, marché compris sans produit) et des
-// réponses de prix sur un seul produit, pour qu'elles soient lues aussitôt avec la
-// voix des phrases entières. Lancé en arrière-plan après chaque import des prix (donc
-// aussi à chaque déploiement) par scripts/voix/lancer-preparation.sh, qui fait attendre
-// une préparation tant qu'une autre tourne :
+// Prépare à l'avance la voix des phrases fixes (produit non compris, marché compris
+// sans produit) et des réponses de prix sur un seul produit, pour qu'elles soient lues
+// aussitôt avec la voix des phrases entières. L'accusé d'un signalement n'est pas lu.
+// Lancé en arrière-plan après chaque import des prix (donc aussi à chaque déploiement)
+// par scripts/voix/lancer-preparation.sh, qui fait attendre une préparation tant
+// qu'une autre tourne :
 //
 //   bash scripts/voix/lancer-preparation.sh
 //
@@ -20,13 +20,10 @@ import { creerSyntheseDepuisEnv, texteADire } from '../../server/synthese.js';
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 // Les textes exacts que le serveur fait dire (voir server/index.js et server/prix.js).
-export function phrasesFixes({ reponses, base, communes, releves }) {
+export function phrasesFixes({ reponses, base, releves }) {
   const textes = creerTextes(reponses);
   const dire = (phrases) => texteADire(textes.joindre(phrases).voix ?? []);
-  const titre = textes.phrase('signalement_transmis');
   const liste = [
-    ...communes.map((c) => dire([titre, textes.phrase('signalement_recu_commune', { commune: c.nom })])),
-    dire([titre, textes.phrase('signalement_recu_gps')]),
     dire([textes.phrase('prix_non_compris')]),
     ...base.marches
       .filter((m) => base.produits.some((p) => releves.prix[p.id]?.[m.id]))
@@ -69,10 +66,10 @@ async function principal() {
     console.log(`${heure()} voix préparée à l'avance : rien à préparer (phrases entières coupées).`);
     return;
   }
-  const [reponses, base, { communes }] = await Promise.all(['reponses', 'referentiel', 'communes'].map((f) => lireJson(path.join(RACINE, 'data', `${f}.json`))));
+  const [reponses, base] = await Promise.all(['reponses', 'referentiel'].map((f) => lireJson(path.join(RACINE, 'data', `${f}.json`))));
   const releves = await lireJson(path.join(dossierDonnees, 'releves-prix.json'))
     .catch(() => lireJson(path.join(RACINE, 'data', 'releves-prix.json')));
-  const fixes = phrasesFixes({ reponses, base, communes, releves });
+  const fixes = phrasesFixes({ reponses, base, releves });
   const prix = phrasesPrix({ reponses, base, releves });
   const liste = [...new Set([...fixes, ...prix])];
   const bilan = await synthese.preparer(liste, { pauseMs: 2000 });

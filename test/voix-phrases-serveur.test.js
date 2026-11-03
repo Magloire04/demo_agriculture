@@ -112,13 +112,14 @@ test('son : identifiant inconnu, chemins forgés, autre extension : 404', async 
   assert.equal(await brut(url, '/api/voix/..%2f..%2fpackage.json'), 404);
 });
 
-test('signalement : voix_phrase de l’accusé, et solutions.voix_phrase quand des solutions sont proposées', async (t) => {
+test('signalement : l’accusé s’affiche sans être lu, seules les solutions ont une voix', async (t) => {
   const url = await demarrer(t);
   const r = await (await envoyer(`${url}/api/signalements?commune=Glazou%C3%A9`)).json();
-  assert.match(r.voix_phrase, HEX);
+  assert.ok(r.messages.titre.fon && r.messages.recu.fon);
+  assert.equal(r.voix, undefined);
+  assert.equal(r.voix_phrase, undefined);
   assert.ok(r.solutions.elements.length >= 2);
   assert.match(r.solutions.voix_phrase, HEX);
-  assert.notEqual(r.solutions.voix_phrase, r.voix_phrase);
   const liste = await (await fetch(`${url}/api/signalements`)).json();
   assert.equal(liste.signalements.find((s) => s.reference === r.reference).solutions.voix_phrase, undefined);
 });

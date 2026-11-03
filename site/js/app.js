@@ -587,7 +587,7 @@ function sectionSolutions(solutions) {
     el('div', { class: 'solutions-mention' }, bilingue(solutions.mention)));
 }
 
-// Accusé de réception en fon. Le récapitulatif garde la culture et le lieu ; ce qui est
+// Accusé de réception en fon, affiché sans être lu. Le récapitulatif garde la culture et le lieu ; ce qui est
 // observé se lit dans la phrase dite, affichée plus bas.
 function afficherSignalement(s) {
   const etape = etapePriseEnCharge(s, s.messages);
@@ -599,7 +599,6 @@ function afficherSignalement(s) {
         el('span', { class: 'fon', lang: 'fon' }, s.messages.titre.fon || T.recu_a)),
       el('p', { class: 'reference', 'aria-label': `${T.reference} ${s.reference}` }, el('span', { 'aria-hidden': 'true' }, '# '), el('strong', {}, s.reference)),
       texteFon(s.messages.recu.fon),
-      lecture(s.voix, s.voix_phrase),
       el('ol', { class: 'etapes' }, el('li', { class: 'fait' }, texteFon(`${T.recu_a} · ${heure(s.recu_le)}`)), etape)),
     el('dl', { class: 'recap' },
       ligneRecap(T.culture, s.culture ? el('span', { class: 'fon', lang: 'fon' }, s.culture.nom_fon || s.culture.nom) : aPreciser(T.a_preciser)),

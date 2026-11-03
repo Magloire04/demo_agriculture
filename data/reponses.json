@@ -52,18 +52,15 @@
     },
     "signalement_transmis": {
       "fr": "Signalement transmis",
-      "fon": "Mǐ sɛ́ xó mitɔn dó.",
-      "voix": "Mǐ sɛ́ xó mitɔn dó."
+      "fon": "Mǐ sɛ́ xó mitɔn dó."
     },
     "signalement_recu_commune": {
       "fr": "Votre signalement a été reçu. Il est transmis au conseiller agricole de la commune de {commune}.",
-      "fon": "Mǐ se xó mitɔn. Mǐ sɛ́ ɛ dó glegán {commune} tɔn.",
-      "voix": "Mǐ se xó mitɔn. | Mǐ sɛ́ ɛ dó glegán {commune} tɔn."
+      "fon": "Mǐ se xó mitɔn. Mǐ sɛ́ ɛ dó glegán {commune} tɔn."
     },
     "signalement_recu_gps": {
       "fr": "Votre signalement a été reçu. Il est transmis au conseiller agricole le plus proche de votre champ.",
-      "fon": "Mǐ se xó mitɔn. Mǐ sɛ́ ɛ dó glegán e ɖo gle mitɔn kpá é.",
-      "voix": "Mǐ se xó mitɔn. | Mǐ sɛ́ ɛ dó glegán e ɖo gle mitɔn kpá é."
+      "fon": "Mǐ se xó mitɔn. Mǐ sɛ́ ɛ dó glegán e ɖo gle mitɔn kpá é."
     },
     "signalement_attente": {
       "fr": "En attente du conseiller agricole.",
