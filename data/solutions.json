@@ -326,8 +326,8 @@
   "phrases": {
     "titre": {
       "fr": "En attendant le conseiller, vous pouvez :",
-      "fon": "Hwenu e glegán ɔ ko wá ǎ é ɔ, nǔ e mi sixú wà lɛ́ ɖíe :",
-      "voix": "Hwenu e glegán ɔ ko wá ǎ é ɔ, nǔ e mi sixú wà lɛ́ ɖíe."
+      "fon": "Hwenu e glegán ɔ man ko wá ǎ é ɔ, nǔ e mi sixú wà lɛ́ ɖíe :",
+      "voix": "Hwenu e glegán ɔ man ko wá ǎ é ɔ, nǔ e mi sixú wà lɛ́ ɖíe."
     },
     "probablement": {
       "fr": "C'est probablement {probleme}.",
@@ -348,8 +348,8 @@
   "gestes": {
     "fumure-organique": {
       "fr": "Mettre du compost ou du fumier bien décomposé au pied des plants.",
-      "fon": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko ɖi é dó atín lɛ́ sín afɔ kpá.",
-      "voix": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko ɖi é dó atín lɛ́ sín afɔ kpá.",
+      "fon": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko gba é dó atín lɛ́ sín afɔ.",
+      "voix": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko gba é dó atín lɛ́ sín afɔ.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -362,8 +362,8 @@
     },
     "desherber": {
       "fr": "Désherber autour des plants.",
-      "fon": "Mi sá gbe lɛ́ ɖo atín lɛ́ kpá.",
-      "voix": "Mi sá gbe lɛ́ ɖo atín lɛ́ kpá.",
+      "fon": "Mi sá gbe é lɛ́ do atín lɛ́ é",
+      "voix": "Mi sá gbe é lɛ́ do atín lɛ́ é",
       "sources": [
         {
           "id": "aa-gombo"
@@ -387,8 +387,8 @@
     },
     "drainer": {
       "fr": "Creuser des rigoles pour que l'eau ne reste pas au pied des plants.",
-      "fon": "Mi kún ali kpɛví lɛ́ bɔ sìn ma nɔ te ɖo atín lɛ́ sín afɔ kpá ǎ.",
-      "voix": "Mi kún ali kpɛví lɛ́ bɔ sìn ma nɔ te ɖo atín lɛ́ sín afɔ kpá ǎ.",
+      "fon": "Mi kún ali kpɛví lɛ́ bo nu sìn ma nɔ te ɖo atín lɛ́ sín afɔ ô",
+      "voix": "Mi kún ali kpɛví lɛ́ bo nu sìn ma nɔ te ɖo atín lɛ́ sín afɔ ô",
       "saison": "pluies",
       "sources": [
         {
@@ -403,8 +403,8 @@
     },
     "retirer-bruler": {
       "fr": "Couper les feuilles malades et les brûler loin du champ.",
-      "fon": "Mi sɛ́n ama e jɛ àzɔn lɛ́, bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
-      "voix": "Mi sɛ́n ama e jɛ àzɔn lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
+      "fon": "Mi sɛ́n ama e jɛ àzɔn lɛ́, bo zé yě dó myɔ̌ mɛ ɖo zɔ nu gle ɔ.",
+      "voix": "Mi sɛ́n ama e jɛ àzɔn lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo zɔ nu gle ɔ.",
       "sources": [
         {
           "id": "aa-mildiou-tomate"
@@ -418,8 +418,8 @@
     },
     "pas-compost-malade": {
       "fr": "Ne pas mettre les plants malades au compost.",
-      "fon": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǎ.",
-      "voix": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǎ.",
+      "fon": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǒ.",
+      "voix": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǒ.",
       "sources": [
         {
           "id": "iita-inrab-maraichage-2010",
@@ -429,8 +429,8 @@
     },
     "aerer": {
       "fr": "Garder de l'espace entre les plants pour que l'air circule.",
-      "fon": "Mi jo fí ɖo atín lɛ́ tɛntin bɔ jɔhɔn ni nɔ gbɔn.",
-      "voix": "Mi jo fí ɖo atín lɛ́ tɛntin bɔ jɔhɔn ni nɔ gbɔn.",
+      "fon": "Mi jo tɛnmɛn do atín lɛ́ tɛntin bo nu jɔhɔn ni nɔ gbɔn.",
+      "voix": "Mi jo tɛnmɛn do atín lɛ́ tɛntin bo nu jɔhɔn ni nɔ gbɔn.",
       "sources": [
         {
           "id": "aa-tuteurage-tomate"
@@ -439,8 +439,8 @@
     },
     "observer-collet": {
       "fr": "Regarder le pied des plants fanés : s'il y a un feutrage blanc, le montrer au conseiller.",
-      "fon": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. Nǔ wewe ɖé ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
-      "voix": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. | Nǔ wewe ɖé ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
+      "fon": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. Nǔ wewe ɖé ɖo fínɛ́ hun, mi xlɛ́ glegán ɔ.",
+      "voix": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. | Nǔ wewe ɖé ɖo fínɛ́ hun, mi xlɛ́ glegán ɔ.",
       "sources": [
         {
           "id": "iita-inrab-maraichage-2010",
@@ -451,8 +451,8 @@
     },
     "pailler": {
       "fr": "Couvrir le sol d'herbe sèche pour garder l'humidité.",
-      "fon": "Mi zé gbe xú lɛ́ xá ayǐ ɔ bɔ ayǐ ɔ ni nɔ fá.",
-      "voix": "Mi zé gbe xú lɛ́ xá ayǐ ɔ bɔ ayǐ ɔ ni nɔ fá.",
+      "fon": "Mi zé gbe xú lɛ́ kpé ayǐ ɔ bo nu ayǐ ɔ ni fá.",
+      "voix": "Mi zé gbe xú lɛ́ kpé ayǐ ɔ bo nu ayǐ ɔ ni fá.",
       "sources": [
         {
           "id": "aa-paillage"
@@ -471,8 +471,8 @@
     },
     "ecraser-oeufs": {
       "fr": "Écraser à la main les œufs et les jeunes insectes.",
-      "fon": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo yě sín azin lɛ́ kpo bɔ yě ni kú.",
-      "voix": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo yě sín azin lɛ́ kpo bɔ yě ni kú.",
+      "fon": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo azin yě ton lɛ́ kpo bo nu yě ni kú.",
+      "voix": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo azin yě ton lɛ́ kpo bo nu yě ni kú.",
       "sources": [
         {
           "id": "fao-cla-2018"
@@ -481,8 +481,8 @@
     },
     "detruire-attaques": {
       "fr": "Ramasser et détruire les fruits et les feuilles attaqués.",
-      "fon": "Mi bɛ́ sínsɛ́n kpo ama kpo e nùvíɖogbɛ̀ lɛ́ ɖù é lɛ́, bo hu yě.",
-      "voix": "Mi bɛ́ sínsɛ́n kpo ama kpo e nùvíɖogbɛ̀ lɛ́ ɖù é lɛ́, bo hu yě.",
+      "fon": "Mi bɛ́ sínsɛ́n kpo ama e nùvíɖogbɛ̀ lɛ́ ɖù é, bo hu yě.",
+      "voix": "Mi bɛ́ sínsɛ́n kpo ama e nùvíɖogbɛ̀ lɛ́ ɖù é, bo hu yě.",
       "sources": [
         {
           "id": "iita-inrab-maraichage-2010",
@@ -492,8 +492,8 @@
     },
     "ramasser-chenilles": {
       "fr": "Ramasser les chenilles à la main et les tuer.",
-      "fon": "Mi bɛ́ wànvú lɛ́ ɖo alɔ mɛ, bo hu yě.",
-      "voix": "Mi bɛ́ wànvú lɛ́ ɖo alɔ mɛ, bo hu yě.",
+      "fon": "Mi bɛ́ wànvú lɛ́, bo hu yě.",
+      "voix": "Mi bɛ́ wànvú lɛ́, bo hu yě.",
       "sources": [
         {
           "id": "fao-cla-2018"
@@ -505,8 +505,8 @@
     },
     "retirer-feuilles-roulees": {
       "fr": "Retirer les feuilles roulées : les chenilles s'y cachent.",
-      "fon": "Mi ɖe ama e ko wlí lɛ́ : wànvú lɛ́ nɔ ɖo yě mɛ.",
-      "voix": "Mi ɖe ama e ko wlí lɛ́. | Wànvú lɛ́ nɔ ɖo yě mɛ.",
+      "fon": "Mi ɖe ama e ko mlan lɛ́ : wànvú lɛ́ nɔ ɖo yě mɛ.",
+      "voix": "Mi ɖe ama e ko mlan lɛ́. | Wànvú lɛ́ nɔ ɖo yě mɛ.",
       "sources": [
         {
           "id": "iita-inrab-maraichage-2010",
@@ -516,8 +516,8 @@
     },
     "retirer-pourri": {
       "fr": "Retirer les parties pourries et les brûler loin du champ.",
-      "fon": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
-      "voix": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
+      "fon": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, bo zé yě dó myɔ̌ mɛ ɖo zɔ nu gle ɔ",
+      "voix": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo zɔ nu gle ɔ",
       "sources": [
         {
           "id": "iita-inrab-maraichage-2010",
