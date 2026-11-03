@@ -393,12 +393,12 @@
     {
       "id": "sorgho",
       "nom": "Sorgho",
-      "nom_fon": "abɔ̀",
+      "nom_fon": "likun",
       "article": "le sorgho",
       "emoji": "🌾",
       "unite": "kg",
       "termes_fon": [
-        "abɔ̀"
+        "likun"
       ],
       "termes_fr": [
         "sorgho"
@@ -492,11 +492,13 @@
     {
       "id": "farine_ble",
       "nom": "Farine de blé",
-      "nom_fon": "farine",
+      "nom_fon": "yovo línfín",
       "article": "la farine de blé",
       "emoji": "🍞",
       "unite": "kg",
-      "termes_fon": [],
+      "termes_fon": [
+        "yovo línfín"
+      ],
       "termes_fr": [
         "farine",
         "farine de blé"
@@ -508,12 +510,12 @@
     {
       "id": "mil",
       "nom": "Mil",
-      "nom_fon": "likún",
+      "nom_fon": "abɔkún",
       "article": "le mil",
       "emoji": "🌾",
       "unite": "kg",
       "termes_fon": [
-        "likún"
+        "abɔkún"
       ],
       "termes_fr": [
         "mil",
@@ -638,11 +640,12 @@
     {
       "id": "legumes_feuilles",
       "nom": "Légumes-feuilles",
-      "nom_fon": "amà",
+      "nom_fon": "màn",
       "article": "le légume-feuille",
       "emoji": "🥬",
       "unite": "kg",
       "termes_fon": [
+        "màn",
         "amà",
         "gbòmá",
         "amavivɛ́"

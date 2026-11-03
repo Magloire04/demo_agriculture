@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fon">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>AgriFon : prix du marché et signalements en fongbé</title>
-  <meta name="description" content="Démo : demandez le prix d'un produit agricole ou signalez une maladie des cultures en parlant fongbé.">
+  <title>AgriFon</title>
+  <meta name="description" data-texte-content="accueil_titre" content="Mi ɖɔ xó ɖo fɔ̀ngbè mɛ, mon ɔ na yí gbe nú mi.">
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="theme-color" content="#006828">
   <link rel="manifest" href="manifest.webmanifest">
@@ -14,26 +14,24 @@
   <script type="module" src="js/app.js"></script>
 </head>
 <body>
-  <a class="evitement" href="#contenu">Aller au contenu</a>
+  <a class="evitement" href="#contenu" data-texte="evitement">Yì xó ɔ jí</a>
 
   <header class="entete">
     <div class="entete-interieur">
-      <a class="logo" href="#/" aria-label="AgriFon, accueil">
+      <a class="logo" href="#/" data-texte-aria-label="accueil" aria-label="Bǐbɛ́mɛ">
         <img class="logo-marque" src="img/logo-agrifon.svg" alt="" width="35" height="50">
         <span class="logo-texte" aria-hidden="true">
           <span class="logo-nom">AgriFon</span>
-          <span class="logo-devise">Prix et signalements en fongbé</span>
         </span>
       </a>
-      <span class="etiquette-demo">Démo</span>
     </div>
   </header>
 
-  <nav class="navigation" aria-label="Rubriques">
+  <nav class="navigation">
     <ul>
-      <li><a href="#/" data-lien="accueil">Accueil</a></li>
-      <li><a href="#/prix" data-lien="prix">Prix du marché</a></li>
-      <li><a href="#/signalement" data-lien="signalement">Signaler</a></li>
+      <li><a href="#/" data-lien="accueil" data-texte="accueil">Bǐbɛ́mɛ</a></li>
+      <li><a href="#/prix" data-lien="prix" data-texte="prix">Axi mɛ kwɛ́</a></li>
+      <li><a href="#/signalement" data-lien="signalement" data-texte="signaler">Biɔ nu tuntun</a></li>
     </ul>
   </nav>
 
@@ -42,9 +40,8 @@
   <main id="contenu" tabindex="-1">
 
     <section data-vue="accueil" aria-labelledby="titre-accueil">
-      <p class="surtitre">Agriculture</p>
-      <h1 class="accroche" id="titre-accueil">Parlez en fongbé, l'application vous répond</h1>
-      <p class="sous-accroche">Posez votre question à voix haute. La réponse s'affiche à l'écran.</p>
+      <h1 class="accroche" id="titre-accueil" data-texte="accueil_titre">Mi ɖɔ xó ɖo fɔ̀ngbè mɛ, mon ɔ na yí gbe nú mi.</h1>
+      <p class="sous-accroche" data-texte="accueil_texte">Mi ze gbe yi ji bo kan xô bi ɔ.</p>
 
       <div class="choix">
         <a class="carte-choix" href="#/prix">
@@ -52,8 +49,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/></svg>
           </span>
           <span class="carte-corps">
-            <span class="carte-titre">Prix du marché</span>
-            <span class="carte-texte">Le prix d'un produit dans un marché.</span>
+            <span class="carte-titre" data-texte="prix">Axi mɛ kwɛ́</span>
+            <span class="carte-texte" data-texte="carte_prix_texte">Nǔ ɖé sín akwɛ́ ɖo axi ɖé mɛ.</span>
           </span>
           <span class="carte-fleche" aria-hidden="true">›</span>
         </a>
@@ -63,8 +60,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/></svg>
           </span>
           <span class="carte-corps">
-            <span class="carte-titre">Signaler une maladie</span>
-            <span class="carte-texte">Ce que vous voyez sur vos cultures.</span>
+            <span class="carte-titre" data-texte="carte_signaler_titre">Aman sin àzɔn</span>
+            <span class="carte-texte" data-texte="carte_signaler_texte">Nǔ e mi mɔ ɖo atín mitɔn lɛ́ wú é.</span>
           </span>
           <span class="carte-fleche" aria-hidden="true">›</span>
         </a>
@@ -72,47 +69,53 @@
     </section>
 
     <section data-vue="prix" aria-labelledby="titre-prix" hidden>
-      <h1 class="titre-vue" id="titre-prix">Prix du marché</h1>
-      <p class="consigne">Appuyez sur le micro, puis dites en fongbé <strong>le produit</strong> et <strong>le marché</strong>.</p>
+      <h1 class="titre-vue" id="titre-prix" data-texte="prix">Axi mɛ kwɛ́</h1>
+      <p class="consigne" data-texte="prix_consigne">Mi zìn mikló ɔ, bo ɖɔ nǔ ɔ sín nyǐkɔ kpo axi ɔ sín nyǐkɔ kpo.</p>
 
       <div class="micro" data-micro="prix" data-etat="pret">
-        <button class="bouton-micro" type="button" aria-label="Appuyer pour parler">
+        <button class="bouton-micro" type="button" data-texte-aria-label="micro_pret" aria-label="Mi zìn d’é jí bo ɖɔ xó">
           <svg class="icone-micro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3" fill="currentColor"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/><path d="M8 21h8"/></svg>
           <svg class="icone-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
         </button>
-        <p class="micro-etat" role="status" aria-live="polite">Appuyez pour parler</p>
+        <p class="micro-etat" role="status" aria-live="polite" data-texte="micro_pret">Mi zìn d’é jí bo ɖɔ xó</p>
         <p class="micro-minuteur" aria-hidden="true"></p>
-        <label class="lien-fichier">ou envoyer un fichier audio<input type="file" accept="audio/*"></label>
+        <label class="lien-fichier" data-texte-title="fichier_envoyer" title="Sɛ́ gbè e mi ko yí é dó">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/><path d="M4 3v6M1 6h6"/></svg>
+          <input type="file" accept="audio/*" data-texte-aria-label="fichier_envoyer" aria-label="Sɛ́ gbè e mi ko yí é dó">
+        </label>
       </div>
 
       <div class="resultat" data-resultat="prix" tabindex="-1" hidden></div>
     </section>
 
     <section data-vue="signalement" aria-labelledby="titre-signalement" hidden>
-      <h1 class="titre-vue" id="titre-signalement">Signaler une maladie des cultures</h1>
-      <p class="consigne">Dites en fongbé <strong>la culture</strong> touchée et <strong>ce que vous voyez</strong>. Le signalement part au conseiller agricole.</p>
+      <h1 class="titre-vue" id="titre-signalement" data-texte="signalement_titre">Ɖɔ àzɔn e jɛ atín lɛ́ wú é</h1>
+      <p class="consigne" data-texte="signalement_consigne">Mi ɖɔ atín ɖe ɖo àzɔn ɔ jɛ wɛ é kpo nǔ e mi mɔ é kpo. Mǐ na sɛ́ xó mitɔn dó glegán ɔ.</p>
 
       <fieldset class="lieu" data-lieu>
-        <legend>Où se trouve le champ ?</legend>
+        <legend data-texte="lieu_question">Fitɛ́ gle ɔ ɖè ?</legend>
         <div class="lieu-gps">
-          <span class="lieu-etat" data-gps-etat>Position non partagée</span>
-          <button class="bouton-secondaire" type="button" data-gps>Partager ma position</button>
+          <span class="lieu-etat" data-gps-etat data-texte="gps_non_partage">Mi ɖo fí e mi ɖè é ǎ.</span>
+          <button class="bouton-secondaire" type="button" data-gps data-texte="gps_partager">xlɛ́ fí e un ɖè ɔ</button>
         </div>
-        <label class="lieu-commune">Commune (facultatif)
+        <label class="lieu-commune"><span data-texte="commune">Glétoxo</span>
           <select data-commune>
-            <option value="">Choisir une commune</option>
+            <option value="" data-texte="commune_choisir">Sɔ́ glétoxo</option>
           </select>
         </label>
       </fieldset>
 
       <div class="micro" data-micro="signalement" data-etat="pret">
-        <button class="bouton-micro" type="button" aria-label="Appuyer pour parler">
+        <button class="bouton-micro" type="button" data-texte-aria-label="micro_pret" aria-label="Mi zìn d’é jí bo ɖɔ xó">
           <svg class="icone-micro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3" fill="currentColor"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/><path d="M8 21h8"/></svg>
           <svg class="icone-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
         </button>
-        <p class="micro-etat" role="status" aria-live="polite">Appuyez pour parler</p>
+        <p class="micro-etat" role="status" aria-live="polite" data-texte="micro_pret">Mi zìn d’é jí bo ɖɔ xó</p>
         <p class="micro-minuteur" aria-hidden="true"></p>
-        <label class="lien-fichier">ou envoyer un fichier audio<input type="file" accept="audio/*"></label>
+        <label class="lien-fichier" data-texte-title="fichier_envoyer" title="Sɛ́ gbè e mi ko yí é dó">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/><path d="M4 3v6M1 6h6"/></svg>
+          <input type="file" accept="audio/*" data-texte-aria-label="fichier_envoyer" aria-label="Sɛ́ gbè e mi ko yí é dó">
+        </label>
       </div>
 
       <div class="resultat" data-resultat="signalement" tabindex="-1" hidden></div>
@@ -121,8 +124,7 @@
   </main>
 
   <footer class="pied">
-    <p><strong>AgriFon</strong> · démonstration de commande vocale en fongbé</p>
-    <p>Reconnaissance vocale : API JaimeMaLangue</p>
+    <p><strong>AgriFon</strong> · JaimeMaLangue</p>
     <span class="bande" aria-hidden="true"></span>
   </footer>
 </body>

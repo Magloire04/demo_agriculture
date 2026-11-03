@@ -88,3 +88,14 @@ test('registre : références du jour, audio, prise en charge, relecture', async
   assert.ok(relu.trouver(s1.reference).pris_en_charge_le);
   assert.equal(await relu.prendreEnCharge('SIG-00000000-999'), null);
 });
+
+test('la culture reconnue porte son nom fon', () => {
+  const a = analyserSignalement(lexique, communes, 'Gbàdé ce ama jaunissent ɖo Djougou.');
+  assert.equal(a.culture.nom_fon, lexique.cultures.find((c) => c.id === 'mais').nom_fon);
+});
+
+test('chaque nom fon affiché d’une culture est reconnu comme cette culture', () => {
+  for (const c of lexique.cultures) {
+    assert.equal(analyserSignalement(lexique, communes, `${c.nom_fon} ce ama jaunissent`).culture?.id, c.id, `« ${c.nom_fon} »`);
+  }
+});

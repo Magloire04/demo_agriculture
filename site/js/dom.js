@@ -23,6 +23,10 @@ export function svg(contenu, viewBox = '0 0 24 24') {
 
 export const nombre = (n) => new Intl.NumberFormat('fr-FR').format(n);
 
+// Unité d'un prix en symbole international : se lit en fon comme en français.
+const UNITES = { kg: 'kg', litre: 'L' };
+export const uniteCourte = (unite) => UNITES[unite] ?? unite;
+
 export function heure(iso) {
   return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 }
@@ -43,8 +47,12 @@ export async function appelerApi(chemin, { delaiMs = 15000, ...options } = {}) {
   try {
     reponse = await fetch(chemin, { ...options, signal: controle.signal });
   } catch (e) {
-    if (e.name === 'AbortError') throw new Error('Le service ne répond pas. Réessayez.');
-    throw new Error('Pas de connexion internet. Vérifiez la connexion et réessayez.');
+    // Le code choisit le message fon côté agriculteur ; le français reste pour le conseiller.
+    const erreur = e.name === 'AbortError'
+      ? new Error('Le service ne répond pas. Réessayez.')
+      : new Error('Pas de connexion internet. Vérifiez la connexion et réessayez.');
+    erreur.code = e.name === 'AbortError' ? 'delai' : 'connexion';
+    throw erreur;
   } finally {
     clearTimeout(minuterie);
   }

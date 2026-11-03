@@ -16,19 +16,16 @@ import { ecrireWav } from '../server/wav.js';
 const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 const donnees = () => ({ reponses: lire('reponses.json'), base: lire('referentiel.json'), communes: lire('communes.json').communes, releves: lire('releves-prix.json') });
 
-test('phrases fixes : chaque commune, le GPS, produit non compris, chaque marché avec des prix', () => {
-  const { reponses, base, communes, releves } = donnees();
-  const liste = phrasesFixes({ reponses, base, communes, releves });
+test('phrases fixes : produit non compris, chaque marché avec des prix, plus aucun accusé de signalement', () => {
+  const { reponses, base, releves } = donnees();
+  const liste = phrasesFixes({ reponses, base, releves });
   const marchesAvecPrix = base.marches.filter((m) => base.produits.some((p) => releves.prix[p.id]?.[m.id]));
   assert.ok(marchesAvecPrix.length > 0 && marchesAvecPrix.length < base.marches.length); // Lokossa n'a pas de prix
-  assert.equal(liste.length, communes.length + 1 + 1 + marchesAvecPrix.length);
+  assert.equal(liste.length, 1 + marchesAvecPrix.length);
   assert.equal(new Set(liste).size, liste.length);
-  const textes = creerTextes(reponses);
-  const titre = textes.phrase('signalement_transmis');
-  assert.ok(liste.includes(texteADire(textes.joindre([titre, textes.phrase('signalement_recu_commune', { commune: 'Bohicon' })]).voix)));
-  assert.ok(liste.includes(texteADire(textes.joindre([titre, textes.phrase('signalement_recu_gps')]).voix)));
-  assert.ok(liste.includes('Un ma se nǔ ɖěbǔ sín nyǐkɔ ǎ. Mi kɛnklɛ́n bo ɖɔ nǔ ɔ sín nyǐkɔ. Énɛ́ gúdo ɔ, mi ɖɔ axi ɔ sín nyǐkɔ.'));
-  assert.ok(liste.includes('Un ma se nǔ ɔ sín nyǐkɔ ǎ. Ɖo Dantokpa axi mɛ ɔ, nǔ lɛ́ sín akwɛ́ ɖíe.'));
+  assert.ok(!liste.some((p) => p.includes('glegán')));
+  assert.ok(liste.includes('Un se nǔ ɖěbǔ sín nyǐkɔ ǎ. Mi kɛnklɛ́n bo ɖɔ nǔ ɔ sín nyǐkɔ. Énɛ́ gúdo ɔ, mi ɖɔ axi ɔ sín nyǐkɔ.'));
+  assert.ok(liste.includes('Un se nǔ ɔ sín nyǐkɔ ǎ. Ɖo Dantokpa sin axi mɛ ɔ, nǔ lɛ́ sín akwɛ́ ɖíe.'));
   assert.ok(!liste.some((p) => p.includes('Lokossa axi')));
 });
 
@@ -85,10 +82,3 @@ test('le serveur et la préparation produisent le même identifiant pour un prix
   }
 });
 
-test('le serveur et la préparation produisent le même identifiant pour un accusé de signalement', async (t) => {
-  const { reponses, base, communes, releves } = donnees();
-  const adresse = await serveurAvec(t, { transcrire: async () => ({ texte: 'gbàdé ama jaunissent', texte_ponctue: 'Gbàdé ama jaunissent.', id: 'r2' }) });
-  const r = await (await fetch(`${adresse}/api/signalements?commune=Bohicon`, { method: 'POST', headers: { 'Content-Type': 'audio/webm' }, body: 'audio' })).json();
-  const fixe = phrasesFixes({ reponses, base, communes, releves }).find((p) => p.includes(' Bohicon '));
-  assert.equal(r.voix_phrase, idPhrase(fixe, 'homme2'));
-});
