@@ -67,6 +67,12 @@ export async function appelerApi(chemin, { delaiMs = 15000, ...options } = {}) {
   return donnees;
 }
 
+// Événement de l'application (« agrifon:… ») : le tour de présentation (site/js/tour.js)
+// suit ainsi le micro, les réponses, leur lecture et le lieu sans toucher à app.js.
+export function emettre(type, detail = {}) {
+  document.dispatchEvent(new CustomEvent(`agrifon:${type}`, { detail }));
+}
+
 export function lireMemoire(cle) {
   try {
     return localStorage.getItem(cle);

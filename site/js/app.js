@@ -1,4 +1,4 @@
-import { appelerApi, ecrireMemoire, el, enregistrerServiceWorker, heure, lireMemoire, nombre, svg, uniteCourte } from './dom.js';
+import { appelerApi, ecrireMemoire, el, emettre, enregistrerServiceWorker, heure, lireMemoire, nombre, svg, uniteCourte } from './dom.js';
 import { demarrerEnregistrement, enregistrementPossible } from './enregistreur.js';
 import { T } from './textes.js';
 
@@ -131,12 +131,21 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
   const minuteur = $('.micro-minuteur', racine);
   const fichier = $('input[type=file]', racine);
   let session = null;
+  const vue = racine.dataset.micro;
 
   function changer(nom, texte, libelleBouton) {
     racine.dataset.etat = nom;
     etat.textContent = texte;
     bouton.setAttribute('aria-label', libelleBouton);
     bouton.setAttribute('aria-pressed', String(nom === 'enregistrement'));
+    emettre('micro', { vue, etat: nom });
+  }
+
+  // Échec avant tout envoi (trop court, micro refusé…) : annoncé au tour comme une
+  // réponse non comprise.
+  function echecLocal(texte, code) {
+    pret(texte);
+    emettre('reponse', { vue, ok: false, code });
   }
 
   function pret(texte = T.micro_pret) {
@@ -154,9 +163,11 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
     try {
       await traiter(audio);
       pret(T.micro_encore);
+      emettre('reponse', { vue, ok: true });
     } catch (e) {
       afficherErreur(e);
       pret(T.micro_reessayer);
+      emettre('reponse', { vue, ok: false, code: e?.code ?? null });
     } finally {
       clearTimeout(lent);
     }
@@ -173,7 +184,7 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
     }
     if (racine.dataset.etat === 'enregistrement') return; // autorisation du micro en attente
     if (!enregistrementPossible()) {
-      pret(T.micro_non_disponible); // navigateur sans enregistrement, ou adresse non sécurisée
+      echecLocal(T.micro_non_disponible, 'micro_non_disponible'); // navigateur sans enregistrement, ou adresse non sécurisée
       return;
     }
     try {
@@ -189,16 +200,16 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
       const { blob, duree } = await session.fin;
       session = null;
       if (duree < 1 || blob.size === 0) {
-        pret(T.erreur_trop_court);
+        echecLocal(T.erreur_trop_court, 'trop_court');
         return;
       }
       await analyser(blob);
     } catch (e) {
       session = null;
-      if (e?.name === 'AbortError') return pret();
-      if (e?.name === 'NotAllowedError' || e?.name === 'SecurityError') return pret(T.micro_refuse);
-      if (e?.name === 'NotFoundError') return pret(T.micro_absent);
-      pret(T.micro_impossible);
+      if (e?.name === 'AbortError') return pret(); // changement de vue : rien à annoncer
+      if (e?.name === 'NotAllowedError' || e?.name === 'SecurityError') return echecLocal(T.micro_refuse, 'micro_refuse');
+      if (e?.name === 'NotFoundError') return echecLocal(T.micro_absent, 'micro_absent');
+      echecLocal(T.micro_impossible, 'micro_impossible');
     }
   });
 
@@ -238,13 +249,15 @@ const lancements = new WeakMap();
 // Lit les réponses affichées l'une après l'autre, sans appui : l'appui sur le micro a
 // débloqué le lecteur. Pas si la vue a changé pendant l'analyse ni si l'application
 // est passée en arrière-plan. Un voix.js plus ancien (cache) ne sait pas le faire.
+// Le tour reprend à la fin de la lecture, ou aussitôt quand il n'y a rien à lire.
 function lireDesLArrivee(zone) {
-  if (typeof voix?.lireSuite !== 'function' || zone.closest('[data-vue]')?.hidden || document.hidden) return;
+  const finie = () => emettre('lecture-finie', { zone: zone.dataset.resultat });
+  if (typeof voix?.lireSuite !== 'function' || zone.closest('[data-vue]')?.hidden || document.hidden) return finie();
   const lectures = [...zone.querySelectorAll('.lecture')]
     .map((bloc) => lancements.get(bloc))
     .filter(Boolean)
     .map((lancer) => () => lancer({ attenteMs: voix.ATTENTE_AUTO_MS }));
-  voix.lireSuite(lectures);
+  voix.lireSuite(lectures).then(finie, finie);
 }
 
 // Texte en fon seul : le français reste dans l'API pour l'écran du conseiller.
@@ -467,6 +480,7 @@ function demanderPosition() {
       etatGps.dataset.ok = '';
       boutonGps.textContent = T.gps_actualiser;
       boutonGps.disabled = false;
+      emettre('lieu');
     },
     (erreur) => {
       position = null;
@@ -496,7 +510,10 @@ async function chargerCommunes() {
   }
 }
 
-choixCommune.addEventListener('change', () => ecrireMemoire('agrifon.commune', choixCommune.value || null));
+choixCommune.addEventListener('change', () => {
+  ecrireMemoire('agrifon.commune', choixCommune.value || null);
+  if (choixCommune.value) emettre('lieu');
+});
 
 async function entrerSignalement() {
   chargerCommunes();
