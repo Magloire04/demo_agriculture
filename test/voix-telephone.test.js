@@ -97,6 +97,24 @@ test('passé le délai, les anciens extraits sont lus', async (t) => {
   assert.equal(lectures.at(-1), 'voix/d.mp3');
 });
 
+// Sans anciens extraits pour la remplacer, la réponse attend sa voix au-delà du délai, tant
+// qu’elle se prépare : elle est lue dès qu’elle arrive, sans que l’agriculteur appuie.
+test('sans anciens extraits, la nouvelle voix est attendue au-delà du délai tant qu’elle se prépare', async (t) => {
+  let appels = 0;
+  remplacerFetch(t, async () => (++appels < 4
+    ? new Response('{"pret":false}', { status: 202, headers: { 'Retry-After': '0.04' } })
+    : SON()));
+  voix.prechargerPhrase('aaaa000000000007');
+  assert.equal(await voix.lireReponse({ phrase: 'aaaa000000000007' }, { attenteMs: 20 }), 'nouvelle');
+  assert.equal(lectures.at(-1)?.startsWith('blob:'), true);
+});
+
+test('sans anciens extraits, une voix abandonnée par le serveur ne fait pas attendre sans fin', async (t) => {
+  remplacerFetch(t, async () => new Response('{}', { status: 404 }));
+  voix.prechargerPhrase('aaaa000000000008');
+  await assert.rejects(voix.lireReponse({ phrase: 'aaaa000000000008' }, { attenteMs: 20 }));
+});
+
 test('le lecteur se débloque par un court silence', () => {
   voix.debloquer();
   assert.match(lectures.at(-1), /^blob:/);

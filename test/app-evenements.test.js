@@ -32,3 +32,13 @@ test('issuePrix : seules les réponses comprises comptent comme réussies', asyn
   const app = readFileSync(new URL('../site/js/app.js', import.meta.url), 'utf8');
   assert.ok(app.includes('issuePrix(r.statut)'), 'afficherPrix rend l’issue de la demande');
 });
+
+// Écran éteint ou autre application pendant l’analyse : la réponse est lue au retour,
+// sans appui, et le tour n’apprend la fin de la lecture qu’après elle.
+test('une réponse arrivée pendant que l’application est cachée est lue au retour', () => {
+  const app = readFileSync(new URL('../site/js/app.js', import.meta.url), 'utf8');
+  const lire = app.slice(app.indexOf('function lireDesLArrivee'), app.indexOf('// Texte en fon seul'));
+  assert.match(lire, /if \(document\.hidden\) \{\s*aLireAuRetour = zone;\s*return;/);
+  assert.ok(!/document\.hidden\) return finie\(\)/.test(lire), 'une réponse cachée n’est pas déclarée lue');
+  assert.match(app, /addEventListener\('visibilitychange'[\s\S]{0,300}lireDesLArrivee\(/);
+});
