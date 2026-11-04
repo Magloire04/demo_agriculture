@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { verifierTraitement } from '../server/pesticides.js';
-import { choisirSolutions } from '../server/solutions.js';
+import { choisirSolutions, solutionsPubliables } from '../server/solutions.js';
 
 const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 const donnees = lire('solutions.json');
@@ -283,4 +283,11 @@ test('un nom de problème ne garde pas de mot français, sauf les noms technique
     const francais = new Set(mots(c.probleme.fr));
     assert.deepEqual(mots(c.probleme.fon).filter((m) => francais.has(m) && !techniques.has(m)), [], `${c.id} : ${c.probleme.fon}`);
   }
+});
+
+// Elisée a relu les 85 textes des solutions (03-04/11/2026) : elles sont proposées
+// aux agriculteurs sans le réglage de démonstration.
+test('le fon des solutions est relu : le serveur les propose sans réglage de démonstration', () => {
+  assert.equal(donnees.fon_a_relire, false);
+  assert.equal(solutionsPubliables(donnees, {}), donnees);
 });

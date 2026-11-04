@@ -1,6 +1,6 @@
 {
   "version": "2026-10-23",
-  "fon_a_relire": true,
+  "fon_a_relire": false,
   "sources": {
     "inrab-recueil-2020": {
       "editeur": "INRAB",
