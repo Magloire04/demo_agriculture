@@ -15,7 +15,7 @@ function nomsSources(donnees, liste = []) {
 }
 
 // Lignes à relire, dans l'ordre du fichier de données.
-export function lignesSolutions(donnees) {
+function lignesSolutions(donnees) {
   const resultat = [];
   for (const [id, p] of Object.entries(donnees.phrases)) resultat.push({ cle: `phrases.${id}`, type: 'phrase', texte: p, source: '' });
   for (const [id, g] of Object.entries(donnees.gestes)) resultat.push({ cle: `gestes.${id}`, type: 'geste', texte: g, source: nomsSources(donnees, g.sources) });
@@ -60,7 +60,7 @@ function lireCsv(texte) {
   return rangees;
 }
 
-export function cibleSolutions(donnees, cle) {
+function cibleSolutions(donnees, cle) {
   const [groupe, id, partie, sous] = cle.split('.');
   if (groupe === 'phrases' && !partie) return donnees.phrases[id];
   if (groupe === 'gestes' && !partie) return donnees.gestes[id];
