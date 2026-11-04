@@ -29,8 +29,8 @@ function faux({ cibles = null, permission = 'granted', lieu = false, voix = true
     enregistrementEnCours: () => etat.enregistrement,
     estVisible: () => !etat.cache,
     visible: () => (etat.cache ? new Promise((ok) => { etat.retour = ok; }) : Promise.resolve()),
-    attendre: (type, { depuis, signal }) => new Promise((resoudre) => {
-      attentes.push({ type, depuis, resoudre });
+    attendre: (type, { depuis, signal, vue }) => new Promise((resoudre) => {
+      attentes.push({ type, depuis, vue, resoudre });
       signal?.addEventListener('abort', () => resoudre({ ok: false, code: 'arrete' }));
     }),
     numeroEvenement: () => numero,
@@ -345,4 +345,37 @@ test('seules les étapes qui attendent un geste ouvrent leur cible aux appuis', 
   assert.deepEqual(gestes, [false, true]);
   f.attentes[0].resoudre({ ok: true });
   await fin;
+});
+
+// M3 : une lecture qui ne finit jamais (son bloqué) ne retient pas le tour sans fin.
+test('l’attente de la lecture a une limite : passé 4 minutes, le tour continue', async () => {
+  const f = faux();
+  const h = horloge();
+  const etapes = [
+    { id: 'l', partie: 3, vue: 'prix', cible: null, phrase: null, attente: 'lecture', voile: false },
+    { id: 'z', partie: 5, vue: 'prix', cible: null, phrase: 'p_z', attente: null },
+  ];
+  const fin = creerMoteur({ etapes, effets: f.effets, delai: h.delai }).demarrer();
+  await jusqua(() => h.enAttente.length === 1);
+  assert.equal(h.enAttente[0].ms, 240_000);
+  h.avancer();
+  assert.equal(await fin, 'fini');
+  assert.deepEqual(f.dits(), ['p_z']);
+});
+
+// M4 : la réponse attendue est celle de l'écran de l'étape.
+test('l’attente d’une réponse ou d’une lecture nomme l’écran de l’étape', async () => {
+  const f = faux();
+  const etapes = [
+    { id: 'm', partie: 3, vue: 'prix', cible: '#micro', phrase: 'p_micro', attente: 'reponse', retour: 'm' },
+    { id: 'l', partie: 3, vue: 'prix', cible: null, phrase: null, attente: 'lecture', voile: false },
+  ];
+  const fin = creerMoteur({ etapes, effets: f.effets, delai: horloge().delai }).demarrer();
+  await jusqua(() => f.attentes.length === 1);
+  assert.equal(f.attentes[0].vue, 'prix');
+  f.attentes[0].resoudre({ ok: true });
+  await jusqua(() => f.attentes.length === 2);
+  assert.equal(f.attentes[1].vue, 'prix');
+  f.attentes[1].resoudre({ ok: true });
+  assert.equal(await fin, 'fini');
 });

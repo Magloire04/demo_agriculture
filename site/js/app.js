@@ -248,12 +248,24 @@ function montrerResultat(zone, ...contenu) {
 const lancements = new WeakMap();
 
 // Lit les réponses affichées l'une après l'autre, sans appui : l'appui sur le micro a
-// débloqué le lecteur. Pas si la vue a changé pendant l'analyse ni si l'application
-// est passée en arrière-plan. Un voix.js plus ancien (cache) ne sait pas le faire.
-// Le tour reprend à la fin de la lecture, ou aussitôt quand il n'y a rien à lire.
+// débloqué le lecteur. Pas si la vue a changé pendant l'analyse ; si l'application est
+// cachée (écran éteint, appel), au retour. Un voix.js plus ancien (cache) ne sait pas
+// le faire. Le tour reprend à la fin de la lecture, ou aussitôt quand il n'y a rien à lire.
+let aLireAuRetour = null;
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden || !aLireAuRetour) return;
+  const zone = aLireAuRetour;
+  aLireAuRetour = null;
+  lireDesLArrivee(zone);
+});
+
 function lireDesLArrivee(zone) {
   const finie = () => emettre('lecture-finie', { zone: zone.dataset.resultat });
-  if (typeof voix?.lireSuite !== 'function' || zone.closest('[data-vue]')?.hidden || document.hidden) return finie();
+  if (typeof voix?.lireSuite !== 'function' || zone.closest('[data-vue]')?.hidden || !zone.isConnected) return finie();
+  if (document.hidden) {
+    aLireAuRetour = zone;
+    return;
+  }
   const lectures = [...zone.querySelectorAll('.lecture')]
     .map((bloc) => lancements.get(bloc))
     .filter(Boolean)
@@ -653,7 +665,10 @@ import('./tour.js')
     m.lancerSiPremierAcces();
   })
   .catch(() => { boutonAide.hidden = true; });
-boutonAide.addEventListener('click', () => {
+boutonAide.addEventListener('click', async () => {
   voix?.debloquer?.();
-  tour?.lancer({ depuisAide: true });
+  // Tour introuvable (hors ligne) : la main tremble, sans texte à lire.
+  if ((await tour?.lancer({ depuisAide: true })) !== 'indisponible') return;
+  boutonAide.classList.add('bouton-aide-refus');
+  setTimeout(() => boutonAide.classList.remove('bouton-aide-refus'), 700);
 });

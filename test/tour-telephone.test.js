@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { appuiAutorise, chevauche, premierAcces, vueACorriger } from '../site/js/tour.js';
+import { appuiAutorise, chevauche, ORDRE, pourCetEcran, premierAcces, voixDisponibles, vueACorriger } from '../site/js/tour.js';
 
 // Faux éléments : `dans` dit dans quel élément (cible, croix) se trouve l'appui.
 const element = (dans = []) => ({ closest: (sel) => (dans.includes(sel) ? {} : null), dans });
@@ -39,7 +39,7 @@ test('le bouton d’aide est dans l’en-tête, avec son nom en fon', () => {
 test('le cache hors ligne garde les modules du tour', () => {
   const sw = readFileSync(new URL('../site/sw.js', import.meta.url), 'utf8');
   for (const f of ['js/tour.js', 'js/tour-moteur.js', 'js/tour-etapes.js']) assert.ok(sw.includes(`'${f}'`), f);
-  assert.match(sw, /agrifon-v15/);
+  assert.match(sw, /agrifon-v16/);
 });
 
 // À la fin, la main montre le bouton d'aide, en haut à droite, là où se trouve la croix :
@@ -57,4 +57,35 @@ test('vueACorriger : seule une navigation que le tour n’attendait pas est corr
   assert.equal(vueACorriger({ vueEtape: 'accueil', vueActuelle: 'prix', navigationAttendue: true }), null, 'appui sur la carte demandé par le tour');
   assert.equal(vueACorriger({ vueEtape: 'prix', vueActuelle: 'prix', navigationAttendue: false }), null);
   assert.equal(vueACorriger({ vueEtape: null, vueActuelle: 'accueil', navigationAttendue: false }), null, 'écran de démarrage');
+});
+
+// M4 : la réponse ou la lecture d'un autre écran (demande lancée avant une relance par
+// l'aide) ne fait pas passer l'étape.
+test('pourCetEcran : seule la réponse de l’écran de l’étape compte', () => {
+  assert.equal(pourCetEcran('reponse', { vue: 'prix', ok: true }, 'prix'), true);
+  assert.equal(pourCetEcran('reponse', { vue: 'signalement', ok: true }, 'prix'), false);
+  assert.equal(pourCetEcran('lecture-finie', { zone: 'prix' }, 'prix'), true);
+  assert.equal(pourCetEcran('lecture-finie', { zone: 'signalement' }, 'prix'), false);
+  assert.equal(pourCetEcran('appui', {}, 'prix'), true);
+  assert.equal(pourCetEcran('lieu', {}, 'signalement'), true);
+});
+
+// M5 : « recommençons » est préparé d'avance, comme les autres phrases.
+test('les phrases préchargées comprennent « recommençons »', () => {
+  assert.ok(ORDRE.includes('tour_pas_compris'));
+});
+
+// M7 : sans aucune voix (synthèse coupée), le tour du premier accès n'est pas lancé :
+// des bulles de texte ne servent à rien à qui ne lit pas.
+test('voixDisponibles : au moins une phrase du tour a sa voix', () => {
+  assert.equal(voixDisponibles({}), false);
+  assert.equal(voixDisponibles({ a: { fon: 'x', voix_phrase: null } }), false);
+  assert.equal(voixDisponibles({ a: { fon: 'x', voix_phrase: null }, b: { fon: 'y', voix_phrase: '0123456789abcdef' } }), true);
+});
+
+// M1 et M8 : relancé par l'aide, le tour est vu ; une erreur ne laisse pas le blocage des appuis.
+test('relancé par l’aide, le tour est marqué vu ; une erreur du moteur referme le tour', () => {
+  const source = readFileSync(new URL('../site/js/tour.js', import.meta.url), 'utf8');
+  assert.match(source, /if \(depuisAide\) effets\.marquerVu\(\)/);
+  assert.match(source, /try \{\s*return await moteur\.demarrer\([\s\S]*?\} catch[\s\S]*?effets\.fermer\(\)/);
 });

@@ -17,8 +17,23 @@ const MAIN = '<path d="M22 6c0-3.3 2.7-6 6-6s6 2.7 6 6v26c1-1.2 2.6-2 4.3-2 3 0 
 const HAUT_PARLEUR = '<path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" stroke="none"/>';
 const LECTURE = '<path d="M7 4l13 8-13 8z" fill="currentColor" stroke="none"/>';
 const TYPES = { appui: 'appui', reponse: 'reponse', lecture: 'lecture-finie', lieu: 'lieu' };
-// Phrases dans l'ordre du tour : chacune précharge les deux suivantes.
-const ORDRE = [...new Set(ETAPES.flatMap((e) => [e.avant, e.phrase]).filter(Boolean))];
+// Phrases dans l'ordre du tour : chacune précharge les deux suivantes. « Recommençons »
+// suit le micro, où une demande peut échouer.
+export const ORDRE = [...new Set(ETAPES.flatMap((e) => [e.avant, e.phrase, e.attente === 'reponse' ? 'tour_pas_compris' : null]).filter(Boolean))];
+
+// La réponse ou la lecture d'un autre écran (une demande lancée avant une relance par
+// l'aide) ne fait pas passer l'étape.
+export function pourCetEcran(type, detail, vue) {
+  if (type === 'reponse') return !detail?.vue || detail.vue === vue;
+  if (type === 'lecture-finie') return !detail?.zone || detail.zone === vue;
+  return true;
+}
+
+// Sans aucune voix (synthèse coupée), le tour du premier accès n'est pas lancé : des
+// bulles de texte ne servent à rien à qui ne lit pas. L'aide le relance quand même.
+export function voixDisponibles(phrasesDuTour) {
+  return Object.values(phrasesDuTour ?? {}).some((p) => p.voix_phrase);
+}
 
 export function premierAcces(memoire = lireMemoire) {
   return memoire(CLE_MEMOIRE) !== 'vu';
@@ -61,6 +76,7 @@ let numero = 0; // compteur des événements de l'application
 const derniers = new Map(); // type → { numero, detail }
 const abonnes = new Set();
 let installe = false;
+let generation = 0; // change à chaque lancement : un ancien minuteur ne touche plus à rien
 
 const $ = (selecteur) => racine?.querySelector(selecteur);
 // La propriété hidden n'existe pas sur un élément SVG (la main) : son style, si.
@@ -102,6 +118,10 @@ function installer() {
       setTimeout(() => { navigationAttendue = false; }, 1500);
       noter('appui', {});
     }
+  }, true);
+  // Une liste déroulante s'ouvre à l'appui, avant le clic : bloquée aussi hors cible.
+  document.addEventListener('pointerdown', (e) => {
+    if (actif && !appuiAutorise(cibleCliquable, actif, e.target)) e.preventDefault();
   }, true);
   window.addEventListener('hashchange', () => {
     if (!actif) return;
@@ -234,8 +254,9 @@ const effets = {
       indicateur.hidden = true; // pas de voix : pas de haut-parleur
       bulle.textContent = phrase?.fon ?? '';
       bulle.hidden = false;
+      const lancement = generation;
       await pause(BULLE_MS);
-      bulle.hidden = true;
+      if (lancement === generation && racine) bulle.hidden = true;
       return false;
     } finally {
       if (racine) indicateur.hidden = true;
@@ -260,14 +281,15 @@ const effets = {
 
   visible: () => (document.hidden ? new Promise((ok) => attentesVisibles.add(ok)) : Promise.resolve()),
 
-  attendre(type, { depuis, signal }) {
+  attendre(type, { depuis, signal, vue }) {
     const attendu = TYPES[type];
+    const compte = (n, detail) => n > depuis && pourCetEcran(attendu, detail, vue);
     const resultat = (detail) => (type === 'reponse' ? { ok: Boolean(detail?.ok), code: detail?.code ?? null } : { ok: true });
     return new Promise((ok) => {
       const dernier = derniers.get(attendu);
-      if (dernier && dernier.numero > depuis) return ok(resultat(dernier.detail));
+      if (dernier && compte(dernier.numero, dernier.detail)) return ok(resultat(dernier.detail));
       const ecouter = (t, n, detail) => {
-        if (t !== attendu || n <= depuis) return;
+        if (t !== attendu || !compte(n, detail)) return;
         abonnes.delete(ecouter);
         ok(resultat(detail));
       };
@@ -318,24 +340,39 @@ function garderEcranAllume() {
 }
 
 // Premier accès ou bouton d'aide (qui commence à l'accueil, son appui ayant débloqué le son).
+async function chargerPhrases() {
+  if (phrases) return true;
+  try {
+    phrases = (await appelerApi('api/tour')).phrases;
+    return true;
+  } catch {
+    return false; // hors ligne : le tour sera proposé à la prochaine ouverture
+  }
+}
+
 export async function lancer({ depuisAide = false } = {}) {
   installer();
   voix ??= await import('./voix.js').catch(() => null);
-  if (!phrases) {
-    try {
-      phrases = (await appelerApi('api/tour')).phrases;
-    } catch {
-      return 'indisponible'; // hors ligne : le tour sera proposé à la prochaine ouverture
-    }
-  }
+  if (!(await chargerPhrases())) return 'indisponible';
+  generation += 1;
   construire();
   actif = true;
   garderEcranAllume();
+  // Qui a trouvé l'aide connaît le tour : il ne revient pas de lui-même à l'ouverture.
+  if (depuisAide) effets.marquerVu();
   precharger(depuisAide ? ORDRE[1] : ORDRE[0]);
   moteur ??= creerMoteur({ etapes: ETAPES, effets, delai: pause });
-  return moteur.demarrer(depuisAide ? PREMIERE_ETAPE_AIDE : ETAPES[0].id);
+  try {
+    return await moteur.demarrer(depuisAide ? PREMIERE_ETAPE_AIDE : ETAPES[0].id);
+  } catch {
+    effets.fermer(); // jamais de page bloquée par un tour en erreur
+    return 'arrete';
+  }
 }
 
-export function lancerSiPremierAcces() {
-  return premierAcces() ? lancer() : null;
+export async function lancerSiPremierAcces() {
+  if (!premierAcces()) return null;
+  installer();
+  if (!(await chargerPhrases()) || !voixDisponibles(phrases)) return null;
+  return lancer();
 }

@@ -11,6 +11,10 @@ const ATTENTE_APPUI_MS = 5000; // attente de la phrase entière après l'appui, 
 // Lecture dès l'arrivée de la réponse : le serveur garde la première demande 20 s, en
 // attendant que le labo ait fini, puis le son doit encore arriver sur le téléphone.
 export const ATTENTE_AUTO_MS = 22_000;
+// Sans anciens extraits pour la remplacer, la phrase est attendue tant qu'elle se prépare
+// (le serveur répond « pas encore prête » toutes les 10 s), au plus ce temps-là : la
+// réponse est lue dès qu'elle arrive, sans appui.
+const ATTENTE_SANS_REPLI_MS = 150_000;
 const ESSAIS_MAX = 12; // demandes de la phrase entière après « pas encore prête »
 let lecteur = null;
 let enCours = null; // lecture ou attente en cours : { arreter() }
@@ -169,7 +173,8 @@ export function lireExtraits(fichiers) {
 
 // Depuis le geste de l'utilisateur, ou dès l'arrivée de la réponse si le lecteur a été
 // débloqué. Phrase entière prête : elle est jouée. Encore en route : attente de
-// `attenteMs` au plus (5 s après un appui). Sinon, les extraits. `surLecture` reçoit
+// `attenteMs` au plus (5 s après un appui), puis les extraits ; sans extraits, attente
+// tant qu'elle se prépare (ATTENTE_SANS_REPLI_MS au plus). `surLecture` reçoit
 // la voix choisie ('nouvelle' ou 'ancienne') au début de la lecture. Rend cette voix
 // à la fin, ou null si l'utilisateur a arrêté pendant l'attente.
 export async function lireReponse({ phrase = null, extraits = null }, { surAttente = () => {}, surLecture = () => {}, attenteMs = ATTENTE_APPUI_MS } = {}) {
@@ -183,7 +188,8 @@ export async function lireReponse({ phrase = null, extraits = null }, { surAtten
     const annulation = new Promise((ok) => { annuler = ok; });
     enCours = attente;
     surAttente();
-    pret = await Promise.race([attendrePret(suivi, attenteMs), annulation.then(() => null)]);
+    const limite = extraits ? attenteMs : Math.max(attenteMs, ATTENTE_SANS_REPLI_MS);
+    pret = await Promise.race([attendrePret(suivi, limite), annulation.then(() => null)]);
     if (pret === null) return null;
     if (enCours === attente) enCours = null;
   }

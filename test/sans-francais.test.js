@@ -25,10 +25,14 @@ const MARQUEURS = marqueurs();
 const francais = (texte) => mots(texte).filter((m) => MARQUEURS.has(m));
 // Une chaîne de code n'est pas un texte affiché : un seul mot en minuscules sans accent
 // (clé, sélecteur), des noms de classes à tiret séparés par des espaces, ou un sélecteur
-// CSS qui commence par « . », « # » ou « [ » (jamais une phrase française).
+// CSS : « . », « # » ou « [ » en tête, et chaque morceau une classe, un attribut ou une
+// balise (jamais un mot de phrase).
+const BALISES = new Set(['a', 'i', 'p', 'li', 'div', 'span', 'svg', 'path', 'button', 'select', 'option', 'input']);
+const estSelecteur = (valeur) => /^[.#[][a-z0-9_\-.:#()[\]=,*>"'/ ]*$/.test(valeur)
+  && valeur.split(/[\s,>]+/).filter(Boolean).every((m) => /^[.#[:]/.test(m) || BALISES.has(m));
 const estDuCode = (valeur) => /^[a-z0-9_\-.:#[\]=/*]*$/.test(valeur)
   || valeur.trim().split(/\s+/).every((m) => /^[a-z0-9_]+(-[a-z0-9_]+)+$/.test(m))
-  || /^[.#[][a-z0-9_\-.:#()[\]=,*>"'/ ]*$/.test(valeur);
+  || estSelecteur(valeur);
 
 // Textes vus par l'agriculteur dans une page : texte des éléments et étiquettes.
 function textesDePage(html) {
@@ -129,6 +133,9 @@ test('le contrôle repère bien une phrase française', () => {
   assert.ok(francais('Appuyez pour parler').includes('pour'));
   assert.deepEqual(francais('Un ma se nǔ ɔ sín nyǐkɔ ǎ.'), []);
   assert.deepEqual(chainesDe("const a = 'Comparer avec les autres'; // un commentaire avec le mot de\nconst b = `x ${'pour'} y`;").map((c) => c.valeur), ['Comparer avec les autres', 'pour', 'x  y']);
+  // Un sélecteur CSS est du code ; une phrase qui commence par « [ » ou « . » n'en est pas.
+  for (const s of ['.tour-points i', '.bouton-micro, [data-aide]', '.carte-choix[href="#/prix"]', '.tour-main:not(.tour-main-demarrage)']) assert.equal(estDuCode(s), true, s);
+  for (const s of ['[aide] appuyez ici pour la suite', '. pas de prix pour le mil']) assert.equal(estDuCode(s), false, s);
 });
 
 test('données affichées sous les conseils : chaque source a un sigle, sans français', () => {
