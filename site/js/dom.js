@@ -67,6 +67,19 @@ export async function appelerApi(chemin, { delaiMs = 15000, ...options } = {}) {
   return donnees;
 }
 
+// Événement de l'application (« agrifon:… ») : le tour de présentation (site/js/tour.js)
+// suit ainsi le micro, les réponses, leur lecture et le lieu sans toucher à app.js.
+export function emettre(type, detail = {}) {
+  document.dispatchEvent(new CustomEvent(`agrifon:${type}`, { detail }));
+}
+
+// Issue d'une demande de prix pour le tour : une réponse rendue (HTTP 200) peut quand
+// même n'avoir rien compris (« non_compris ») ; le serveur compte les mêmes réussites.
+const PRIX_COMPRIS = new Set(['ok', 'sans_prix', 'marche_seul']);
+export function issuePrix(statut) {
+  return PRIX_COMPRIS.has(statut) ? { ok: true } : { ok: false, code: statut || 'non_compris' };
+}
+
 export function lireMemoire(cle) {
   try {
     return localStorage.getItem(cle);

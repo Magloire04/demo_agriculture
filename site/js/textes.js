@@ -5,6 +5,7 @@ export const T = Object.freeze({
   accueil: "Bǐbɛ́mɛ",
   accueil_texte: "Mi ze gbe yi ji bo kan xô bi ɔ.",
   accueil_titre: "Mi ɖɔ xó ɖo fɔ̀ngbè mɛ, mon ɔ na yí gbe nú mi.",
+  aide: "Alɔdó",
   arreter: "Nɔnté",
   autre_question: "Kàn nǔ ɖevo byɔ",
   autre_signalement: "Ɖɔ àzɔn ɖevo",
