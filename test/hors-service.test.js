@@ -35,7 +35,7 @@ async function demarrer(t, { solutionsBrouillon = true } = {}) {
     registre: await creerRegistre(dossier),
     textes: creerTextes(lire('reponses.json')),
     voix: creerVoix('/inexistant'),
-    solutions: lire('solutions.json'), // fon_a_relire: true
+    solutions: { ...lire('solutions.json'), fon_a_relire: true }, // le réglage n’agit que sur un fon à relire
     protection: null,
     reglages,
   });

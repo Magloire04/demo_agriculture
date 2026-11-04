@@ -1,9 +1,10 @@
 {
   "version": "2026-10-23",
-  "fon_a_relire": true,
+  "fon_a_relire": false,
   "sources": {
     "inrab-recueil-2020": {
       "editeur": "INRAB",
+      "sigle": "INRAB",
       "titre": "Recueil des technologies agricoles prometteuses développées par le système national de recherche agricole",
       "nature": "fiche",
       "annee": 2020,
@@ -13,6 +14,7 @@
     },
     "iita-inrab-maraichage-2010": {
       "editeur": "IITA et INRAB",
+      "sigle": "IITA · INRAB",
       "titre": "Integrated pest management in vegetable production: a guide for extension workers in West Africa",
       "nature": "guide",
       "annee": 2010,
@@ -22,6 +24,7 @@
     },
     "fao-cla-2018": {
       "editeur": "FAO",
+      "sigle": "FAO",
       "titre": "Gestion intégrée de la chenille légionnaire d'automne sur le maïs : guide pour les champs-écoles des producteurs en Afrique",
       "nature": "guide",
       "annee": 2018,
@@ -31,6 +34,7 @@
     },
     "fao-pertes-apres-recolte": {
       "editeur": "FAO",
+      "sigle": "FAO",
       "titre": "Prevention of post-harvest food losses: fruits, vegetables and root crops",
       "nature": "guide",
       "annee": 1989,
@@ -40,6 +44,7 @@
     },
     "aa-compost-striga": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Composting to beat striga",
       "nature": "video",
       "annee": null,
@@ -49,6 +54,7 @@
     },
     "aa-gombo": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Taking care of okra",
       "nature": "video",
       "annee": null,
@@ -58,6 +64,7 @@
     },
     "aa-pepiniere-oignon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Onion nursery",
       "nature": "video",
       "annee": null,
@@ -67,6 +74,7 @@
     },
     "aa-mildiou-tomate": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Managing tomato late blight",
       "nature": "video",
       "annee": null,
@@ -76,6 +84,7 @@
     },
     "aa-tuteurage-tomate": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Staking tomato plants",
       "nature": "video",
       "annee": null,
@@ -85,6 +94,7 @@
     },
     "aa-paillage": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Mulch for a better soil and crop",
       "nature": "video",
       "annee": null,
@@ -94,6 +104,7 @@
     },
     "aa-chenille-legionnaire": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Killing fall armyworms naturally",
       "nature": "video",
       "annee": null,
@@ -103,6 +114,7 @@
     },
     "aa-rotation-legumineuses": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Crop rotation with legumes",
       "nature": "video",
       "annee": null,
@@ -112,6 +124,7 @@
     },
     "fao-coton": {
       "editeur": "FAO",
+      "sigle": "FAO",
       "titre": "Gestion intégrée de la production et des déprédateurs du coton : guide du facilitateur pour les champs-écoles des producteurs",
       "nature": "guide",
       "annee": null,
@@ -121,6 +134,7 @@
     },
     "aa-cla-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Killing fall armyworms naturally (version fon)",
       "nature": "video",
       "annee": null,
@@ -130,6 +144,7 @@
     },
     "aa-striga-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Integrated approach against striga (version fon)",
       "nature": "video",
       "annee": null,
@@ -139,6 +154,7 @@
     },
     "aa-striga-ensemble": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Joining hands against striga",
       "nature": "video",
       "annee": null,
@@ -148,6 +164,7 @@
     },
     "aa-tri-semences": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Seed sorting by flotation",
       "nature": "video",
       "annee": null,
@@ -157,6 +174,7 @@
     },
     "aa-semences-riz": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Rice seed preservation",
       "nature": "video",
       "annee": null,
@@ -166,6 +184,7 @@
     },
     "fao-manioc-2013": {
       "editeur": "FAO",
+      "sigle": "FAO",
       "titre": "Produire plus avec moins : le manioc",
       "nature": "guide",
       "annee": 2013,
@@ -175,6 +194,7 @@
     },
     "pw-mosaique-manioc": {
       "editeur": "CABI Plantwise",
+      "sigle": "CABI Plantwise",
       "titre": "Mosaïque africaine du manioc : liste verte (Pest Management Decision Guide)",
       "nature": "fiche",
       "annee": 2016,
@@ -184,6 +204,7 @@
     },
     "pw-pourridie-manioc": {
       "editeur": "CABI Plantwise",
+      "sigle": "CABI Plantwise",
       "titre": "Pourriture des racines du manioc, Ghana (Pest Management Decision Guide)",
       "nature": "fiche",
       "annee": 2016,
@@ -193,6 +214,7 @@
     },
     "pw-cercosporiose-ghana": {
       "editeur": "CABI Plantwise",
+      "sigle": "CABI Plantwise",
       "titre": "Cercosporiose noire du bananier, Ghana (Pest Management Decision Guide)",
       "nature": "fiche",
       "annee": 2014,
@@ -202,6 +224,7 @@
     },
     "pw-cercosporiose-rdc": {
       "editeur": "CABI Plantwise",
+      "sigle": "CABI Plantwise",
       "titre": "Cercosporiose noire du bananier, RDC (fiche en français)",
       "nature": "fiche",
       "annee": 2014,
@@ -211,6 +234,7 @@
     },
     "inrab-brab-2022-bananier": {
       "editeur": "INRAB",
+      "sigle": "INRAB",
       "titre": "Vodounou et al., bunchy top du bananier au Sud-Bénin, BRAB vol. 32 n° 1",
       "nature": "article",
       "annee": 2022,
@@ -220,6 +244,7 @@
     },
     "inrab-brab-2021-palmier": {
       "editeur": "INRAB",
+      "sigle": "INRAB",
       "titre": "Koussinou et al., fusariose du palmier à huile, BRAB vol. 31 n° 1",
       "nature": "article",
       "annee": 2021,
@@ -229,6 +254,7 @@
     },
     "aa-mosaique-manioc-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "La mosaïque du manioc (version fon)",
       "nature": "video",
       "annee": null,
@@ -238,6 +264,7 @@
     },
     "aa-rejets-sains-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Rejets de bananier sains (version fon)",
       "nature": "video",
       "annee": null,
@@ -247,6 +274,7 @@
     },
     "aa-fourmis-tisserandes-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Fourmis tisserandes dans les vergers (version fon)",
       "nature": "video",
       "annee": null,
@@ -256,6 +284,7 @@
     },
     "infonet-anacarde": {
       "editeur": "Infonet-Biovision (hébergé par Access Agriculture)",
+      "sigle": "Infonet-Biovision",
       "titre": "Cashew",
       "nature": "fiche",
       "annee": null,
@@ -265,6 +294,7 @@
     },
     "aa-tylcv": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Managing tomato leaf curl virus",
       "nature": "video",
       "annee": null,
@@ -274,6 +304,7 @@
     },
     "aa-maladies-oignon-fon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Managing onion diseases (version fon)",
       "nature": "video",
       "annee": null,
@@ -283,6 +314,7 @@
     },
     "aa-champ-oignon": {
       "editeur": "Access Agriculture",
+      "sigle": "Access Agriculture",
       "titre": "Installing an onion field",
       "nature": "video",
       "annee": null,
@@ -294,8 +326,8 @@
   "phrases": {
     "titre": {
       "fr": "En attendant le conseiller, vous pouvez :",
-      "fon": "Hwenu e glegán ɔ ko wá ǎ é ɔ, nǔ e mi sixú wà lɛ́ ɖíe :",
-      "voix": "Hwenu e glegán ɔ ko wá ǎ é ɔ, nǔ e mi sixú wà lɛ́ ɖíe."
+      "fon": "Hwenu e glegán ɔ man ko wá ǎ é ɔ, nǔ e mi sixú wà lɛ́ ɖíe :",
+      "voix": "Hwenu e glegán ɔ man ko wá ǎ é ɔ, nǔ e mi sixú wà lɛ́ ɖíe."
     },
     "probablement": {
       "fr": "C'est probablement {probleme}.",
@@ -316,8 +348,8 @@
   "gestes": {
     "fumure-organique": {
       "fr": "Mettre du compost ou du fumier bien décomposé au pied des plants.",
-      "fon": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko ɖi é dó atín lɛ́ sín afɔ kpá.",
-      "voix": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko ɖi é dó atín lɛ́ sín afɔ kpá.",
+      "fon": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko gba é dó atín lɛ́ sín afɔ.",
+      "voix": "Mi kɔn kɔ́mpɔ́si alǒ fúmyé e ko gba é dó atín lɛ́ sín afɔ.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -330,8 +362,8 @@
     },
     "desherber": {
       "fr": "Désherber autour des plants.",
-      "fon": "Mi sá gbe lɛ́ ɖo atín lɛ́ kpá.",
-      "voix": "Mi sá gbe lɛ́ ɖo atín lɛ́ kpá.",
+      "fon": "Mi sá gbe é lɛ́ do atín lɛ́ é",
+      "voix": "Mi sá gbe é lɛ́ do atín lɛ́ é",
       "sources": [
         {
           "id": "aa-gombo"
@@ -355,8 +387,8 @@
     },
     "drainer": {
       "fr": "Creuser des rigoles pour que l'eau ne reste pas au pied des plants.",
-      "fon": "Mi kún ali kpɛví lɛ́ bɔ sìn ma nɔ te ɖo atín lɛ́ sín afɔ kpá ǎ.",
-      "voix": "Mi kún ali kpɛví lɛ́ bɔ sìn ma nɔ te ɖo atín lɛ́ sín afɔ kpá ǎ.",
+      "fon": "Mi kún ali kpɛví lɛ́ bo nu sìn ma nɔ te ɖo atín lɛ́ sín afɔ ô",
+      "voix": "Mi kún ali kpɛví lɛ́ bo nu sìn ma nɔ te ɖo atín lɛ́ sín afɔ ô",
       "saison": "pluies",
       "sources": [
         {
@@ -366,12 +398,13 @@
         {
           "id": "aa-pepiniere-oignon"
         }
-      ]
+      ],
+      "illustration": "rigoles"
     },
     "retirer-bruler": {
       "fr": "Couper les feuilles malades et les brûler loin du champ.",
-      "fon": "Mi sɛ́n ama e jɛ àzɔn lɛ́, bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
-      "voix": "Mi sɛ́n ama e jɛ àzɔn lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
+      "fon": "Mi sɛ́n ama e jɛ àzɔn lɛ́, bo zé yě dó myɔ̌ mɛ ɖo zɔ nu gle ɔ.",
+      "voix": "Mi sɛ́n ama e jɛ àzɔn lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo zɔ nu gle ɔ.",
       "sources": [
         {
           "id": "aa-mildiou-tomate"
@@ -380,12 +413,13 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 77"
         }
-      ]
+      ],
+      "illustration": "couper-bruler"
     },
     "pas-compost-malade": {
       "fr": "Ne pas mettre les plants malades au compost.",
-      "fon": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǎ.",
-      "voix": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǎ.",
+      "fon": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǒ.",
+      "voix": "Mi ma zé atín e jɛ àzɔn lɛ́ dó kɔ́mpɔ́si mɛ ǒ.",
       "sources": [
         {
           "id": "iita-inrab-maraichage-2010",
@@ -395,8 +429,8 @@
     },
     "aerer": {
       "fr": "Garder de l'espace entre les plants pour que l'air circule.",
-      "fon": "Mi jo fí ɖo atín lɛ́ tɛntin bɔ jɔhɔn ni nɔ gbɔn.",
-      "voix": "Mi jo fí ɖo atín lɛ́ tɛntin bɔ jɔhɔn ni nɔ gbɔn.",
+      "fon": "Mi jo tɛnmɛn do atín lɛ́ tɛntin bo nu jɔhɔn ni nɔ gbɔn.",
+      "voix": "Mi jo tɛnmɛn do atín lɛ́ tɛntin bo nu jɔhɔn ni nɔ gbɔn.",
       "sources": [
         {
           "id": "aa-tuteurage-tomate"
@@ -405,19 +439,20 @@
     },
     "observer-collet": {
       "fr": "Regarder le pied des plants fanés : s'il y a un feutrage blanc, le montrer au conseiller.",
-      "fon": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. Nǔ wewe ɖé ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
-      "voix": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. | Nǔ wewe ɖé ɖo fínɛ́ ɔ, mi xlɛ́ glegán ɔ.",
+      "fon": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. Nǔ wewe ɖé ɖo fínɛ́ hun, mi xlɛ́ glegán ɔ.",
+      "voix": "Mi kpɔ́n atín e fyɔ́ lɛ́ sín afɔ. | Nǔ wewe ɖé ɖo fínɛ́ hun, mi xlɛ́ glegán ɔ.",
       "sources": [
         {
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 45 et 49"
         }
-      ]
+      ],
+      "illustration": "observer-montrer"
     },
     "pailler": {
       "fr": "Couvrir le sol d'herbe sèche pour garder l'humidité.",
-      "fon": "Mi zé gbe xú lɛ́ xá ayǐ ɔ bɔ ayǐ ɔ ni nɔ fá.",
-      "voix": "Mi zé gbe xú lɛ́ xá ayǐ ɔ bɔ ayǐ ɔ ni nɔ fá.",
+      "fon": "Mi zé gbe xú lɛ́ kpé ayǐ ɔ bo nu ayǐ ɔ ni fá.",
+      "voix": "Mi zé gbe xú lɛ́ kpé ayǐ ɔ bo nu ayǐ ɔ ni fá.",
       "sources": [
         {
           "id": "aa-paillage"
@@ -436,8 +471,8 @@
     },
     "ecraser-oeufs": {
       "fr": "Écraser à la main les œufs et les jeunes insectes.",
-      "fon": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo yě sín azin lɛ́ kpo bɔ yě ni kú.",
-      "voix": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo yě sín azin lɛ́ kpo bɔ yě ni kú.",
+      "fon": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo azin yě ton lɛ́ kpo bo nu yě ni kú.",
+      "voix": "Mi zìn nùvíɖogbɛ̀ kpɛví lɛ́ kpo azin yě ton lɛ́ kpo bo nu yě ni kú.",
       "sources": [
         {
           "id": "fao-cla-2018"
@@ -446,8 +481,8 @@
     },
     "detruire-attaques": {
       "fr": "Ramasser et détruire les fruits et les feuilles attaqués.",
-      "fon": "Mi bɛ́ sínsɛ́n kpo ama kpo e nùvíɖogbɛ̀ lɛ́ ɖù é lɛ́, bo hu yě.",
-      "voix": "Mi bɛ́ sínsɛ́n kpo ama kpo e nùvíɖogbɛ̀ lɛ́ ɖù é lɛ́, bo hu yě.",
+      "fon": "Mi bɛ́ sínsɛ́n kpo ama e nùvíɖogbɛ̀ lɛ́ ɖù é, bo hu yě.",
+      "voix": "Mi bɛ́ sínsɛ́n kpo ama e nùvíɖogbɛ̀ lɛ́ ɖù é, bo hu yě.",
       "sources": [
         {
           "id": "iita-inrab-maraichage-2010",
@@ -457,8 +492,8 @@
     },
     "ramasser-chenilles": {
       "fr": "Ramasser les chenilles à la main et les tuer.",
-      "fon": "Mi bɛ́ wànvú lɛ́ ɖo alɔ mɛ, bo hu yě.",
-      "voix": "Mi bɛ́ wànvú lɛ́ ɖo alɔ mɛ, bo hu yě.",
+      "fon": "Mi bɛ́ wànvú lɛ́, bo hu yě.",
+      "voix": "Mi bɛ́ wànvú lɛ́, bo hu yě.",
       "sources": [
         {
           "id": "fao-cla-2018"
@@ -470,8 +505,8 @@
     },
     "retirer-feuilles-roulees": {
       "fr": "Retirer les feuilles roulées : les chenilles s'y cachent.",
-      "fon": "Mi ɖe ama e ko wlí lɛ́ : wànvú lɛ́ nɔ ɖo yě mɛ.",
-      "voix": "Mi ɖe ama e ko wlí lɛ́. | Wànvú lɛ́ nɔ ɖo yě mɛ.",
+      "fon": "Mi ɖe ama e ko mlan lɛ́ : wànvú lɛ́ nɔ ɖo yě mɛ.",
+      "voix": "Mi ɖe ama e ko mlan lɛ́. | Wànvú lɛ́ nɔ ɖo yě mɛ.",
       "sources": [
         {
           "id": "iita-inrab-maraichage-2010",
@@ -481,19 +516,20 @@
     },
     "retirer-pourri": {
       "fr": "Retirer les parties pourries et les brûler loin du champ.",
-      "fon": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
-      "voix": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo fí e ɖo gle ɔ sí é.",
+      "fon": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, bo zé yě dó myɔ̌ mɛ ɖo zɔ nu gle ɔ",
+      "voix": "Mi ɖe nǔ e jɛ̀ vǎ lɛ́, | bo zé yě dó myɔ̌ mɛ ɖo zɔ nu gle ɔ",
       "sources": [
         {
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 49 et 71"
         }
-      ]
+      ],
+      "illustration": "couper-bruler"
     },
     "recolter-secher": {
       "fr": "Récolter sans blesser les produits, puis bien les sécher au soleil.",
-      "fon": "Hwenu e mi ɖo nǔ ɖe wɛ ɔ, mi ma gbá yě ǎ. Énɛ́ gúdo ɔ, mi sá yě dó hwe mɛ ganji.",
-      "voix": "Hwenu e mi ɖo nǔ ɖe wɛ ɔ, mi ma gbá yě ǎ. | Énɛ́ gúdo ɔ, mi sá yě dó hwe mɛ ganji.",
+      "fon": "Hwenu e mi ɖo nǔ kun lɛ ya wɛ ɔ, mi ma gbá yě ǒ. Énɛ́ gúdo ɔ, mi xiyà yě dó hwesivɔ nu",
+      "voix": "Hwenu e mi ɖo nǔ kun lɛ ya wɛ ɔ, mi ma gbá yě ǒ. | Énɛ́ gúdo ɔ, mi xiyà yě dó hwesivɔ nu",
       "sources": [
         {
           "id": "fao-pertes-apres-recolte",
@@ -519,7 +555,8 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 58 et 64"
         }
-      ]
+      ],
+      "illustration": "observer-montrer"
     },
     "semences-saines": {
       "fr": "À la prochaine saison, semer des graines prises sur des plants sains.",
@@ -542,8 +579,8 @@
     },
     "rotation-legumineuse": {
       "fr": "À la prochaine saison, cultiver du niébé, de l'arachide ou du soja à cet endroit.",
-      "fon": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ sɔja ɖo fí ɔ.",
-      "voix": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ sɔja ɖo fí ɔ.",
+      "fon": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ soja ɖo fí ɔ.",
+      "voix": "Xwè e ja é ɔ, mi ná dó ayikun, azin alǒ soja ɖo fí ɔ.",
       "sources": [
         {
           "id": "aa-rotation-legumineuses"
@@ -572,7 +609,8 @@
           "id": "inrab-recueil-2020",
           "detail": "fiche D-20"
         }
-      ]
+      ],
+      "illustration": "striga-arracher"
     },
     "mais-cla-cornet": {
       "fr": "Écraser avec les doigts les pontes et les jeunes chenilles dans le cornet du maïs, plutôt que de traiter.",
@@ -582,7 +620,8 @@
         {
           "id": "fao-cla-2018"
         }
-      ]
+      ],
+      "illustration": "ecraser-cornet"
     },
     "striga-arrachage-collectif": {
       "fr": "S'organiser avec les voisins pour arracher le striga dans tous les champs avant qu'il fasse ses graines.",
@@ -592,12 +631,13 @@
         {
           "id": "aa-striga-ensemble"
         }
-      ]
+      ],
+      "illustration": "striga-arracher"
     },
     "varietes-tolerantes-striga": {
       "fr": "À la prochaine saison, semer une variété tolérante au striga : le conseiller indique laquelle.",
-      "fon": "Xwè e ja é ɔ, mi ná dó kwín e striga ma nɔ wa nǔ ɖé é. Glegán ɔ ná xlɛ́ mi.",
-      "voix": "Xwè e ja é ɔ, mi ná dó kwín e striga ma nɔ wa nǔ ɖé é. | Glegán ɔ ná xlɛ́ mi.",
+      "fon": "Xwè e ja é ɔ, mi ná dó kwín e striga ma nɔ wa nǔ ɖé nan é. Glegán ɔ ná xlɛ́ mi.",
+      "voix": "Xwè e ja é ɔ, mi ná dó kwín e striga ma nɔ wa nǔ ɖé nan é. | Glegán ɔ ná xlɛ́ mi.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -607,19 +647,20 @@
     },
     "coton-ecraser-chenilles-cornet": {
       "fr": "Écraser les chenilles cachées dans les feuilles enroulées en cornet.",
-      "fon": "Mi zìn wànvú e ɖo ama e wlí lɛ́ mɛ é lɛ́.",
-      "voix": "Mi zìn wànvú e ɖo ama e wlí lɛ́ mɛ é lɛ́.",
+      "fon": "Mi hu wànvú e ɖo ama e mlan lɛ́ mɛ é.",
+      "voix": "Mi hu wànvú e ɖo ama e mlan lɛ́ mɛ é.",
       "sources": [
         {
           "id": "fao-coton",
           "detail": "p. 34"
         }
-      ]
+      ],
+      "illustration": "ecraser-cornet"
     },
     "coton-detruire-tiges": {
       "fr": "Après la récolte, arracher et détruire les tiges de cotonnier.",
-      "fon": "Ðo nǔ ɖe gúdo ɔ, mi ɖe kanfun sín atínkàn lɛ́ bo zé yě dó myɔ̌ mɛ.",
-      "voix": "Ðo nǔ ɖe gúdo ɔ, mi ɖe kanfun sín atínkàn lɛ́ bo zé yě dó myɔ̌ mɛ.",
+      "fon": "Ɖo nǔ yiya gúdo ɔ, mi ɖe avɔkanfun sín atínkàn lɛ́ bo zé yě dó myɔ̌ mɛ.",
+      "voix": "Ɖo nǔ yiya gúdo ɔ, mi ɖe avɔkanfun sín atínkàn lɛ́ bo zé yě dó myɔ̌ mɛ.",
       "sources": [
         {
           "id": "fao-coton",
@@ -629,18 +670,19 @@
     },
     "riz-tri-semences": {
       "fr": "À la prochaine saison, trier les semences dans l'eau et retirer celles qui flottent ou sont tachées.",
-      "fon": "Xwè e ja é ɔ, mi zé mɔ̌likún kwín lɛ́ dó sìn mɛ, bo ɖe é e nɔ sìn jí lɛ́ kpo é e ɖo wuntun lɛ́ kpo.",
-      "voix": "Xwè e ja é ɔ, mi zé mɔ̌likún kwín lɛ́ dó sìn mɛ, | bo ɖe é e nɔ sìn jí lɛ́ kpo é e ɖo wuntun lɛ́ kpo.",
+      "fon": "Xwè e ja é ɔ, mi zé mɔ̌likún kwín lɛ́ dó sìn mɛ, bo ɖe é nɔ sìn jí lɛ́ kpo é ɖo wuntun lɛ́ kpo.",
+      "voix": "Xwè e ja é ɔ, mi zé mɔ̌likún kwín lɛ́ dó sìn mɛ, | bo ɖe é nɔ sìn jí lɛ́ kpo é ɖo wuntun lɛ́ kpo.",
       "sources": [
         {
           "id": "aa-tri-semences"
         }
-      ]
+      ],
+      "illustration": "tri-semences"
     },
     "riz-conserver-semences": {
       "fr": "Bien sécher les semences de riz au soleil avant de les conserver dans un récipient fermé.",
-      "fon": "Mi sá mɔ̌likún kwín lɛ́ dó hwe mɛ ganji cóbɔ mi ná bɛ́ yě dó nǔ e è sú nu tɔn é mɛ.",
-      "voix": "Mi sá mɔ̌likún kwín lɛ́ dó hwe mɛ ganji | cóbɔ mi ná bɛ́ yě dó nǔ e è sú nu tɔn é mɛ.",
+      "fon": "Mi sá mɔ̌likún kwín lɛ́ dó hwe nu ganji cóbɔ mi ná bɛ́ yě dó nǔ e ɖo nu su é mɛ.",
+      "voix": "Mi sá mɔ̌likún kwín lɛ́ dó hwe nu ganji | cóbɔ mi ná bɛ́ yě dó nǔ e ɖo nu su é mɛ.",
       "sources": [
         {
           "id": "aa-semences-riz"
@@ -649,8 +691,8 @@
     },
     "rotation-cereale": {
       "fr": "À la prochaine saison, cultiver une céréale (maïs, sorgho) à cet endroit.",
-      "fon": "Xwè e ja é ɔ, mi ná dó gbadé alǒ abɔ̀ ɖo fí ɔ.",
-      "voix": "Xwè e ja é ɔ, mi ná dó gbadé alǒ abɔ̀ ɖo fí ɔ.",
+      "fon": "Xwè e ja é ɔ, mi ná dó gbadé alǒ likun ɖo fí ɔ.",
+      "voix": "Xwè e ja é ɔ, mi ná dó gbadé alǒ likun ɖo fí ɔ.",
       "sources": [
         {
           "id": "aa-rotation-legumineuses"
@@ -659,8 +701,8 @@
     },
     "manioc-arracher-bruler-tot": {
       "fr": "Arracher tôt les plants à feuilles déformées en mosaïque, puis les brûler ou les enterrer.",
-      "fon": "Mi ɖe fɛnnyɛ e sín ama wunwun lɛ́ zǎn, bo zé yě dó myɔ̌ mɛ alǒ ɖi yě.",
-      "voix": "Mi ɖe fɛnnyɛ e sín ama wunwun lɛ́ zǎn, | bo zé yě dó myɔ̌ mɛ alǒ ɖi yě.",
+      "fon": "Mi ɖe fɛnnyɛ e sín aman gblé lɛ, bo zé yě dó myɔ̌ mɛ alǒ mi ɖi yě.",
+      "voix": "Mi ɖe fɛnnyɛ e sín aman gblé lɛ, | bo zé yě dó myɔ̌ mɛ alǒ mi ɖi yě.",
       "sources": [
         {
           "id": "pw-mosaique-manioc"
@@ -669,7 +711,8 @@
           "id": "fao-manioc-2013",
           "detail": "p. 78"
         }
-      ]
+      ],
+      "illustration": "arracher-bruler-enterrer"
     },
     "manioc-boutures-saines": {
       "fr": "Planter des boutures prises sur des plants sans symptômes.",
@@ -687,8 +730,8 @@
     },
     "manioc-rotation": {
       "fr": "À la prochaine saison, cultiver du sorgho ou du niébé à cet endroit.",
-      "fon": "Xwè e ja é ɔ, mi ná dó abɔ̀ alǒ ayikun ɖo fí ɔ.",
-      "voix": "Xwè e ja é ɔ, mi ná dó abɔ̀ alǒ ayikun ɖo fí ɔ.",
+      "fon": "Xwè e ja é ɔ, mi ná dó likun alǒ ayikun ɖo fí ɔ.",
+      "voix": "Xwè e ja é ɔ, mi ná dó likun alǒ ayikun ɖo fí ɔ.",
       "sources": [
         {
           "id": "pw-mosaique-manioc"
@@ -697,8 +740,8 @@
     },
     "manioc-terrain-sain": {
       "fr": "Planter sur un terrain qui ne garde pas l'eau, et ne pas prendre de boutures dans un champ atteint.",
-      "fon": "Mi dó fɛnnyɛ ɖo ayǐ e ma nɔ hɛn sìn ǎ é jí, bo ma sɛ́n fɛnnyɛ́ntín ɖo gle e àzɔn ɔ ɖe é mɛ ǎ.",
-      "voix": "Mi dó fɛnnyɛ ɖo ayǐ e ma nɔ hɛn sìn ǎ é jí, | bo ma sɛ́n fɛnnyɛ́ntín ɖo gle e àzɔn ɔ ɖe é mɛ ǎ.",
+      "fon": "Mi dó fɛnnyɛ ɖo ayǐ e ma nɔ hɛn sìn ǎ é jí, bo ma sɛ́n fɛnnyɛ́ntín ɖo gle e àzɔn ɔ ɖe é mɛ ò.",
+      "voix": "Mi dó fɛnnyɛ ɖo ayǐ e ma nɔ hɛn sìn ǎ é jí, | bo ma sɛ́n fɛnnyɛ́ntín ɖo gle e àzɔn ɔ ɖe é mɛ ò.",
       "sources": [
         {
           "id": "pw-pourridie-manioc"
@@ -711,18 +754,19 @@
     },
     "manioc-outils-javel": {
       "fr": "Laver les outils à l'eau de Javel diluée à 10 % après chaque plant malade.",
-      "fon": "Mi klɔ́ azɔ̌wanu lɛ́ kpo javɛ́li sìn kpo ɖo fɛnnyɛ e jɛ àzɔn é ɖokpo ɖokpo gúdo.",
-      "voix": "Mi klɔ́ azɔ̌wanu lɛ́ kpo javɛ́li sìn kpo ɖo fɛnnyɛ e jɛ àzɔn é ɖokpo ɖokpo gúdo.",
+      "fon": "Mi klɔ́ azɔ̌wanu lɛ́ kpo javɛ́li sìn kpo azɔ miton gúdo.",
+      "voix": "Mi klɔ́ azɔ̌wanu lɛ́ kpo javɛ́li sìn kpo azɔ miton gúdo.",
       "sources": [
         {
           "id": "pw-pourridie-manioc"
         }
-      ]
+      ],
+      "illustration": "outils-javel"
     },
     "manioc-rotation-cereales": {
       "fr": "Pendant au moins 3 saisons, cultiver du maïs, du mil ou du sorgho à cet endroit.",
-      "fon": "Xwè 3 ɔ, mi ná dó gbadé, likún alǒ abɔ̀ ɖo fí ɔ.",
-      "voix": "Xwè atɔ̀n ɔ, mi ná dó gbadé, likún alǒ abɔ̀ ɖo fí ɔ.",
+      "fon": "Nù xwè 3 mon ɔ, mi dó gbadé, abɔkún alǒ likun ɖo fí ɔ.",
+      "voix": "Nù xwè atɔ̀n mon ɔ, mi dó gbadé, abɔkún alǒ likun ɖo fí ɔ.",
       "sources": [
         {
           "id": "pw-pourridie-manioc"
@@ -731,8 +775,8 @@
     },
     "manioc-couper-bruler-infestes": {
       "fr": "Couper et brûler les parties couvertes de cochenilles, sans pulvériser d'insecticide sur les feuilles.",
-      "fon": "Mi sɛ́n fí e wànvú wewe lɛ́ ɖe é bo zé dó myɔ̌ mɛ. Mi ma fún nǔ ɖé dó ama lɛ́ jí ǎ.",
-      "voix": "Mi sɛ́n fí e wànvú wewe lɛ́ ɖe é bo zé dó myɔ̌ mɛ. | Mi ma fún nǔ ɖé dó ama lɛ́ jí ǎ.",
+      "fon": "Mi sɛ́n fí e wànvú wewe lɛ́ ɖe é bo zé dó myɔ̌ mɛ. Mi ma fún nǔ ɖé dó ama lɛ́ jí ǒ.",
+      "voix": "Mi sɛ́n fí e wànvú wewe lɛ́ ɖe é bo zé dó myɔ̌ mɛ. | Mi ma fún nǔ ɖé dó ama lɛ́ jí ǒ.",
       "sources": [
         {
           "id": "fao-manioc-2013",
@@ -742,19 +786,20 @@
     },
     "igname-cure": {
       "fr": "Après la récolte, garder les tubercules sans blessure 1 à 4 jours sous une bâche, à l'abri, pour qu'ils cicatrisent.",
-      "fon": "Ðo tɛvi ɖe gúdo ɔ, mi bɛ́ tɛvi e ma gbá ǎ lɛ́ dó bàshi glɔ́ azǎn 1 jɛ 4.",
-      "voix": "Ðo tɛvi ɖe gúdo ɔ, mi bɛ́ tɛvi e ma gbá ǎ lɛ́ dó bàshi glɔ́ azǎn ɖokpó jɛ ɛnɛ̀.",
+      "fon": "Ɖo tɛvi yiyà gúdo ɔ, mi bɛ́ tɛvi e ma gbá ǎ lɛ́ dó bàshi glɔ́ azǎn 1 jɛ 4.",
+      "voix": "Ɖo tɛvi yiyà gúdo ɔ, mi bɛ́ tɛvi e ma gbá ǎ lɛ́ dó bàshi glɔ́ azǎn ɖokpó jɛ ɛnɛ̀.",
       "sources": [
         {
           "id": "fao-pertes-apres-recolte",
           "detail": "section 11.1"
         }
-      ]
+      ],
+      "illustration": "igname-cicatriser"
     },
     "igname-trier": {
       "fr": "Trier souvent les tubercules stockés et retirer ceux qui pourrissent.",
-      "fon": "Mi nɔ kpɔ́n tɛvi e mi bɛ́ lɛ́ hwenu bǐ, bo ɖe é e jɛ̀ vǎ lɛ́.",
-      "voix": "Mi nɔ kpɔ́n tɛvi e mi bɛ́ lɛ́ hwenu bǐ, bo ɖe é e jɛ̀ vǎ lɛ́.",
+      "fon": "Mi nɔ kpɔ́n tɛvi e mi bɛ́ lɛ́ hwebǐ nu, bo ɖe é e jɛ̀ vǎ lɛ́.",
+      "voix": "Mi nɔ kpɔ́n tɛvi e mi bɛ́ lɛ́ hwebǐ nu, bo ɖe é e jɛ̀ vǎ lɛ́.",
       "sources": [
         {
           "id": "fao-pertes-apres-recolte",
@@ -781,7 +826,8 @@
         {
           "id": "inrab-brab-2022-bananier"
         }
-      ]
+      ],
+      "illustration": "plantain-enfouir-replanter"
     },
     "plantain-rejets-sains": {
       "fr": "À la prochaine plantation, utiliser des rejets sains.",
@@ -801,12 +847,13 @@
         {
           "id": "pw-cercosporiose-ghana"
         }
-      ]
+      ],
+      "illustration": "ecartement-plantain"
     },
     "plantain-effeuiller": {
       "fr": "Couper les feuilles très tachées avec un outil propre et les brûler.",
-      "fon": "Mi sɛ́n ama e wuntun ganji lɛ́ kpo azɔ̌wanu e klɔ́ é kpo, bo zé yě dó myɔ̌ mɛ.",
-      "voix": "Mi sɛ́n ama e wuntun ganji lɛ́ kpo azɔ̌wanu e klɔ́ é kpo, | bo zé yě dó myɔ̌ mɛ.",
+      "fon": "Mi sɛ́n ama e ɖo wuntun ganji lɛ́ kpo azɔ̌wanu e é klɔ́ é kpo, bo zé yě dó myɔ̌ mɛ.",
+      "voix": "Mi sɛ́n ama e ɖo wuntun ganji lɛ́ kpo azɔ̌wanu e é klɔ́ é kpo, | bo zé yě dó myɔ̌ mɛ.",
       "sources": [
         {
           "id": "pw-cercosporiose-rdc"
@@ -814,7 +861,8 @@
         {
           "id": "pw-cercosporiose-ghana"
         }
-      ]
+      ],
+      "illustration": "couper-bruler"
     },
     "anacarde-tailler": {
       "fr": "Tailler les branches mortes et les sortir du champ.",
@@ -828,8 +876,8 @@
     },
     "anacarde-fourmis-tisserandes": {
       "fr": "Protéger les fourmis tisserandes dans les arbres : elles chassent les punaises.",
-      "fon": "Mi ma hu zǐn e nɔ tá ama lɛ́ dó ɖokpo ɖo atín lɛ́ jí lɛ́ ǎ : yě nɔ nya nùvíɖogbɛ̀ lɛ́.",
-      "voix": "Mi ma hu zǐn e nɔ tá ama lɛ́ dó ɖokpo ɖo atín lɛ́ jí lɛ́ ǎ. | Yě nɔ nya nùvíɖogbɛ̀ lɛ́.",
+      "fon": "Mi ma hu azǐnzɛn e nɔ ɖo atín lɛ́ jí ɔ ǒ : yě nɔ nya nùvíɖogbɛ̀ lɛ́.",
+      "voix": "Mi ma hu azǐnzɛn e nɔ ɖo atín lɛ́ jí ɔ ǒ. | Yě nɔ nya nùvíɖogbɛ̀ lɛ́.",
       "sources": [
         {
           "id": "aa-fourmis-tisserandes-fon"
@@ -838,8 +886,8 @@
     },
     "palmier-replanter-tolerants": {
       "fr": "Remplacer les palmiers morts par des plants tolérants, produits par la station de recherche de Pobè.",
-      "fon": "Mi ɖe dɛtin e kú lɛ́, bo dó dɛtin yɔ̌yɔ́ e àzɔn ɔ ma nɔ wa nǔ ɖé é, e è nɔ wlí ɖo Pobè é.",
-      "voix": "Mi ɖe dɛtin e kú lɛ́, | bo dó dɛtin yɔ̌yɔ́ e àzɔn ɔ ma nɔ wa nǔ ɖé é, e è nɔ wlí ɖo Pobè é.",
+      "fon": "Mi ɖe dɛtin e kú lɛ́, bo dó dɛtin yɔ̌yɔ́ e àzɔn ɔ ma nɔ wa nǔ ɖé nan é, e è nɔ mon ɖo Pobè é.",
+      "voix": "Mi ɖe dɛtin e kú lɛ́, | bo dó dɛtin yɔ̌yɔ́ e àzɔn ɔ ma nɔ wa nǔ ɖé nan é, e è nɔ mon ɖo Pobè é.",
       "sources": [
         {
           "id": "inrab-brab-2021-palmier"
@@ -859,8 +907,8 @@
     },
     "pieges-jaunes": {
       "fr": "Poser des pièges jaunes englués pour attraper les mouches blanches.",
-      "fon": "Mi tɛ́ nǔ jɛ̀wě e nɔ lé nùvíɖogbɛ̀ wewe lɛ́ é ɖo gle ɔ mɛ.",
-      "voix": "Mi tɛ́ nǔ jɛ̀wě e nɔ lé nùvíɖogbɛ̀ wewe lɛ́ é ɖo gle ɔ mɛ.",
+      "fon": "Mi tɛ́ fɛcà e nɔ wli nùvíɖogbɛ̀ wewe lɛ́ é ɖo gle ɔ mɛ.",
+      "voix": "Mi tɛ́ fɛcà e nɔ wli nùvíɖogbɛ̀ wewe lɛ́ é ɖo gle ɔ mɛ.",
       "sources": [
         {
           "id": "aa-tylcv"
@@ -869,22 +917,24 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 58"
         }
-      ]
+      ],
+      "illustration": "pieges-jaunes"
     },
     "tomate-arracher-viroses": {
       "fr": "Arracher les plants à feuilles petites, jaunes et en cuillère, et les sortir du champ.",
-      "fon": "Mi ɖe timati e sín ama lɛ́ cí kpɛví bo jɛ̀ wě lɛ́, bo zé yě tɔ́n sín gle ɔ mɛ.",
-      "voix": "Mi ɖe timati e sín ama lɛ́ cí kpɛví bo jɛ̀ wě lɛ́, | bo zé yě tɔ́n sín gle ɔ mɛ.",
+      "fon": "Mi ɖe timati e sín ama lɛ́ cí kpɛví bo ɖo sinmɛ̀n koklojò lɛ́, bo zé yě tɔ́n sín gle ɔ mɛ.",
+      "voix": "Mi ɖe timati e sín ama lɛ́ cí kpɛví bo ɖo sinmɛ̀n koklojò lɛ́, | bo zé yě tɔ́n sín gle ɔ mɛ.",
       "sources": [
         {
           "id": "aa-tylcv"
         }
-      ]
+      ],
+      "illustration": "arracher-sortir"
     },
     "tomate-varietes-tylcv": {
       "fr": "À la prochaine saison, planter BENTO 02 (tolérante) ou BENTO 04 (résistante au virus).",
-      "fon": "Xwè e ja é ɔ, mi dó timati BENTO 02 alǒ BENTO 04 : àzɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
-      "voix": "Xwè e ja é ɔ, mi dó timati bɛ́ntó wè alǒ bɛ́ntó ɛnɛ̀. | Àzɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
+      "fon": "Xwè e ja é ɔ, mi dó timati BENTO 02 alǒ BENTO 04 : àzɔn ɔ ma nɔ wa nǔ ɖé yě.",
+      "voix": "Xwè e ja é ɔ, mi dó timati bɛ́ntó wè alǒ bɛ́ntó ɛnɛ̀. | Àzɔn ɔ ma nɔ wa nǔ ɖé yě.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -901,12 +951,13 @@
           "id": "iita-inrab-maraichage-2010",
           "detail": "p. 45"
         }
-      ]
+      ],
+      "illustration": "arracher-sortir"
     },
     "tomate-hybrides-fletrissement": {
       "fr": "À la prochaine saison, planter un hybride résistant au flétrissement bactérien : BENTO 06 (Padma) ou BENTO 08 (Thorgal).",
-      "fon": "Xwè e ja é ɔ, mi dó timati BENTO 06 alǒ BENTO 08 : fyɔ́ azɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
-      "voix": "Xwè e ja é ɔ, mi dó timati bɛ́ntó ayizɛ́n alǒ bɛ́ntó tántɔn. | Fyɔ́ azɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
+      "fon": "Xwè e ja é ɔ, mi dó timati BENTO 06 alǒ BENTO 08 : fyɔ́ sin azɔn ɔ nɔ wa nǔ ɖé nǔ yě ǎ.",
+      "voix": "Xwè e ja é ɔ, mi dó timati bɛ́ntó ayizɛ́n alǒ bɛ́ntó tántɔn. | Fyɔ́ sin azɔn ɔ nɔ wa nǔ ɖé nu yě ǎ.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -916,8 +967,8 @@
     },
     "piment-benpim": {
       "fr": "À la prochaine saison, planter la variété BENPIM-01, tolérante à l'anthracnose.",
-      "fon": "Xwè e ja é ɔ, mi dó takin BENPIM-01 : wuntun azɔn ɔ ma nɔ wa nǔ ɖé ɛ ǎ.",
-      "voix": "Xwè e ja é ɔ, mi dó takin bɛnpím ɖokpó. | Wuntun azɔn ɔ ma nɔ wa nǔ ɖé ɛ ǎ.",
+      "fon": "Xwè e ja é ɔ, mi dó takin BENPIM-01 : wuntun sin azɔn ɔ nɔ wa nǔ ɖé nu yě ǎ.",
+      "voix": "Xwè e ja é ɔ, mi dó takin bɛnpím ɖokpó. | Wuntun sin azɔn ɔ nɔ wa nǔ ɖé nǔ yé ǎ.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -927,8 +978,8 @@
     },
     "oignon-planches-surelevees": {
       "fr": "En saison des pluies, cultiver l'oignon sur des planches surélevées.",
-      "fon": "Ðo jɔhɔn xwe mɛ ɔ, mi dó ayoma ɖo ayǐ e mi kplá bɔ é jɛ jǐ é jí.",
-      "voix": "Ðo jɔhɔn xwe mɛ ɔ, mi dó ayoma ɖo ayǐ e mi kplá bɔ é jɛ jǐ é jí.",
+      "fon": "Ɖo jɔhɔn sin xwenǔ ɔ, mi dó ayoma ɖo ayǐ e mi blo bɔ é yi jǐ é jí.",
+      "voix": "Ɖo jɔhɔn sin xwenǔ ɔ, mi dó ayoma ɖo ayǐ e mi blo bɔ é yi jǐ é jí.",
       "sources": [
         {
           "id": "aa-maladies-oignon-fon"
@@ -940,8 +991,8 @@
     },
     "oignon-rotation-3-ans": {
       "fr": "Ne cultiver l'oignon qu'une fois tous les 3 ans sur la même parcelle.",
-      "fon": "Mi ma dó ayoma ɖo fí ɖokpó ɔ hú azɔ̌n ɖokpó ɖo xwè 3 mɛ ǎ.",
-      "voix": "Mi ma dó ayoma ɖo fí ɖokpó ɔ hú azɔ̌n ɖokpó ɖo xwè atɔ̀n mɛ ǎ.",
+      "fon": "Mi ma dó ayoma ɖo fí ɖokpó ɔ hú azɔ̌n ɖokpó ɖo xwè 3 mɛ ǒ.",
+      "voix": "Mi ma dó ayoma ɖo fí ɖokpó ɔ hú azɔ̌n ɖokpó ɖo xwè atɔ̀n mɛ ǒ.",
       "sources": [
         {
           "id": "aa-champ-oignon"
@@ -953,8 +1004,8 @@
     },
     "gombo-compost-pied": {
       "fr": "Mettre de temps en temps un peu de compost, de fumier décomposé ou de litière au pied des plants.",
-      "fon": "Mi nɔ kɔn kɔ́mpɔ́si, fúmyé e ko ɖi é alǒ gbe xú kpɛ́ɖé dó feví lɛ́ sín afɔ kpá hwebǐnu.",
-      "voix": "Mi nɔ kɔn kɔ́mpɔ́si, fúmyé e ko ɖi é alǒ gbe xú kpɛ́ɖé dó feví lɛ́ sín afɔ kpá hwebǐnu.",
+      "fon": "Mi nɔ kɔn kɔ́mpɔ́si, fúmyé e ko gba é alǒ gbe xú xù kpɛ́ɖé dó feví lɛ́ sín afɔ kpá hwebǐnu.",
+      "voix": "Mi nɔ kɔn kɔ́mpɔ́si, fúmyé e ko gba é alǒ gbe xú xù kpɛ́ɖé dó feví lɛ́ sín afɔ kpá hwebǐnu.",
       "sources": [
         {
           "id": "aa-gombo"
@@ -963,8 +1014,8 @@
     },
     "maraichage-fumure-dose": {
       "fr": "Apporter 10 à 20 tonnes de fientes de volaille par hectare, au labour ou une semaine après le repiquage.",
-      "fon": "Mi kɔn kokló sín mɛ̀ tɔ́n 10 jɛ 20 dó hɛkta 1 jí, hwenu e mi ɖo ayǐ kplá wɛ é alǒ azǎn 7 ɖo atín lɛ́ dódó gúdo.",
-      "voix": "Mi kɔn kokló sín mɛ̀ dó ayǐ ɔ mɛ, hwenu e mi ɖo ayǐ kplá wɛ é alǒ azǎn tɛ́nwe ɖo atín lɛ́ dódó gúdo. | Mi kpɔ́n wema ɔ jí nú kpɛ́n ɔ.",
+      "fon": "Mi kɔn kokló sín mǐ tɔ́nu 10 jɛ 20 dó hɛkta 1 jí, hwenu e mi ɖo ayǐ kplá wɛ é alǒ azǎn 7 ɖo atín lɛ́ dudó gúdo.",
+      "voix": "Mi kɔn kokló sín mǐ dó ayǐ ɔ mɛ, hwenu e mi ɖo ayǐ kplá wɛ é alǒ azǎn tɛ́nwe ɖo atín lɛ́ dudó gúdo. | Mi kpɔ́n wema ɔ jí nú kpɛ́n ɔ.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -999,10 +1050,10 @@
       "aerer"
     ],
     "fletrissement": [
-      "observer-collet",
       "pailler",
       "arroser",
-      "drainer"
+      "drainer",
+      "pas-compost-malade"
     ],
     "ravageurs": [
       "visiter",
@@ -1288,8 +1339,8 @@
       "traitement": {
         "type": "preparation",
         "fr": "Extrait de feuilles de neem ou de papayer : pour 1 hectare, piler 15 kg de feuilles ni trop jeunes ni trop âgées, les mettre dans 10 litres d'eau avec ½ pain de savon ordinaire, laisser reposer au moins 12 heures, puis filtrer. Pulvériser dès l'apparition des boutons floraux, puis tous les 5 jours : 6 traitements jusqu'à la récolte.",
-        "fon": "Nim alǒ kpɛ́nkpɛ́n sín ama sìn : nú hɛkta 1 ɔ, mi gbà ama kg 15, bo zé yě dó sìn litli 10 mɛ kpo kpɛ́ adaɖé kpo. Mi jo é gàn 12, bo sɛ́n. Hwenu e fló lɛ́ ko jɛ tɛ́nmɛ é ɔ, mi fún, bo nɔ fún azǎn 5 ɖebǔ : azɔ̌n 6.",
-        "voix": "Nim alǒ kpɛ́nkpɛ́n sín ama sìn. | Nú hɛkta ɖokpó ɔ, mi gbà ama kilo afɔ́tɔn, bo zé yě dó sìn lǐtli wǒ mɛ kpo kpɛ́ adaɖé kpo. | Mi jo é gàn wěwè, bo sɛ́n. | Hwenu e fló lɛ́ ko jɛ tɛ́nmɛ é ɔ, mi fún, bo nɔ fún azǎn atɔ́ɔ́n ɖebǔ, azɔ̌n ayizɛ́n.",
+        "fon": "Nim alǒ kpɛ́ntiin sín ama sìn : nú hɛkta 1 ɔ, mi lì ama kg 15, bo zé yě dó sìn litli 10 mɛ kpo adǐ adaɖé kpo. Mi jo é do gàn 12, bo xwi. Hwenu e flówà lɛ́ nan wa ɔ, mi fún, bo nɔ fún azǎn 5 lɛ bì: azɔ̌n 6.",
+        "voix": "Nim alǒ kpɛ́ntiin sín ama sìn. | Nú hɛkta ɖokpó ɔ, mi lì ama kilo afɔ́tɔn, bo zé yě dó sìn lǐtli wǒ mɛ kpo adǐ adaɖé kpo. | Mi jo é do gàn wěwè, bo xwi. | Hwenu e flówà lɛ́ nan wa ɔ, mi fún, bo nɔ fún azǎn atɔ́ɔ́n lɛ bì, azɔ̌n ayizɛ́n.",
         "matieres": [],
         "cible": null,
         "reserves": [
@@ -1300,7 +1351,8 @@
             "id": "inrab-recueil-2020",
             "detail": "fiche M-11, p. 221"
           }
-        ]
+        ],
+        "illustration": "neem-feuilles"
       },
       "sources": [
         {
@@ -1334,8 +1386,8 @@
       "traitement": {
         "type": "preparation",
         "fr": "Extrait d'amande de neem : 500 g de poudre de graines de neem décortiquées, 10 litres d'eau, 200 g de savon et 100 ml d'huile de koby. Appliquer 10 litres par hectare tous les 7 jours, tant que les pucerons sont présents.",
-        "fon": "Nim kwín sín sìn : nim kwín e è ɖe gbá yětɔn é sín wún g 500, sìn litli 10, kpɛ́ g 200 kpo kobí sín amí ml 100 kpo. Mi fún litli 10 ɖo hɛkta 1 jí azǎn 7 ɖebǔ, hwenu e nùvíɖogbɛ̀ lɛ́ kpó ɖo fínɛ́ é.",
-        "voix": "Nim kwín sín sìn. | Mi kpɔ́n wema ɔ jí nú nǔ e mi ná zé lɛ́ sín kpɛ́n. | Mi nɔ fún azǎn tɛ́nwe ɖebǔ, hwenu e nùvíɖogbɛ̀ lɛ́ kpó ɖo fínɛ́ é.",
+        "fon": "Nim kwín sín sìn : nim kwín e è ɖe gbá yětɔn sín wún g 500, sìn litli 10, adì g 200 kpo kobí sín amí ml 100 kpo. Mi fún litli 10 ɖo hɛkta 1 jí azǎn 7 lɛ bì, hwenu e nùvíɖogbɛ̀ lɛ́ kpó ɖo fínɛ́ é.",
+        "voix": "Nim kwín sín sìn. | Mi kpɔ́n wema ɔ jí nú nǔ e mi ná zé lɛ́ sín wonbǎ. | Mi nɔ fún azǎn tɛ́nwe lɛ bì, hwenu e nùvíɖogbɛ̀ lɛ́ kpó ɖo fínɛ́ é.",
         "matieres": [],
         "cible": null,
         "reserves": [
@@ -1346,7 +1398,8 @@
             "id": "fao-coton",
             "detail": "tableau des substances naturelles, p. 36 du PDF"
           }
-        ]
+        ],
+        "illustration": "neem-amande"
       },
       "sources": [
         {
@@ -1363,7 +1416,7 @@
       "certitude": "nette",
       "probleme": {
         "fr": "la mosaïque africaine du manioc",
-        "fon": "fɛnnyɛ sín ama wunwun azɔn"
+        "fon": "fɛnnyɛ sín ama sin azɔn"
       },
       "gestes": [
         "manioc-arracher-bruler-tot",
@@ -1393,7 +1446,7 @@
       "certitude": "nette",
       "probleme": {
         "fr": "la pourriture des racines (pourridié)",
-        "fon": "fɛnnyɛ sín atínɖɔ̀ jɛ̀ vǎ azɔn"
+        "fon": "fɛnnyɛ sín atínɖɔ̀ jɛ̀ azɔn"
       },
       "gestes": [
         "manioc-terrain-sain",
@@ -1443,7 +1496,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "le bunchy top du bananier",
-        "fon": "kókwé sín bunchy top azɔn"
+        "fon": "kókwé sín bunchy top sin azɔn"
       },
       "gestes": [
         "plantain-arracher-enfouir",
@@ -1464,7 +1517,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "la cercosporiose noire",
-        "fon": "kókwé sín ama wuntun azɔn"
+        "fon": "kókwé sín ama sin azɔn"
       },
       "gestes": [
         "plantain-effeuiller",
@@ -1488,7 +1541,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "l'anthracnose de l'anacardier",
-        "fon": "anacardier sín ama wuntun azɔn"
+        "fon": "kajú sín ama sin azɔn"
       },
       "gestes": [
         "anacarde-tailler"
@@ -1509,7 +1562,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "la fusariose du palmier à huile",
-        "fon": "dɛtin sín fusariose azɔn"
+        "fon": "dɛtin sín fusariose sin azɔn"
       },
       "gestes": [
         "palmier-replanter-tolerants"
@@ -1541,8 +1594,8 @@
       "traitement": {
         "type": "produit",
         "fr": "Spinosad 480 g/l (SC) : 96 g de matière active par hectare, 4 applications à 15 jours d'intervalle, de la floraison à la récolte.",
-        "fon": "Spinosad 480 g/l : matière active g 96 nú hɛkta 1. Mi fún azɔ̌n 4, azǎn 15 ɖebǔ, sín hwenu e fló lɛ́ jɛ tɛ́nmɛ é jɛ hwenu e mi ná ɖe timati lɛ́ é.",
-        "voix": "Spinosad. | Mi kpɔ́n wema ɔ jí nú kpɛ́n ɔ. | Mi fún azɔ̌n ɛnɛ̀, azǎn afɔ́tɔn ɖebǔ, sín hwenu e fló lɛ́ jɛ tɛ́nmɛ é.",
+        "fon": "Spinosad 480 g/l : nǔvì 96 g nú hɛkta 1. Mi fún azɔ̌n 4, azǎn 15 lɛ bì, sín hwenu e fló lɛ́ jɛ tɛ́nmɛ é jɛ hwenu e mi ná ɖe timati lɛ́ é.",
+        "voix": "Spinosad. | Mi kpɔ́n wema ɔ jí nú kpɛ́n ɔ. | Mi fún azɔ̌n ɛnɛ̀, azǎn afɔ́tɔn lɛ bì, sín hwenu e fló lɛ́ jɛ tɛ́nmɛ é.",
         "matieres": [
           {
             "nom": "spinosad",
@@ -1559,7 +1612,8 @@
             "id": "inrab-recueil-2020",
             "detail": "fiche C-8, p. 48"
           }
-        ]
+        ],
+        "illustration": "spinosad"
       },
       "sources": [
         {
@@ -1582,7 +1636,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "le virus de l'enroulement jaune des feuilles, transmis par les mouches blanches",
-        "fon": "timati sín ama wunwun azɔn"
+        "fon": "timati sín ama sin azɔn"
       },
       "gestes": [
         "tomate-arracher-viroses",
@@ -1608,7 +1662,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "le flétrissement bactérien",
-        "fon": "timati sín fyɔ́ azɔn"
+        "fon": "timati sín fyfyɔ́ sin azɔn"
       },
       "gestes": [
         "tomate-arracher-sortir",
@@ -1654,7 +1708,8 @@
             "id": "inrab-recueil-2020",
             "detail": "fiche C-23, p. 63"
           }
-        ]
+        ],
+        "illustration": "jus-ail"
       },
       "sources": [
         {
@@ -1696,7 +1751,8 @@
             "id": "inrab-recueil-2020",
             "detail": "fiche C-23, p. 63"
           }
-        ]
+        ],
+        "illustration": "jus-ail"
       },
       "sources": [
         {
@@ -1718,7 +1774,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "l'anthracnose du piment",
-        "fon": "takin sín wuntun azɔn"
+        "fon": "takin sín wuntun sin azɔn"
       },
       "gestes": [
         "pas-compost-malade",
@@ -1741,7 +1797,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "l'anthracnose de l'oignon",
-        "fon": "ayoma sín ama azɔn"
+        "fon": "ayoma sín ama sin azɔn"
       },
       "gestes": [
         "oignon-planches-surelevees",

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { verifierTraitement } from '../server/pesticides.js';
-import { choisirSolutions } from '../server/solutions.js';
+import { choisirSolutions, solutionsPubliables } from '../server/solutions.js';
 
 const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
 const donnees = lire('solutions.json');
@@ -223,4 +223,71 @@ test('références croisées', () => {
     for (const id of c.gestes ?? []) geste(id, `cas ${c.id}`);
     assert.ok(['nette', 'possible'].includes(c.certitude), `cas ${c.id} : certitude`);
   }
+});
+
+// « Regarder le pied des plants fanés » n’est pas un geste à faire (note d’Elisée à la
+// relecture) : il n’est plus proposé pour un flétrissement, où « ne pas mettre les
+// plants malades au compost » le remplace comme second geste valable en toute saison.
+test('un flétrissement propose des gestes à faire, plus « observer le collet »', () => {
+  for (const culture of lexique.cultures.map((c) => c.id)) {
+    const gestes = signaler(culture, ['fletrissement'])?.elements.filter((e) => e.type === 'geste').map((e) => e.id) ?? [];
+    assert.ok(!gestes.includes('observer-collet'), `${culture} : ${gestes.join(', ')}`);
+    assert.ok(gestes.includes('pas-compost-malade'), `${culture} : ${gestes.join(', ')}`);
+  }
+});
+
+// Ð (U+00D0, lettre islandaise) ressemble à Ɖ (U+0189) mais n'est pas du fon : la voix
+// de synthèse ne la lit pas comme Ɖ.
+test('le fon écrit Ɖ et ɖ, jamais Ð ni ð', () => {
+  for (const f of ['interface.json', 'reponses.json', 'solutions.json', 'lexique.json', 'referentiel.json']) {
+    const texte = readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8');
+    assert.deepEqual([...texte.matchAll(/.{0,20}[\u00d0\u00f0].{0,10}/g)].map((m) => m[0].trim()), [], f);
+  }
+});
+
+// « abɔ̀ » n'est plus le sorgho (likun) et le mil se dit abɔkún (relecture d'Elisée).
+test('les conseils nomment le sorgho likun et le mil abɔkún, plus jamais abɔ̀', () => {
+  const textes = [
+    ...Object.entries(donnees.gestes).map(([id, g]) => [`geste ${id}`, g]),
+    ...donnees.cas.flatMap((c) => [[`cas ${c.id}`, c.probleme], [`traitement ${c.id}`, c.traitement]]),
+  ].filter(([, t]) => t);
+  for (const [ou, t] of textes) {
+    for (const champ of ['fon', 'voix']) assert.ok(!/(^|[\s,.|])abɔ̀?([\s,.|]|$)/.test(t[champ] ?? ''), `${ou} : ${t[champ]}`);
+  }
+});
+
+// Une dose sans son unité ne se lit plus (« kobí sín amí 100 » : 100 quoi ?). Chaque
+// quantité du français garde son unité dans le fon, avant ou après le nombre, ou en
+// tête d'une fourchette (« kg 0,76 jɛ 1,2 »).
+test('chaque dose d’un traitement garde son unité dans le fon', () => {
+  const unites = { g: ['g'], kg: ['kg'], ml: ['ml'], litre: ['litli', 'l'], litres: ['litli', 'l'], l: ['l', 'litli'] };
+  const echapper = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  for (const c of donnees.cas.filter((x) => x.traitement)) {
+    const { fr, fon } = c.traitement;
+    for (const m of fr.matchAll(/(\d+(?:[.,]\d+)?)\s*(kg|ml|g|litres?|l)(?![a-zà-ÿ])/gi)) {
+      const n = echapper(m[1]);
+      const trouvee = unites[m[2].toLowerCase()].some((u) => new RegExp(
+        `(^|[\\s(])(${u}\\s+${n}|${n}\\s*${u}|${u}\\s+[\\d,.]+\\s+jɛ\\s+${n})(?![\\p{L}\\d])`, 'iu',
+      ).test(fon));
+      assert.ok(trouvee, `${c.id} : « ${m[0]} » sans son unité dans « ${fon} »`);
+    }
+  }
+});
+
+// Le nom d'un problème est dit en fon : seuls les noms techniques sans équivalent
+// (striga, bunchy top, fusariose) restent tels quels.
+test('un nom de problème ne garde pas de mot français, sauf les noms techniques', () => {
+  const techniques = new Set(['striga', 'bunchy', 'top', 'fusariose']);
+  const mots = (t) => t.toLowerCase().split(/[^\p{L}]+/u).filter((m) => m.length >= 4);
+  for (const c of donnees.cas) {
+    const francais = new Set(mots(c.probleme.fr));
+    assert.deepEqual(mots(c.probleme.fon).filter((m) => francais.has(m) && !techniques.has(m)), [], `${c.id} : ${c.probleme.fon}`);
+  }
+});
+
+// Elisée a relu les 85 textes des solutions (03-04/11/2026) : elles sont proposées
+// aux agriculteurs sans le réglage de démonstration.
+test('le fon des solutions est relu : le serveur les propose sans réglage de démonstration', () => {
+  assert.equal(donnees.fon_a_relire, false);
+  assert.equal(solutionsPubliables(donnees, {}), donnees);
 });

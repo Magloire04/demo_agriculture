@@ -17,7 +17,7 @@ function sourcesDe(donnees, liste = []) {
   return liste.map(({ id, detail = null }) => {
     const s = donnees.sources[id];
     if (!s) throw new Error(`Source inconnue : ${id}`);
-    return { id, nom: `${s.editeur}, ${s.titre}`, detail, url: s.url };
+    return { id, nom: `${s.editeur}, ${s.titre}`, sigle: s.sigle ?? s.editeur, detail, url: s.url };
   });
 }
 
@@ -58,6 +58,7 @@ export function choisirSolutions(donnees, analyse, { departement = null, date = 
     choisis.push({
       element: {
         type: 'traitement', id: `${cas.id}.traitement`, fr: t.fr, fon: t.fon,
+        ...(t.illustration && { illustration: t.illustration }),
         ...(t.securite && { securite: { fr: t.securite.fr, fon: t.securite.fon } }),
         reserves: t.reserves ?? [],
         sources: sourcesDe(donnees, t.sources),
@@ -89,7 +90,8 @@ export function choisirSolutions(donnees, analyse, { departement = null, date = 
     if (!geste) throw new Error(`Geste inconnu : ${id}`);
     if (geste.saison && geste.saison !== saison) continue;
     if (geste.cultures_exclues?.includes(culture)) continue;
-    choisis.push({ element: { type: 'geste', id, fr: geste.fr, fon: geste.fon, sources: sourcesDe(donnees, geste.sources) }, voix: decouper(geste.voix), cas });
+    const element = { type: 'geste', id, fr: geste.fr, fon: geste.fon, ...(geste.illustration && { illustration: geste.illustration }), sources: sourcesDe(donnees, geste.sources) };
+    choisis.push({ element, voix: decouper(geste.voix), cas });
     liste.apports++;
   }
 

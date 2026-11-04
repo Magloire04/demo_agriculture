@@ -632,6 +632,14 @@ select {
   background: var(--vert-pale);
 }
 
+/* Conseil illustré : étapes numérotées dessinées, sur toute la largeur de la carte. */
+.solution-image {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+}
+
 .solution-etiquette {
   justify-self: start;
   padding: 2px 8px;

@@ -120,3 +120,11 @@ test('le contrôle repère bien une phrase française', () => {
   assert.deepEqual(francais('Un ma se nǔ ɔ sín nyǐkɔ ǎ.'), []);
   assert.deepEqual(chainesDe("const a = 'Comparer avec les autres'; // un commentaire avec le mot de\nconst b = `x ${'pour'} y`;").map((c) => c.valeur), ['Comparer avec les autres', 'pour', 'x  y']);
 });
+
+test('données affichées sous les conseils : chaque source a un sigle, sans français', () => {
+  const { sources } = JSON.parse(lire('data/solutions.json'));
+  for (const [id, s] of Object.entries(sources)) {
+    assert.ok(typeof s.sigle === 'string' && s.sigle.trim(), `${id} : sigle manquant`);
+    assert.deepEqual(francais(s.sigle), [], `${id} : « ${s.sigle} »`);
+  }
+});

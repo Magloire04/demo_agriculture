@@ -11,7 +11,7 @@
     { "id": "piment", "nom": "Piment", "nom_fon": "takin", "fon": ["takin"], "fr": ["piment"] },
     { "id": "soja", "nom": "Soja", "nom_fon": "soja", "fon": ["sɔja"], "fr": ["soja"] },
     { "id": "coton", "nom": "Coton", "nom_fon": "avɔkanfun", "fon": ["avɔkanfun"], "fr": ["coton"] },
-    { "id": "sorgho", "nom": "Sorgho", "nom_fon": "abɔ̀", "fon": ["abɔ̀"], "fr": ["sorgho"] },
+    { "id": "sorgho", "nom": "Sorgho", "nom_fon": "likun", "fon": ["likun"], "fr": ["sorgho"] },
     { "id": "gombo", "nom": "Gombo", "nom_fon": "feví", "fon": ["feví"], "fr": ["gombo"] },
     { "id": "oignon", "nom": "Oignon", "nom_fon": "ayoma", "fon": ["ayoma"], "fr": ["oignon"] },
     { "id": "ananas", "nom": "Ananas", "nom_fon": "ananan", "fon": ["ablɛndɛ"], "fr": ["ananas"] },

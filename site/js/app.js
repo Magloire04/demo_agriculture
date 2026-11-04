@@ -252,14 +252,6 @@ function texteFon(fon) {
   return el('div', { class: 'bilingue' }, el('p', { class: 'texte-fon fon', lang: 'fon' }, fon || T.erreur_reessayer));
 }
 
-// Fon suivi du français : seulement pour les solutions, jusqu'à leur passage en fon seul.
-function bilingue({ fr, fon }, classeFrancaisSeul = '') {
-  if (!fon) return el('p', { class: classeFrancaisSeul || null, lang: 'fr' }, fr);
-  return el('div', { class: 'bilingue' },
-    el('p', { class: 'texte-fon fon', lang: 'fon' }, fon),
-    el('p', { class: 'texte-fr', lang: 'fr' }, fr));
-}
-
 // `lire(etiquette, options)` peut changer le libellé du bouton pendant qu'il travaille.
 // `lancer(options)` démarre la lecture sans appui ; il rejette si elle échoue.
 function boutonLecture(libelle, lire) {
@@ -562,29 +554,31 @@ function suivreStatut(s, messages) {
   }, 5000);
 }
 
-function texteSourceSolution({ nom, detail }) {
-  return `${nom}${detail ? `, ${detail}` : ''}`;
-}
+// Sources d'un conseil : leurs sigles seulement (INRAB, FAO…), sans doublon. Les titres
+// des documents, souvent en français, restent pour l'écran du conseiller.
+const sigles = (sources) => [...new Set(sources.map((s) => s.sigle))].join(' · ');
 
-// Solutions proposées après le signalement : problème probable, traitement
-// documenté éventuel, gestes, puis la mention « À confirmer avec un conseiller ».
+// Solutions proposées après le signalement, en fon seul : problème probable, traitement
+// documenté éventuel, gestes, puis la mention « à confirmer avec un conseiller ». Les
+// conseils difficiles ont une image en étapes numérotées (site/img/conseils/).
 function sectionSolutions(solutions) {
   if (!solutions) return null;
   const elements = solutions.elements.map((e) => {
     const traitement = e.type === 'traitement';
     return el('div', { class: `solution${traitement ? ' solution-traitement' : ''}` },
       traitement && el('span', { class: 'solution-etiquette fon', lang: 'fon' }, T.traitement),
-      bilingue(e),
-      traitement && e.securite && el('div', { class: 'solution-securite' }, bilingue(e.securite)),
-      el('p', { class: 'solution-source' }, el('span', { 'aria-hidden': 'true' }, 'ⓘ '), e.sources.map(texteSourceSolution).join(' · ')),
+      e.illustration && el('img', { class: 'solution-image', src: `img/conseils/${e.illustration}.svg`, alt: '', loading: 'lazy', width: 336 }),
+      texteFon(e.fon),
+      traitement && e.securite && el('div', { class: 'solution-securite' }, texteFon(e.securite.fon)),
+      el('p', { class: 'solution-source' }, el('span', { 'aria-hidden': 'true' }, 'ⓘ '), sigles(e.sources)),
       e.video && el('a', { class: 'solution-video', href: e.video.url, target: '_blank', rel: 'noopener' }, `${T.video} · Access Agriculture`));
   });
   return el('section', { class: 'solutions', 'aria-label': T.solutions },
-    el('div', { class: 'solutions-titre' }, bilingue(solutions.titre)),
-    ...solutions.problemes.map((p) => el('div', { class: 'solutions-probleme' }, bilingue(p))),
+    el('div', { class: 'solutions-titre' }, texteFon(solutions.titre.fon)),
+    ...solutions.problemes.map((p) => el('div', { class: 'solutions-probleme' }, texteFon(p.fon))),
     ...elements,
     lecture(solutions.voix, solutions.voix_phrase),
-    el('div', { class: 'solutions-mention' }, bilingue(solutions.mention)));
+    el('div', { class: 'solutions-mention' }, texteFon(solutions.mention.fon)));
 }
 
 // Accusé de réception en fon, affiché sans être lu. Le récapitulatif garde la culture et le lieu ; ce qui est

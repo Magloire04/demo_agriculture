@@ -1,5 +1,5 @@
 {
-  "_note": "Textes de l'interface que voit l'agriculteur. Seul le fon est affiché ; le français sert d'aide-mémoire au développeur. Brouillons rédigés d'après le fon déjà présent dans data/reponses.json et data/solutions.json, à relire par Elisée avant la mise en ligne. Après une modification : node scripts/textes-interface.js.",
+  "_note": "Textes de l'interface que voit l'agriculteur. Seul le fon est affiché ; le français sert d'aide-mémoire au développeur. Fon relu et validé par Elisée le 3 novembre 2026 ; tout texte ajouté ou modifié se fait relire avant la mise en ligne. Après une modification : node scripts/textes-interface.js.",
   "textes": {
     "evitement": { "fr": "Aller au contenu", "fon": "Yì xó ɔ jí" },
     "accueil": { "fr": "Accueil", "fon": "Bǐbɛ́mɛ" },

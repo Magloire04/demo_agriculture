@@ -33,7 +33,7 @@ test('cas nette : problème « probablement », traitement en premier', () => {
   assert.deepEqual(s.elements[0].reserves, ['Pulvérisateur à très bas volume.']);
   assert.deepEqual(s.elements[0].securite, { fr: 'Porter des gants.', fon: 'gants fon' });
   assert.deepEqual(s.elements[0].video, { url: 'https://www.accessagriculture.org/exemple', titre: 'Vidéo de test' });
-  assert.deepEqual(s.elements[0].sources, [{ id: 's-benin', nom: 'INRAB, Recueil de test', detail: 'fiche M-11', url: 'https://exemple.bj/recueil.pdf' }]);
+  assert.deepEqual(s.elements[0].sources, [{ id: 's-benin', nom: 'INRAB, Recueil de test', sigle: 'INRAB', detail: 'fiche M-11', url: 'https://exemple.bj/recueil.pdf' }]);
   assert.equal(s.mention.fr, 'À confirmer avec un conseiller.');
   assert.equal(s.titre.fr, 'En attendant le conseiller, vous pouvez :');
   assert.equal(s.version, 'test-1');
@@ -117,4 +117,11 @@ test('morceaux : du titre à la mention, tous dans la liste des extraits', () =>
   const liste = new Set(morceauxSolutions(donnees).map(texteVoix));
   for (const m of s.morceaux) assert.ok(liste.has(texteVoix(m)), m);
   assert.ok(liste.has('foreurs fon') && liste.has('loin du champ'));
+});
+
+test('un élément porte l’illustration de son geste ou de son traitement', () => {
+  const s = choisir(analyse('haricot', ['feuilles_mangees'], ['fruits']));
+  assert.equal(s.elements[0].illustration, 'neem-feuilles');
+  assert.equal(s.elements.find((e) => e.id === 'visiter').illustration, 'observer-montrer');
+  assert.ok(s.elements.filter((e) => e.id !== 'visiter' && e.type === 'geste').every((e) => !('illustration' in e)));
 });
