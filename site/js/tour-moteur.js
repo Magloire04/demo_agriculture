@@ -4,7 +4,7 @@
 //   aller(vue), cibleExiste(selecteur), eclairer({ cible, voile, ecran, partie, geste }),
 //   dire(cle) → Promise<boolean>, taire(),
 //   etatPermission(nom) → Promise<'granted'|'denied'|'prompt'|null>,
-//   attendre(type, { cible, depuis, signal }) → Promise<{ ok, code? }>,
+//   attendre(type, { cible, depuis, signal, vue }) → Promise<{ ok, code? }>,
 //   numeroEvenement() → number, surEnregistrement(rappel) → désabonnement,
 //   enregistrementEnCours() → boolean (micro en écoute ou en analyse),
 //   estVisible() → boolean, visible() → Promise (résolue quand la page est visible),
@@ -16,7 +16,9 @@ const SANS_ISSUE = new Set(['micro_refuse', 'micro_non_disponible', 'micro_absen
 const ECHECS_MAX = 2; // échecs de suite avant de passer à la partie suivante
 const GESTES = new Set(['appui', 'reponse', 'lieu']); // attentes d'un geste sur la cible
 
-export function creerMoteur({ etapes, effets, delai, relanceMs = 10_000, relancesMax = 3 }) {
+// `lectureMaxMs` : la voix d'une réponse peut se faire attendre 150 s (site/js/voix.js),
+// puis se lire ; au-delà, le tour continue.
+export function creerMoteur({ etapes, effets, delai, relanceMs = 10_000, relancesMax = 3, lectureMaxMs = 240_000 }) {
   let controleur = null;
   let courante = null;
   let parole = false; // une phrase est dite, ou attend le retour de la page
@@ -49,7 +51,9 @@ export function creerMoteur({ etapes, effets, delai, relanceMs = 10_000, relance
   // `relancesMax` fois au plus. Plus de relance dès que l'enregistrement commence : la
   // voix du tour ne doit pas couvrir celle de l'agriculteur.
   async function attendreGeste(etape, depuis, signal) {
-    const attente = effets.attendre(etape.attente, { cible: etape.cible, depuis, signal });
+    const attente = effets.attendre(etape.attente, { cible: etape.cible, depuis, signal, vue: etape.vue });
+    // Une lecture bloquée (son qui ne finit jamais) ne retient pas le tour sans fin.
+    if (etape.attente === 'lecture') return Promise.race([attente, delai(lectureMaxMs, signal).then(() => ({ ok: true, code: 'delai' }))]);
     if (!etape.phrase) return attente;
     let enregistrement = enregistre(etape);
     const desabonner = effets.surEnregistrement(() => {

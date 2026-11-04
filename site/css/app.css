@@ -1206,6 +1206,16 @@ select {
   stroke-linejoin: round;
 }
 
+.bouton-aide-refus {
+  animation: aide-refus 0.35s ease-in-out 2;
+}
+
+@keyframes aide-refus {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
 .bouton-aide:focus-visible {
   outline: 3px solid var(--jaune);
   outline-offset: 2px;
@@ -1290,7 +1300,7 @@ select {
 .tour-fermer {
   position: fixed;
   top: max(12px, env(safe-area-inset-top));
-  right: 12px;
+  right: max(12px, env(safe-area-inset-right, 0px));
   width: 44px;
   height: 44px;
   border: 0;
@@ -1305,7 +1315,7 @@ select {
 }
 
 .tour-fermer-gauche {
-  left: 12px;
+  left: max(12px, env(safe-area-inset-left, 0px));
   right: auto;
 }
 
@@ -1334,9 +1344,9 @@ select {
 
 .tour-bulle {
   position: fixed;
-  left: 16px;
-  right: 16px;
-  bottom: 48px;
+  left: max(16px, env(safe-area-inset-left, 0px));
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(48px + env(safe-area-inset-bottom, 0px));
   margin: 0 auto;
   max-width: 480px;
   padding: 14px 16px;

@@ -665,7 +665,10 @@ import('./tour.js')
     m.lancerSiPremierAcces();
   })
   .catch(() => { boutonAide.hidden = true; });
-boutonAide.addEventListener('click', () => {
+boutonAide.addEventListener('click', async () => {
   voix?.debloquer?.();
-  tour?.lancer({ depuisAide: true });
+  // Tour introuvable (hors ligne) : la main tremble, sans texte à lire.
+  if ((await tour?.lancer({ depuisAide: true })) !== 'indisponible') return;
+  boutonAide.classList.add('bouton-aide-refus');
+  setTimeout(() => boutonAide.classList.remove('bouton-aide-refus'), 700);
 });
