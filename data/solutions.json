@@ -907,8 +907,8 @@
     },
     "pieges-jaunes": {
       "fr": "Poser des pièges jaunes englués pour attraper les mouches blanches.",
-      "fon": "Mi tɛ́ nǔ jɛ̀wě e nɔ lé nùvíɖogbɛ̀ wewe lɛ́ é ɖo gle ɔ mɛ.",
-      "voix": "Mi tɛ́ nǔ jɛ̀wě e nɔ lé nùvíɖogbɛ̀ wewe lɛ́ é ɖo gle ɔ mɛ.",
+      "fon": "Mi tɛ́ fɛcà e nɔ wli nùvíɖogbɛ̀ wewe lɛ́ é ɖo gle ɔ mɛ.",
+      "voix": "Mi tɛ́ fɛcà e nɔ wli nùvíɖogbɛ̀ wewe lɛ́ é ɖo gle ɔ mɛ.",
       "sources": [
         {
           "id": "aa-tylcv"
@@ -922,8 +922,8 @@
     },
     "tomate-arracher-viroses": {
       "fr": "Arracher les plants à feuilles petites, jaunes et en cuillère, et les sortir du champ.",
-      "fon": "Mi ɖe timati e sín ama lɛ́ cí kpɛví bo jɛ̀ wě lɛ́, bo zé yě tɔ́n sín gle ɔ mɛ.",
-      "voix": "Mi ɖe timati e sín ama lɛ́ cí kpɛví bo jɛ̀ wě lɛ́, | bo zé yě tɔ́n sín gle ɔ mɛ.",
+      "fon": "Mi ɖe timati e sín ama lɛ́ cí kpɛví bo ɖo sinmɛ̀n koklojò lɛ́, bo zé yě tɔ́n sín gle ɔ mɛ.",
+      "voix": "Mi ɖe timati e sín ama lɛ́ cí kpɛví bo ɖo sinmɛ̀n koklojò lɛ́, | bo zé yě tɔ́n sín gle ɔ mɛ.",
       "sources": [
         {
           "id": "aa-tylcv"
@@ -933,8 +933,8 @@
     },
     "tomate-varietes-tylcv": {
       "fr": "À la prochaine saison, planter BENTO 02 (tolérante) ou BENTO 04 (résistante au virus).",
-      "fon": "Xwè e ja é ɔ, mi dó timati BENTO 02 alǒ BENTO 04 : àzɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
-      "voix": "Xwè e ja é ɔ, mi dó timati bɛ́ntó wè alǒ bɛ́ntó ɛnɛ̀. | Àzɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
+      "fon": "Xwè e ja é ɔ, mi dó timati BENTO 02 alǒ BENTO 04 : àzɔn ɔ ma nɔ wa nǔ ɖé yě.",
+      "voix": "Xwè e ja é ɔ, mi dó timati bɛ́ntó wè alǒ bɛ́ntó ɛnɛ̀. | Àzɔn ɔ ma nɔ wa nǔ ɖé yě.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -956,8 +956,8 @@
     },
     "tomate-hybrides-fletrissement": {
       "fr": "À la prochaine saison, planter un hybride résistant au flétrissement bactérien : BENTO 06 (Padma) ou BENTO 08 (Thorgal).",
-      "fon": "Xwè e ja é ɔ, mi dó timati BENTO 06 alǒ BENTO 08 : fyɔ́ azɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
-      "voix": "Xwè e ja é ɔ, mi dó timati bɛ́ntó ayizɛ́n alǒ bɛ́ntó tántɔn. | Fyɔ́ azɔn ɔ ma nɔ wa nǔ ɖé yě ǎ.",
+      "fon": "Xwè e ja é ɔ, mi dó timati BENTO 06 alǒ BENTO 08 : fyɔ́ sin azɔn ɔ nɔ wa nǔ ɖé nǔ yě ǎ.",
+      "voix": "Xwè e ja é ɔ, mi dó timati bɛ́ntó ayizɛ́n alǒ bɛ́ntó tántɔn. | Fyɔ́ sin azɔn ɔ nɔ wa nǔ ɖé nu yě ǎ.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -967,8 +967,8 @@
     },
     "piment-benpim": {
       "fr": "À la prochaine saison, planter la variété BENPIM-01, tolérante à l'anthracnose.",
-      "fon": "Xwè e ja é ɔ, mi dó takin BENPIM-01 : wuntun azɔn ɔ ma nɔ wa nǔ ɖé ɛ ǎ.",
-      "voix": "Xwè e ja é ɔ, mi dó takin bɛnpím ɖokpó. | Wuntun azɔn ɔ ma nɔ wa nǔ ɖé ɛ ǎ.",
+      "fon": "Xwè e ja é ɔ, mi dó takin BENPIM-01 : wuntun sin azɔn ɔ nɔ wa nǔ ɖé nu yě ǎ.",
+      "voix": "Xwè e ja é ɔ, mi dó takin bɛnpím ɖokpó. | Wuntun sin azɔn ɔ nɔ wa nǔ ɖé nǔ yé ǎ.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -978,8 +978,8 @@
     },
     "oignon-planches-surelevees": {
       "fr": "En saison des pluies, cultiver l'oignon sur des planches surélevées.",
-      "fon": "Ɖo jɔhɔn xwe mɛ ɔ, mi dó ayoma ɖo ayǐ e mi kplá bɔ é jɛ jǐ é jí.",
-      "voix": "Ɖo jɔhɔn xwe mɛ ɔ, mi dó ayoma ɖo ayǐ e mi kplá bɔ é jɛ jǐ é jí.",
+      "fon": "Ɖo jɔhɔn sin xwenǔ ɔ, mi dó ayoma ɖo ayǐ e mi blo bɔ é yi jǐ é jí.",
+      "voix": "Ɖo jɔhɔn sin xwenǔ ɔ, mi dó ayoma ɖo ayǐ e mi blo bɔ é yi jǐ é jí.",
       "sources": [
         {
           "id": "aa-maladies-oignon-fon"
@@ -991,8 +991,8 @@
     },
     "oignon-rotation-3-ans": {
       "fr": "Ne cultiver l'oignon qu'une fois tous les 3 ans sur la même parcelle.",
-      "fon": "Mi ma dó ayoma ɖo fí ɖokpó ɔ hú azɔ̌n ɖokpó ɖo xwè 3 mɛ ǎ.",
-      "voix": "Mi ma dó ayoma ɖo fí ɖokpó ɔ hú azɔ̌n ɖokpó ɖo xwè atɔ̀n mɛ ǎ.",
+      "fon": "Mi ma dó ayoma ɖo fí ɖokpó ɔ hú azɔ̌n ɖokpó ɖo xwè 3 mɛ ǒ.",
+      "voix": "Mi ma dó ayoma ɖo fí ɖokpó ɔ hú azɔ̌n ɖokpó ɖo xwè atɔ̀n mɛ ǒ.",
       "sources": [
         {
           "id": "aa-champ-oignon"
@@ -1004,8 +1004,8 @@
     },
     "gombo-compost-pied": {
       "fr": "Mettre de temps en temps un peu de compost, de fumier décomposé ou de litière au pied des plants.",
-      "fon": "Mi nɔ kɔn kɔ́mpɔ́si, fúmyé e ko ɖi é alǒ gbe xú kpɛ́ɖé dó feví lɛ́ sín afɔ kpá hwebǐnu.",
-      "voix": "Mi nɔ kɔn kɔ́mpɔ́si, fúmyé e ko ɖi é alǒ gbe xú kpɛ́ɖé dó feví lɛ́ sín afɔ kpá hwebǐnu.",
+      "fon": "Mi nɔ kɔn kɔ́mpɔ́si, fúmyé e ko gba é alǒ gbe xú xù kpɛ́ɖé dó feví lɛ́ sín afɔ kpá hwebǐnu.",
+      "voix": "Mi nɔ kɔn kɔ́mpɔ́si, fúmyé e ko gba é alǒ gbe xú xù kpɛ́ɖé dó feví lɛ́ sín afɔ kpá hwebǐnu.",
       "sources": [
         {
           "id": "aa-gombo"
@@ -1014,8 +1014,8 @@
     },
     "maraichage-fumure-dose": {
       "fr": "Apporter 10 à 20 tonnes de fientes de volaille par hectare, au labour ou une semaine après le repiquage.",
-      "fon": "Mi kɔn kokló sín mɛ̀ tɔ́n 10 jɛ 20 dó hɛkta 1 jí, hwenu e mi ɖo ayǐ kplá wɛ é alǒ azǎn 7 ɖo atín lɛ́ dódó gúdo.",
-      "voix": "Mi kɔn kokló sín mɛ̀ dó ayǐ ɔ mɛ, hwenu e mi ɖo ayǐ kplá wɛ é alǒ azǎn tɛ́nwe ɖo atín lɛ́ dódó gúdo. | Mi kpɔ́n wema ɔ jí nú kpɛ́n ɔ.",
+      "fon": "Mi kɔn kokló sín mǐ tɔ́nu 10 jɛ 20 dó hɛkta 1 jí, hwenu e mi ɖo ayǐ kplá wɛ é alǒ azǎn 7 ɖo atín lɛ́ dudó gúdo.",
+      "voix": "Mi kɔn kokló sín mǐ dó ayǐ ɔ mɛ, hwenu e mi ɖo ayǐ kplá wɛ é alǒ azǎn tɛ́nwe ɖo atín lɛ́ dudó gúdo. | Mi kpɔ́n wema ɔ jí nú kpɛ́n ɔ.",
       "sources": [
         {
           "id": "inrab-recueil-2020",
@@ -1339,8 +1339,8 @@
       "traitement": {
         "type": "preparation",
         "fr": "Extrait de feuilles de neem ou de papayer : pour 1 hectare, piler 15 kg de feuilles ni trop jeunes ni trop âgées, les mettre dans 10 litres d'eau avec ½ pain de savon ordinaire, laisser reposer au moins 12 heures, puis filtrer. Pulvériser dès l'apparition des boutons floraux, puis tous les 5 jours : 6 traitements jusqu'à la récolte.",
-        "fon": "Nim alǒ kpɛ́nkpɛ́n sín ama sìn : nú hɛkta 1 ɔ, mi gbà ama kg 15, bo zé yě dó sìn litli 10 mɛ kpo kpɛ́ adaɖé kpo. Mi jo é gàn 12, bo sɛ́n. Hwenu e fló lɛ́ ko jɛ tɛ́nmɛ é ɔ, mi fún, bo nɔ fún azǎn 5 ɖebǔ : azɔ̌n 6.",
-        "voix": "Nim alǒ kpɛ́nkpɛ́n sín ama sìn. | Nú hɛkta ɖokpó ɔ, mi gbà ama kilo afɔ́tɔn, bo zé yě dó sìn lǐtli wǒ mɛ kpo kpɛ́ adaɖé kpo. | Mi jo é gàn wěwè, bo sɛ́n. | Hwenu e fló lɛ́ ko jɛ tɛ́nmɛ é ɔ, mi fún, bo nɔ fún azǎn atɔ́ɔ́n ɖebǔ, azɔ̌n ayizɛ́n.",
+        "fon": "Nim alǒ kpɛ́ntiin sín ama sìn : nú hɛkta 1 ɔ, mi lì ama kg 15, bo zé yě dó sìn litli 10 mɛ kpo adǐ adaɖé kpo. Mi jo é do gàn 12, bo xwi. Hwenu e flówà lɛ́ nan wa ɔ, mi fún, bo nɔ fún azǎn 5 lɛ bì: azɔ̌n 6.",
+        "voix": "Nim alǒ kpɛ́ntiin sín ama sìn. | Nú hɛkta ɖokpó ɔ, mi lì ama kilo afɔ́tɔn, bo zé yě dó sìn lǐtli wǒ mɛ kpo adǐ adaɖé kpo. | Mi jo é do gàn wěwè, bo xwi. | Hwenu e flówà lɛ́ nan wa ɔ, mi fún, bo nɔ fún azǎn atɔ́ɔ́n lɛ bì, azɔ̌n ayizɛ́n.",
         "matieres": [],
         "cible": null,
         "reserves": [
@@ -1386,8 +1386,8 @@
       "traitement": {
         "type": "preparation",
         "fr": "Extrait d'amande de neem : 500 g de poudre de graines de neem décortiquées, 10 litres d'eau, 200 g de savon et 100 ml d'huile de koby. Appliquer 10 litres par hectare tous les 7 jours, tant que les pucerons sont présents.",
-        "fon": "Nim kwín sín sìn : nim kwín e è ɖe gbá yětɔn é sín wún g 500, sìn litli 10, kpɛ́ g 200 kpo kobí sín amí ml 100 kpo. Mi fún litli 10 ɖo hɛkta 1 jí azǎn 7 ɖebǔ, hwenu e nùvíɖogbɛ̀ lɛ́ kpó ɖo fínɛ́ é.",
-        "voix": "Nim kwín sín sìn. | Mi kpɔ́n wema ɔ jí nú nǔ e mi ná zé lɛ́ sín kpɛ́n. | Mi nɔ fún azǎn tɛ́nwe ɖebǔ, hwenu e nùvíɖogbɛ̀ lɛ́ kpó ɖo fínɛ́ é.",
+        "fon": "Nim kwín sín sìn : nim kwín e è ɖe gbá yětɔn sín wún g 500, sìn litli 10, adì g 200 kpo kobí sín amí ml 100 kpo. Mi fún litli 10 ɖo hɛkta 1 jí azǎn 7 lɛ bì, hwenu e nùvíɖogbɛ̀ lɛ́ kpó ɖo fínɛ́ é.",
+        "voix": "Nim kwín sín sìn. | Mi kpɔ́n wema ɔ jí nú nǔ e mi ná zé lɛ́ sín wonbǎ. | Mi nɔ fún azǎn tɛ́nwe lɛ bì, hwenu e nùvíɖogbɛ̀ lɛ́ kpó ɖo fínɛ́ é.",
         "matieres": [],
         "cible": null,
         "reserves": [
@@ -1416,7 +1416,7 @@
       "certitude": "nette",
       "probleme": {
         "fr": "la mosaïque africaine du manioc",
-        "fon": "fɛnnyɛ sín ama wunwun azɔn"
+        "fon": "fɛnnyɛ sín ama sin azɔn"
       },
       "gestes": [
         "manioc-arracher-bruler-tot",
@@ -1446,7 +1446,7 @@
       "certitude": "nette",
       "probleme": {
         "fr": "la pourriture des racines (pourridié)",
-        "fon": "fɛnnyɛ sín atínɖɔ̀ jɛ̀ vǎ azɔn"
+        "fon": "fɛnnyɛ sín atínɖɔ̀ jɛ̀ azɔn"
       },
       "gestes": [
         "manioc-terrain-sain",
@@ -1496,7 +1496,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "le bunchy top du bananier",
-        "fon": "kókwé sín bunchy top azɔn"
+        "fon": "kókwé sín bunchy top sin azɔn"
       },
       "gestes": [
         "plantain-arracher-enfouir",
@@ -1517,7 +1517,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "la cercosporiose noire",
-        "fon": "kókwé sín ama wuntun azɔn"
+        "fon": "kókwé sín ama sin azɔn"
       },
       "gestes": [
         "plantain-effeuiller",
@@ -1541,7 +1541,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "l'anthracnose de l'anacardier",
-        "fon": "anacardier sín ama wuntun azɔn"
+        "fon": "kajú sín ama sin azɔn"
       },
       "gestes": [
         "anacarde-tailler"
@@ -1562,7 +1562,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "la fusariose du palmier à huile",
-        "fon": "dɛtin sín fusariose azɔn"
+        "fon": "dɛtin sín fusariose sin azɔn"
       },
       "gestes": [
         "palmier-replanter-tolerants"
@@ -1594,8 +1594,8 @@
       "traitement": {
         "type": "produit",
         "fr": "Spinosad 480 g/l (SC) : 96 g de matière active par hectare, 4 applications à 15 jours d'intervalle, de la floraison à la récolte.",
-        "fon": "Spinosad 480 g/l : matière active g 96 nú hɛkta 1. Mi fún azɔ̌n 4, azǎn 15 ɖebǔ, sín hwenu e fló lɛ́ jɛ tɛ́nmɛ é jɛ hwenu e mi ná ɖe timati lɛ́ é.",
-        "voix": "Spinosad. | Mi kpɔ́n wema ɔ jí nú kpɛ́n ɔ. | Mi fún azɔ̌n ɛnɛ̀, azǎn afɔ́tɔn ɖebǔ, sín hwenu e fló lɛ́ jɛ tɛ́nmɛ é.",
+        "fon": "Spinosad 480 g/l : nǔvì 96 g nú hɛkta 1. Mi fún azɔ̌n 4, azǎn 15 lɛ bì, sín hwenu e fló lɛ́ jɛ tɛ́nmɛ é jɛ hwenu e mi ná ɖe timati lɛ́ é.",
+        "voix": "Spinosad. | Mi kpɔ́n wema ɔ jí nú kpɛ́n ɔ. | Mi fún azɔ̌n ɛnɛ̀, azǎn afɔ́tɔn lɛ bì, sín hwenu e fló lɛ́ jɛ tɛ́nmɛ é.",
         "matieres": [
           {
             "nom": "spinosad",
@@ -1636,7 +1636,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "le virus de l'enroulement jaune des feuilles, transmis par les mouches blanches",
-        "fon": "timati sín ama wunwun azɔn"
+        "fon": "timati sín ama sin azɔn"
       },
       "gestes": [
         "tomate-arracher-viroses",
@@ -1662,7 +1662,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "le flétrissement bactérien",
-        "fon": "timati sín fyɔ́ azɔn"
+        "fon": "timati sín fyfyɔ́ sin azɔn"
       },
       "gestes": [
         "tomate-arracher-sortir",
@@ -1774,7 +1774,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "l'anthracnose du piment",
-        "fon": "takin sín wuntun azɔn"
+        "fon": "takin sín wuntun sin azɔn"
       },
       "gestes": [
         "pas-compost-malade",
@@ -1797,7 +1797,7 @@
       "certitude": "possible",
       "probleme": {
         "fr": "l'anthracnose de l'oignon",
-        "fon": "ayoma sín ama azɔn"
+        "fon": "ayoma sín ama sin azɔn"
       },
       "gestes": [
         "oignon-planches-surelevees",

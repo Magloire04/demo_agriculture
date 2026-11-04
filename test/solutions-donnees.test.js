@@ -255,3 +255,32 @@ test('les conseils nomment le sorgho likun et le mil abɔkún, plus jamais abɔ�
     for (const champ of ['fon', 'voix']) assert.ok(!/(^|[\s,.|])abɔ̀?([\s,.|]|$)/.test(t[champ] ?? ''), `${ou} : ${t[champ]}`);
   }
 });
+
+// Une dose sans son unité ne se lit plus (« kobí sín amí 100 » : 100 quoi ?). Chaque
+// quantité du français garde son unité dans le fon, avant ou après le nombre, ou en
+// tête d'une fourchette (« kg 0,76 jɛ 1,2 »).
+test('chaque dose d’un traitement garde son unité dans le fon', () => {
+  const unites = { g: ['g'], kg: ['kg'], ml: ['ml'], litre: ['litli', 'l'], litres: ['litli', 'l'], l: ['l', 'litli'] };
+  const echapper = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  for (const c of donnees.cas.filter((x) => x.traitement)) {
+    const { fr, fon } = c.traitement;
+    for (const m of fr.matchAll(/(\d+(?:[.,]\d+)?)\s*(kg|ml|g|litres?|l)(?![a-zà-ÿ])/gi)) {
+      const n = echapper(m[1]);
+      const trouvee = unites[m[2].toLowerCase()].some((u) => new RegExp(
+        `(^|[\\s(])(${u}\\s+${n}|${n}\\s*${u}|${u}\\s+[\\d,.]+\\s+jɛ\\s+${n})(?![\\p{L}\\d])`, 'iu',
+      ).test(fon));
+      assert.ok(trouvee, `${c.id} : « ${m[0]} » sans son unité dans « ${fon} »`);
+    }
+  }
+});
+
+// Le nom d'un problème est dit en fon : seuls les noms techniques sans équivalent
+// (striga, bunchy top, fusariose) restent tels quels.
+test('un nom de problème ne garde pas de mot français, sauf les noms techniques', () => {
+  const techniques = new Set(['striga', 'bunchy', 'top', 'fusariose']);
+  const mots = (t) => t.toLowerCase().split(/[^\p{L}]+/u).filter((m) => m.length >= 4);
+  for (const c of donnees.cas) {
+    const francais = new Set(mots(c.probleme.fr));
+    assert.deepEqual(mots(c.probleme.fon).filter((m) => francais.has(m) && !techniques.has(m)), [], `${c.id} : ${c.probleme.fon}`);
+  }
+});
