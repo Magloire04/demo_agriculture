@@ -1,20 +1,20 @@
 {
-  "_note": "Phrases du tour de présentation, dites par la voix des phrases entières (JML). Seul le fon est entendu ou affiché ; le français donne le sens au développeur. Brouillons à relire par Elisée avant la mise en ligne.",
+  "_note": "Phrases du tour de présentation, dites par la voix des phrases entières (JML). Seul le fon est entendu ou affiché ; le français donne le sens au développeur. Relu et validé par Elisée le 4 novembre 2026 ; une phrase ajoutée ou modifiée se fait relire avant la mise en ligne.",
   "phrases": {
-    "tour_bienvenue": { "fr": "Bienvenue dans AgriFon. Je vais vous montrer comment vous servir de l'application.", "fon": "Mi kú abɔ ɖo AgriFon mɛ. Un na xlɛ́ mi lee mi na zán mɔn élɔ́ gbɔn é." },
-    "tour_accueil_prix": { "fr": "Ici, vous connaissez le prix d'un produit au marché.", "fon": "Fí ɔ, mi na mɔ nǔ ɖé sín akwɛ́ ɖo axi mɛ." },
+    "tour_bienvenue": { "fr": "Bienvenue dans AgriFon. Je vais vous montrer comment vous servir de l'application.", "fon": "Mi kú abɔ ɖo AgriFon ji. Un na xlɛ́ mi lee mi na zán mɔn élɔ́ gbɔn é." },
+    "tour_accueil_prix": { "fr": "Ici, vous connaissez le prix d'un produit au marché.", "fon": "Fí ɔ, mi na tun akwɛ́ nu ɖé lɛ́ ton ɖo axi lɛ́ mɛn." },
     "tour_accueil_conseil": { "fr": "Ici, vous demandez conseil quand vos cultures sont malades.", "fon": "Fí ɔ, mi na biɔ nu tuntun hwenu e àzɔn jɛ atín mitɔn lɛ́ wú é." },
-    "tour_prix_carte": { "fr": "Appuyez ici pour connaître un prix.", "fon": "Mi zìn fí ɔ bo mɔ nǔ ɖé sín akwɛ́." },
-    "tour_permission_micro": { "fr": "Le téléphone va vous demander la permission d'utiliser le micro : acceptez.", "fon": "Alokan ɔ na biɔ gbè mi nú mikló ɔ : mi ná gbè." },
-    "tour_prix_micro": { "fr": "Appuyez sur le micro, dites le nom du produit puis celui du marché, et appuyez encore pour finir.", "fon": "Mi zìn mikló ɔ, mi ɖɔ nǔ ɔ sín nyǐkɔ kpo axi ɔ sín nyǐkɔ kpo, bo lɛ́ zìn d’é jí ényí mi fó xó." },
-    "tour_prix_reecouter": { "fr": "Appuyez ici pour réécouter la réponse.", "fon": "Mi zìn fí ɔ bo lɛ́ sè xó ɔ." },
-    "tour_prix_autre": { "fr": "Appuyez ici pour poser une autre question.", "fon": "Mi zìn fí ɔ bo kàn nǔ ɖevo byɔ." },
-    "tour_conseil_onglet": { "fr": "Appuyez ici pour demander conseil.", "fon": "Mi zìn fí ɔ bo biɔ nu tuntun." },
-    "tour_permission_position": { "fr": "Le téléphone va vous demander la permission de connaître votre position : acceptez.", "fon": "Alokan ɔ na biɔ gbè mi nú fí e mi ɖè é : mi ná gbè." },
-    "tour_conseil_lieu": { "fr": "Appuyez ici pour dire où se trouve votre champ, ou choisissez votre commune dans la liste.", "fon": "Mi zìn fí ɔ bo xlɛ́ fí e gle mitɔn ɖè é, alǒ mi sɔ́ glétoxo mitɔn." },
-    "tour_conseil_micro": { "fr": "Appuyez sur le micro, dites la culture et ce que vous voyez, et appuyez encore pour finir.", "fon": "Mi zìn mikló ɔ, mi ɖɔ atín ɔ kpo nǔ e mi mɔ é kpo, bo lɛ́ zìn d’é jí ényí mi fó xó." },
+    "tour_prix_carte": { "fr": "Appuyez ici pour connaître un prix.", "fon": "Mi zìn fí élɔ bo kan nǔ ɖé sín akwɛ́ byɔ." },
+    "tour_permission_micro": { "fr": "Le téléphone va vous demander la permission d'utiliser le micro : acceptez.", "fon": "Alokan ɔ na biɔ mi gbè bo nan ɖo zan mikló ɔ : mi nin gbè." },
+    "tour_prix_micro": { "fr": "Appuyez sur le micro, dites le nom du produit puis celui du marché, et appuyez encore pour finir.", "fon": "Mi zìn mikló ɔ, mi ɖɔ nǔ ɔ sín nyǐkɔ kpo axi ɔ sín nyǐkɔ kpo, bo lɛ́ zìn ényí mi fó xó ɔ." },
+    "tour_prix_reecouter": { "fr": "Appuyez ici pour réécouter la réponse.", "fon": "Mi zìn fí élɔ bo lɛ́ sè xó ɔ." },
+    "tour_prix_autre": { "fr": "Appuyez ici pour poser une autre question.", "fon": "Mi zìn fí élɔ bo kàn nǔ ɖevo byɔ." },
+    "tour_conseil_onglet": { "fr": "Appuyez ici pour demander conseil.", "fon": "Mi zìn fí élɔ bo biɔ nu tuntun." },
+    "tour_permission_position": { "fr": "Le téléphone va vous demander la permission de connaître votre position : acceptez.", "fon": "Alokan ɔ na biɔ gbè mi bo nan tun fí e mi ɖè ɔ : mi nin gbè." },
+    "tour_conseil_lieu": { "fr": "Appuyez ici pour dire où se trouve votre champ, ou choisissez votre commune dans la liste.", "fon": "Mi zìn fí élɔ bo xlɛ́ fí e gle mitɔn ɖè é, alǒ mi sɔ́ glétoxo mitɔn." },
+    "tour_conseil_micro": { "fr": "Appuyez sur le micro, dites la culture et ce que vous voyez, et appuyez encore pour finir.", "fon": "Mi zìn mikló ɔ, mi ɖɔ atín ɔ kpo nǔ e mi mɔ é kpo, bo lɛ́ zìn ényí mi fó xó ɔ." },
     "tour_conseil_recu": { "fr": "Le conseiller agricole a reçu votre message.", "fon": "Glegán ɔ yí xó mitɔn." },
-    "tour_fin": { "fr": "Pour réentendre ces explications, appuyez ici à tout moment.", "fon": "Nú mi jló na lɛ́ sè xó élɔ́ lɛ́ ɔ, mi zìn fí ɔ hwenu e mi jló é." },
-    "tour_pas_compris": { "fr": "Je n'ai pas compris. Recommençons.", "fon": "Un se xó ɔ ǎ. Mi nú mǐ lɛ́ bɛ́ ɛ." }
+    "tour_fin": { "fr": "Pour réentendre ces explications, appuyez ici à tout moment.", "fon": "Nú mi jló na lɛ́ sè xó élɔ́ lɛ́ ɔ, mi zìn fí élɔ hwenu e mi jló é." },
+    "tour_pas_compris": { "fr": "Je n'ai pas compris. Recommençons.", "fon": "Un se xó ɔ ǎ. Mi nú mǐ lɛ́ bɛ́." }
   }
 }
