@@ -1180,3 +1180,226 @@ select {
     transition: none !important;
   }
 }
+
+/* ---------- Bouton d'aide : relance le tour de présentation ---------- */
+
+.bouton-aide {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid var(--vert);
+  border-radius: 50%;
+  background: var(--blanc);
+  cursor: pointer;
+}
+
+.bouton-aide svg {
+  width: 24px;
+  height: 30px;
+  fill: #ffd9b0;
+  stroke: var(--vert);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.bouton-aide:focus-visible {
+  outline: 3px solid var(--jaune);
+  outline-offset: 2px;
+}
+
+/* ---------- Tour de présentation : projecteur, main, voix, croix, points ---------- */
+
+.tour {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.tour-projecteur {
+  position: fixed;
+  border-radius: 14px;
+  box-shadow: 0 0 0 200vmax rgba(0, 0, 0, 0.68);
+  transition: left 0.25s, top 0.25s, width 0.25s, height 0.25s;
+}
+
+.tour-main {
+  position: fixed;
+  width: 58px;
+  height: auto;
+  fill: #ffd9b0;
+  stroke: #5a3a1e;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+  animation: tour-appui 1.6s ease-in-out infinite;
+}
+
+@keyframes tour-appui {
+  0%, 100% { transform: translateY(26px); }
+  45%, 55% { transform: translateY(2px) scale(0.92); }
+}
+
+.tour-voix {
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 24px;
+  background: var(--blanc);
+  color: var(--vert);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.tour-voix svg {
+  width: 24px;
+  height: 24px;
+}
+
+.tour-barres {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 20px;
+}
+
+.tour-barres i {
+  width: 4px;
+  border-radius: 2px;
+  background: var(--vert);
+  animation: tour-barre 0.9s ease-in-out infinite;
+}
+
+.tour-barres i:nth-child(2) { animation-delay: 0.15s; }
+.tour-barres i:nth-child(3) { animation-delay: 0.3s; }
+.tour-barres i:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes tour-barre {
+  0%, 100% { height: 5px; }
+  50% { height: 20px; }
+}
+
+.tour-fermer {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--blanc);
+  color: var(--texte);
+  font-size: 20px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.tour-points {
+  position: fixed;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tour-points i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.tour-points i.ici {
+  width: 24px;
+  border-radius: 5px;
+  background: var(--jaune);
+}
+
+.tour-bulle {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 48px;
+  margin: 0 auto;
+  max-width: 480px;
+  padding: 14px 16px;
+  border-radius: var(--rayon);
+  background: var(--blanc);
+  color: var(--texte);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Écran de démarrage : le premier appui autorise le son. */
+.tour-demarrage {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  background: var(--vert);
+  pointer-events: auto;
+}
+
+.tour-demarrage[hidden] {
+  display: none;
+}
+
+.tour-logo {
+  color: var(--blanc);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.tour-demarrage-cible {
+  position: relative;
+}
+
+.tour-demarrer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--blanc);
+  color: var(--vert);
+  cursor: pointer;
+}
+
+.tour-demarrer svg {
+  width: 64px;
+  height: 64px;
+  margin-left: 10px;
+}
+
+.tour-main-demarrage {
+  position: absolute;
+  left: calc(50% - 25px);
+  top: 50%;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-main {
+    animation: none;
+    transform: translateY(4px);
+  }
+}

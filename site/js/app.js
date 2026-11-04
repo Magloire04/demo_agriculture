@@ -640,3 +640,18 @@ window.addEventListener('hashchange', afficherVue);
 afficherVue();
 verifierServeur();
 enregistrerServiceWorker();
+
+// Tour de présentation à la voix : au premier accès, puis à chaque appui sur l'aide (la
+// main de l'en-tête). Cet appui autorise le son, comme celui sur le micro.
+let tour = null;
+const boutonAide = $('[data-aide]');
+import('./tour.js')
+  .then((m) => {
+    tour = m;
+    m.lancerSiPremierAcces();
+  })
+  .catch(() => { boutonAide.hidden = true; });
+boutonAide.addEventListener('click', () => {
+  voix?.debloquer?.();
+  tour?.lancer({ depuisAide: true });
+});

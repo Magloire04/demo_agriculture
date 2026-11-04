@@ -24,9 +24,11 @@ function marqueurs() {
 const MARQUEURS = marqueurs();
 const francais = (texte) => mots(texte).filter((m) => MARQUEURS.has(m));
 // Une chaîne de code n'est pas un texte affiché : un seul mot en minuscules sans accent
-// (clé, sélecteur), ou des noms de classes à tiret séparés par des espaces.
+// (clé, sélecteur), des noms de classes à tiret séparés par des espaces, ou un sélecteur
+// CSS qui commence par « . », « # » ou « [ » (jamais une phrase française).
 const estDuCode = (valeur) => /^[a-z0-9_\-.:#[\]=/*]*$/.test(valeur)
-  || valeur.trim().split(/\s+/).every((m) => /^[a-z0-9_]+(-[a-z0-9_]+)+$/.test(m));
+  || valeur.trim().split(/\s+/).every((m) => /^[a-z0-9_]+(-[a-z0-9_]+)+$/.test(m))
+  || /^[.#[][a-z0-9_\-.:#()[\]=,*>"'/ ]*$/.test(valeur);
 
 // Textes vus par l'agriculteur dans une page : texte des éléments et étiquettes.
 function textesDePage(html) {
@@ -100,6 +102,13 @@ test('aucun mot français dans les pages de l’agriculteur', () => {
     assert.deepEqual(francais(t), [], `manifeste : « ${t} »`);
   }
   assert.equal(manifeste.lang, 'fon');
+});
+
+test('aucune chaîne française affichée par le tour de présentation', () => {
+  for (const f of ['site/js/tour.js', 'site/js/tour-moteur.js', 'site/js/tour-etapes.js']) {
+    const fautives = chainesDe(lire(f)).filter(({ valeur }) => !estDuCode(valeur) && francais(valeur).length > 0);
+    assert.deepEqual(fautives.map(({ ligne, valeur }) => `${f} ligne ${ligne} : ${valeur}`), []);
+  }
 });
 
 test('aucune chaîne française affichée par app.js', () => {
