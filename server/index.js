@@ -93,10 +93,12 @@ const PRIX_COMPRIS = new Set(['ok', 'sans_prix', 'marche_seul']);
 // eux, le site est toujours en service et `solutions` est servi tel quel.
 // `synthese` : voix des réponses en phrases entières (server/synthese.js) ; sans elle,
 // seuls les anciens extraits sont proposés.
+// `tour` : phrases du tour de présentation (data/tour.json), rendues avec leur voix.
 export function creerApplication({
   asr, base, releves, lexique, communes, registre, textes, codeConseiller = '', dossierSite = path.join(RACINE, 'site'),
   voix = creerVoix(path.join(dossierSite, 'voix')), solutions = null, protection = creerProtection(), maxEnAttente = 8,
   maxEnAttenteParVisiteur = 4, mesures = null, reglages = null, maxVisitesParAdresse = 200, admin = null, synthese = null,
+  tour = null,
 }) {
   // Identifiant de la phrase entière à dire, à côté des anciens extraits.
   const voixPhrase = (morceaux) => (synthese && morceaux?.length ? synthese.enregistrer(texteADire(morceaux)) : null);
@@ -226,6 +228,13 @@ export function creerApplication({
     if (m === 'GET' && p === '/api/prix/base') return envoyerJson(res, 200, resumerBase(base, releves.lire()));
     if (m === 'GET' && p === '/api/communes') {
       return envoyerJson(res, 200, { communes: communes.map(({ nom, departement }) => ({ nom, departement })) });
+    }
+    // Phrases du tour de présentation : le fon et l'identifiant de sa voix, que la
+    // préparation a synthétisée à l'avance avec les phrases fixes.
+    if (m === 'GET' && p === '/api/tour') {
+      const phrases = Object.fromEntries(Object.entries(tour?.phrases ?? {})
+        .map(([cle, { fon }]) => [cle, { fon, voix_phrase: voixPhrase([fon]) }]));
+      return envoyerJson(res, 200, { phrases });
     }
 
     if (m === 'POST' && p === '/api/prix') return journaliser('prix', async (note) => {
@@ -445,12 +454,13 @@ export async function demarrer() {
     motDePasse: env.ASR_MDP,
     simulation: env.ASR_SIMULATION === '1' || process.argv.includes('--simulation'),
   });
-  const [base, lexique, { communes }, reponses, solutions] = await Promise.all([
+  const [base, lexique, { communes }, reponses, solutions, tour] = await Promise.all([
     lireJson('data/referentiel.json'),
     lireJson('data/lexique.json'),
     lireJson('data/communes.json'),
     lireJson('data/reponses.json'),
     lireJson('data/solutions.json'),
+    lireJson('data/tour.json'),
   ]);
   const dossierDonnees = path.resolve(RACINE, env.DOSSIER_DONNEES || 'stockage');
   const registre = await creerRegistre(dossierDonnees);
@@ -477,7 +487,7 @@ export async function demarrer() {
   }
   const gerer = creerApplication({
     asr, base, releves, lexique, communes, registre, textes: creerTextes(reponses), codeConseiller: env.CODE_CONSEILLER || '',
-    solutions, mesures, reglages, admin, synthese,
+    solutions, mesures, reglages, admin, synthese, tour,
   });
 
   // Un hébergeur peut fournir un socket (chemin) au lieu d'un numéro de port.

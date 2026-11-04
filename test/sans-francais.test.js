@@ -12,7 +12,8 @@ const mots = (texte) => texte.toLowerCase().split(/[^\p{L}]+/u).filter(Boolean);
 function marqueurs() {
   const { textes } = JSON.parse(lire('data/interface.json'));
   const { phrases, unites } = JSON.parse(lire('data/reponses.json'));
-  const tous = [...Object.values(textes), ...Object.values(phrases), ...Object.values(unites)];
+  const tour = JSON.parse(lire('data/tour.json')).phrases;
+  const tous = [...Object.values(textes), ...Object.values(phrases), ...Object.values(unites), ...Object.values(tour)];
   const sansMarques = (t) => (t ?? '').replace(/\{[a-z_]+\}/g, ' '); // {commune} n'est pas un mot fon
   const enFon = new Set(tous.flatMap((t) => mots(sansMarques(t.fon))));
   const longs = tous.flatMap((t) => mots(sansMarques(t.fr))).filter((m) => m.length >= 4 && !enFon.has(m));
@@ -127,4 +128,8 @@ test('données affichées sous les conseils : chaque source a un sigle, sans fra
     assert.ok(typeof s.sigle === 'string' && s.sigle.trim(), `${id} : sigle manquant`);
     assert.deepEqual(francais(s.sigle), [], `${id} : « ${s.sigle} »`);
   }
+});
+
+test('aucun mot français dans le fon du tour de présentation', () => {
+  for (const [cle, { fon }] of Object.entries(JSON.parse(lire('data/tour.json')).phrases)) assert.deepEqual(francais(fon), [], `${cle} : ${fon}`);
 });

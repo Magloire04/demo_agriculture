@@ -14,7 +14,7 @@ import { creerVoix } from '../server/voix.js';
 import { ecrireWav } from '../server/wav.js';
 
 const lire = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url), 'utf8'));
-const donnees = () => ({ reponses: lire('reponses.json'), base: lire('referentiel.json'), communes: lire('communes.json').communes, releves: lire('releves-prix.json') });
+const donnees = () => ({ reponses: lire('reponses.json'), base: lire('referentiel.json'), communes: lire('communes.json').communes, releves: lire('releves-prix.json'), tour: lire('tour.json') });
 
 test('phrases fixes : produit non compris, chaque marché avec des prix, plus aucun accusé de signalement', () => {
   const { reponses, base, releves } = donnees();
@@ -59,6 +59,7 @@ async function serveurAvec(t, asr) {
     textes: creerTextes(reponses),
     voix: creerVoix('/inexistant'),
     protection: null,
+    tour: lire('tour.json'),
     synthese: creerSynthese({ dossier: path.join(dossier, 'voix-phrases'), voix: 'homme2', appeler: async () => ecrireWav({ frequence: 24000, echantillons: new Int16Array(10) }) }),
   });
   const serveur = createServer(gerer);
@@ -82,3 +83,15 @@ test('le serveur et la préparation produisent le même identifiant pour un prix
   }
 });
 
+
+test('phrases fixes : chaque phrase du tour, avec le même identifiant que le serveur', async (t) => {
+  const { reponses, base, releves, tour } = donnees();
+  const sansTour = phrasesFixes({ reponses, base, releves });
+  const liste = phrasesFixes({ reponses, base, releves, tour });
+  assert.equal(liste.length, sansTour.length + 15);
+  for (const { fon } of Object.values(tour.phrases)) assert.ok(liste.includes(texteADire([fon])), fon);
+  const ids = new Set(liste.map((p) => idPhrase(p, 'homme2')));
+  const adresse = await serveurAvec(t, {});
+  const { phrases } = await (await fetch(`${adresse}/api/tour`)).json();
+  for (const [cle, p] of Object.entries(phrases)) assert.ok(ids.has(p.voix_phrase), cle);
+});

@@ -1,5 +1,5 @@
-// Prépare à l'avance la voix des phrases fixes (produit non compris, marché compris
-// sans produit) et des réponses de prix sur un seul produit, pour qu'elles soient lues
+// Prépare à l'avance la voix des phrases fixes (tour de présentation, produit non
+// compris, marché compris sans produit) et des réponses de prix sur un seul produit, pour qu'elles soient lues
 // aussitôt avec la voix des phrases entières. L'accusé d'un signalement n'est pas lu.
 // Lancé en arrière-plan après chaque import des prix (donc aussi à chaque déploiement)
 // par scripts/voix/lancer-preparation.sh, qui fait attendre une préparation tant
@@ -20,10 +20,12 @@ import { creerSyntheseDepuisEnv, texteADire } from '../../server/synthese.js';
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 // Les textes exacts que le serveur fait dire (voir server/index.js et server/prix.js).
-export function phrasesFixes({ reponses, base, releves }) {
+// Le tour de présentation (data/tour.json) en fait partie : ses phrases ne changent jamais.
+export function phrasesFixes({ reponses, base, releves, tour = null }) {
   const textes = creerTextes(reponses);
   const dire = (phrases) => texteADire(textes.joindre(phrases).voix ?? []);
   const liste = [
+    ...Object.values(tour?.phrases ?? {}).map(({ fon }) => texteADire([fon])),
     dire([textes.phrase('prix_non_compris')]),
     ...base.marches
       .filter((m) => base.produits.some((p) => releves.prix[p.id]?.[m.id]))
@@ -66,10 +68,10 @@ async function principal() {
     console.log(`${heure()} voix préparée à l'avance : rien à préparer (phrases entières coupées).`);
     return;
   }
-  const [reponses, base] = await Promise.all(['reponses', 'referentiel'].map((f) => lireJson(path.join(RACINE, 'data', `${f}.json`))));
+  const [reponses, base, tour] = await Promise.all(['reponses', 'referentiel', 'tour'].map((f) => lireJson(path.join(RACINE, 'data', `${f}.json`))));
   const releves = await lireJson(path.join(dossierDonnees, 'releves-prix.json'))
     .catch(() => lireJson(path.join(RACINE, 'data', 'releves-prix.json')));
-  const fixes = phrasesFixes({ reponses, base, releves });
+  const fixes = phrasesFixes({ reponses, base, releves, tour });
   const prix = phrasesPrix({ reponses, base, releves });
   const liste = [...new Set([...fixes, ...prix])];
   const bilan = await synthese.preparer(liste, { pauseMs: 2000 });
