@@ -1304,6 +1304,11 @@ select {
   cursor: pointer;
 }
 
+.tour-fermer-gauche {
+  left: 12px;
+  right: auto;
+}
+
 .tour-points {
   position: fixed;
   bottom: max(18px, env(safe-area-inset-bottom));
@@ -1357,8 +1362,9 @@ select {
   pointer-events: auto;
 }
 
-.tour-demarrage[hidden] {
-  display: none;
+/* Un élément caché du tour l'est vraiment, même avec un display à lui. */
+.tour [hidden] {
+  display: none !important;
 }
 
 .tour-logo {

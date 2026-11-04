@@ -32,6 +32,11 @@ export function appuiAutorise(cible, tourActif, element) {
   return Boolean(cible && cible.contains(element));
 }
 
+// Deux rectangles (getBoundingClientRect) qui se recouvrent ; bord contre bord ne compte pas.
+export function chevauche(a, b) {
+  return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+}
+
 let voix = null;
 let phrases = null;
 let moteur = null;
@@ -44,6 +49,8 @@ const abonnes = new Set();
 let installe = false;
 
 const $ = (selecteur) => racine?.querySelector(selecteur);
+// La propriété hidden n'existe pas sur un élément SVG (la main) : son style, si.
+const montrer = (element, oui) => { element.style.display = oui ? '' : 'none'; };
 const pause = (ms, signal) => new Promise((ok) => {
   const minuterie = setTimeout(ok, ms);
   signal?.addEventListener('abort', () => { clearTimeout(minuterie); ok(); });
@@ -107,7 +114,7 @@ function construire() {
     el('button', { class: 'tour-fermer', type: 'button', 'data-tour-fermer': '', 'aria-label': T.arreter }, '✕'),
     el('div', { class: 'tour-points', 'aria-hidden': 'true' }, Array.from({ length: PARTIES }, () => el('i'))),
     el('p', { class: 'tour-bulle', lang: 'fon', role: 'status', hidden: true }));
-  mainCible.hidden = true;
+  montrer(mainCible, false);
   $('.tour-bulle').classList.add('fon'); // police du fon
   document.body.append(racine);
 }
@@ -121,10 +128,14 @@ function placer() {
   if (!cible) {
     // Phrase sans bouton à montrer : tout l'écran sous le voile.
     Object.assign(projecteur.style, { left: '50%', top: '50%', width: '0px', height: '0px', borderRadius: '0' });
-    main.hidden = true;
+    montrer(main, false);
     return;
   }
   const r = cible.getBoundingClientRect();
+  // La croix ne doit pas cacher l'élément montré (le bouton d'aide, en haut à droite).
+  const croix = $('.tour-fermer');
+  croix.classList.remove('tour-fermer-gauche');
+  if (chevauche(croix.getBoundingClientRect(), r)) croix.classList.add('tour-fermer-gauche');
   const rond = cible.matches('.bouton-micro, [data-aide]');
   Object.assign(projecteur.style, {
     left: `${r.left - MARGE}px`, top: `${r.top - MARGE}px`,
@@ -132,7 +143,7 @@ function placer() {
     borderRadius: rond ? '50%' : '14px',
   });
   // Le bout de l'index (44 % de la largeur de la main) touche le centre de l'élément.
-  main.hidden = false;
+  montrer(main, true);
   Object.assign(main.style, { left: `${r.left + r.width / 2 - 0.44 * main.getBoundingClientRect().width}px`, top: `${r.top + r.height / 2}px` });
 }
 
@@ -163,7 +174,7 @@ const effets = {
     const demarrage = ecran === 'demarrage';
     $('.tour-demarrage').hidden = !demarrage;
     $('.tour-projecteur').hidden = demarrage || !voile;
-    $('.tour-main:not(.tour-main-demarrage)').hidden = true;
+    montrer($('.tour-main:not(.tour-main-demarrage)'), false);
     cible = selecteur ? document.querySelector(selecteur) : null;
     if (cible && !demarrage) cible.scrollIntoView({ block: 'center', behavior: 'smooth' });
     placer();
@@ -186,6 +197,7 @@ const effets = {
       if (!actif) return false;
       // Secours rare : le fon s'affiche, la main continue.
       const bulle = $('.tour-bulle');
+      indicateur.hidden = true; // pas de voix : pas de haut-parleur
       bulle.textContent = phrase?.fon ?? '';
       bulle.hidden = false;
       await pause(BULLE_MS);
