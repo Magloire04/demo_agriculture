@@ -7,7 +7,8 @@
 //   'lecture' : la fin de la lecture de la réponse à voix haute ;
 //   'lieu'    : une position partagée ou une commune choisie.
 // `permission` + `avant` : phrase dite d'abord si le téléphone n'a pas encore donné
-// cette permission. `retour` : étape où revenir après une demande non comprise.
+// cette permission. `retour` : étape où revenir après une demande non comprise ;
+// `sinon` : étape où passer quand la demande ne peut pas aboutir (micro refusé…).
 // `voile: false` : écran normal pendant que l'application lit sa réponse.
 
 export const PARTIES = 5;
@@ -25,7 +26,7 @@ export const ETAPES = [
   { id: '3a', partie: 3, vue: 'accueil', cible: CARTE_PRIX, phrase: 'tour_prix_carte', attente: 'appui' },
   {
     id: '3b', partie: 3, vue: 'prix', cible: '[data-micro=prix] .bouton-micro', phrase: 'tour_prix_micro', attente: 'reponse',
-    permission: 'microphone', avant: 'tour_permission_micro', retour: '3b',
+    permission: 'microphone', avant: 'tour_permission_micro', retour: '3b', sinon: '4a',
   },
   { id: '3c', partie: 3, vue: 'prix', cible: null, phrase: null, attente: 'lecture', voile: false },
   { id: '3d', partie: 3, vue: 'prix', cible: '[data-resultat=prix] .bouton-ecouter', phrase: 'tour_prix_reecouter', attente: null },
@@ -37,7 +38,7 @@ export const ETAPES = [
   },
   {
     id: '4c', partie: 4, vue: 'signalement', cible: '[data-micro=signalement] .bouton-micro', phrase: 'tour_conseil_micro', attente: 'reponse',
-    permission: 'microphone', avant: 'tour_permission_micro', retour: '4c',
+    permission: 'microphone', avant: 'tour_permission_micro', retour: '4c', sinon: '5',
   },
   { id: '4d', partie: 4, vue: 'signalement', cible: null, phrase: null, attente: 'lecture', voile: false },
   { id: '4e', partie: 4, vue: 'signalement', cible: '[data-resultat=signalement] .confirmation', phrase: 'tour_conseil_recu', attente: null },

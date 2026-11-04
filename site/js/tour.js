@@ -32,6 +32,16 @@ export function appuiAutorise(cible, tourActif, element) {
   return Boolean(cible && cible.contains(element));
 }
 
+// Geste « retour » pendant le tour : la vue de l’étape est remise, sauf si le tour vient
+// de demander lui-même ce changement (appui sur une carte ou sur l’onglet).
+export function vueACorriger({ vueEtape, vueActuelle, navigationAttendue }) {
+  if (!vueEtape || navigationAttendue || vueEtape === vueActuelle) return null;
+  return vueEtape;
+}
+
+const vueActuelle = () => location.hash.replace(/^#\/?/, '') || 'accueil';
+const adresseVue = (vue) => (vue === 'accueil' ? '#/' : `#/${vue}`);
+
 // Deux rectangles (getBoundingClientRect) qui se recouvrent ; bord contre bord ne compte pas.
 export function chevauche(a, b) {
   return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
@@ -43,6 +53,10 @@ let moteur = null;
 let actif = false;
 let racine = null;
 let cible = null; // élément sous le projecteur
+let cibleCliquable = null; // la cible, quand l’étape attend un geste dessus
+let navigationAttendue = false; // l’appui demandé va changer d’écran
+let veille = null; // écran gardé allumé pendant le tour
+const attentesVisibles = new Set();
 let numero = 0; // compteur des événements de l'application
 const derniers = new Map(); // type → { numero, detail }
 const abonnes = new Set();
@@ -72,7 +86,7 @@ function installer() {
   document.addEventListener('agrifon:micro', (e) => noter('micro', e.detail));
   document.addEventListener('click', (e) => {
     if (!actif) return;
-    if (!appuiAutorise(cible, actif, e.target)) {
+    if (!appuiAutorise(cibleCliquable, actif, e.target)) {
       e.preventDefault();
       e.stopPropagation();
       return;
@@ -83,12 +97,29 @@ function installer() {
     }
     // L'appui sur le gros bouton autorise le son : la voix du tour pourra parler.
     if (e.target.closest('[data-tour-demarrer]')) voix?.debloquer?.();
-    if (cible?.contains(e.target)) noter('appui', {});
+    if (cibleCliquable?.contains(e.target)) {
+      navigationAttendue = true;
+      setTimeout(() => { navigationAttendue = false; }, 1500);
+      noter('appui', {});
+    }
   }, true);
+  window.addEventListener('hashchange', () => {
+    if (!actif) return;
+    const etape = ETAPES.find((e) => e.id === moteur?.etape());
+    const vue = vueACorriger({ vueEtape: etape?.vue ?? null, vueActuelle: vueActuelle(), navigationAttendue });
+    if (vue) location.hash = adresseVue(vue);
+    for (const ms of [100, 400]) setTimeout(placer, ms);
+  });
   document.addEventListener('visibilitychange', () => {
     if (!actif) return;
-    if (document.hidden) voix?.arreterLecture?.();
-    else moteur?.reprendre();
+    if (document.hidden) {
+      voix?.arreterLecture?.();
+      return;
+    }
+    garderEcranAllume();
+    for (const ok of [...attentesVisibles]) ok();
+    attentesVisibles.clear();
+    moteur?.reprendre();
   });
   window.addEventListener('resize', placer);
   window.addEventListener('scroll', placer, true);
@@ -169,13 +200,16 @@ const effets = {
     return Boolean(e) && (Boolean(e.closest('[data-tour]')) || !e.closest('[hidden]'));
   },
 
-  eclairer({ cible: selecteur, voile, ecran, partie }) {
+  eclairer({ cible: selecteur, voile, ecran, partie, geste }) {
     [...racine.querySelectorAll('.tour-points i')].forEach((point, i) => point.classList.toggle('ici', i + 1 === partie));
     const demarrage = ecran === 'demarrage';
     $('.tour-demarrage').hidden = !demarrage;
     $('.tour-projecteur').hidden = demarrage || !voile;
     montrer($('.tour-main:not(.tour-main-demarrage)'), false);
     cible = selecteur ? document.querySelector(selecteur) : null;
+    // « Appuyez ici » sans attendre l’appui (réécouter, autre question) : l’élément est
+    // montré mais ne répond pas, sinon la phrase suivante couperait ce qu’il lance.
+    cibleCliquable = geste ? cible : null;
     if (cible && !demarrage) cible.scrollIntoView({ block: 'center', behavior: 'smooth' });
     placer();
     // Le défilement doux dure un moment : le projecteur le suit.
@@ -212,13 +246,19 @@ const effets = {
     voix?.arreterLecture?.();
   },
 
-  async permissionAccordee(nom) {
+  async etatPermission(nom) {
     try {
-      return (await navigator.permissions?.query({ name: nom }))?.state === 'granted';
+      return (await navigator.permissions?.query({ name: nom }))?.state ?? null;
     } catch {
-      return false; // permission inconnue du navigateur : la voix prévient quand même
+      return null; // permission inconnue du navigateur : la voix prévient quand même
     }
   },
+
+  enregistrementEnCours: () => Boolean(document.querySelector('[data-micro][data-etat="enregistrement"], [data-micro][data-etat="analyse"]')),
+
+  estVisible: () => !document.hidden,
+
+  visible: () => (document.hidden ? new Promise((ok) => attentesVisibles.add(ok)) : Promise.resolve()),
 
   attendre(type, { depuis, signal }) {
     const attendu = TYPES[type];
@@ -259,10 +299,23 @@ const effets = {
   fermer() {
     actif = false;
     cible = null;
+    cibleCliquable = null;
+    veille?.release?.().catch(() => {});
+    veille = null;
     racine?.remove();
     racine = null;
   },
 };
+
+// Écran gardé allumé pendant le tour : les téléphones s’éteignent souvent au bout de 30 s
+// sans appui, plus tôt que la réponse à une vraie demande. Refusé ou absent : sans gravité.
+function garderEcranAllume() {
+  if (!actif || veille || !navigator.wakeLock?.request) return;
+  navigator.wakeLock.request('screen').then((v) => {
+    veille = v;
+    v.addEventListener?.('release', () => { if (veille === v) veille = null; });
+  }).catch(() => {});
+}
 
 // Premier accès ou bouton d'aide (qui commence à l'accueil, son appui ayant débloqué le son).
 export async function lancer({ depuisAide = false } = {}) {
@@ -277,6 +330,7 @@ export async function lancer({ depuisAide = false } = {}) {
   }
   construire();
   actif = true;
+  garderEcranAllume();
   precharger(depuisAide ? ORDRE[1] : ORDRE[0]);
   moteur ??= creerMoteur({ etapes: ETAPES, effets, delai: pause });
   return moteur.demarrer(depuisAide ? PREMIERE_ETAPE_AIDE : ETAPES[0].id);

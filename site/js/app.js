@@ -1,4 +1,4 @@
-import { appelerApi, ecrireMemoire, el, emettre, enregistrerServiceWorker, heure, lireMemoire, nombre, svg, uniteCourte } from './dom.js';
+import { appelerApi, ecrireMemoire, el, emettre, enregistrerServiceWorker, heure, issuePrix, lireMemoire, nombre, svg, uniteCourte } from './dom.js';
 import { demarrerEnregistrement, enregistrementPossible } from './enregistreur.js';
 import { T } from './textes.js';
 
@@ -161,9 +161,10 @@ function brancherMicro(racine, { traiter, afficherErreur }) {
       etat.textContent = T.micro_lent;
     }, 10_000);
     try {
-      await traiter(audio);
+      // `traiter` peut rendre l'issue de la demande (prix : réponse rendue mais rien compris).
+      const issue = (await traiter(audio)) ?? { ok: true };
       pret(T.micro_encore);
-      emettre('reponse', { vue, ok: true });
+      emettre('reponse', { vue, ok: issue.ok, code: issue.code ?? null });
     } catch (e) {
       afficherErreur(e);
       pret(T.micro_reessayer);
@@ -447,6 +448,7 @@ function afficherPrix(r) {
     r.statut === 'marche_seul' && carteMarche(r.marche, r.produits_du_marche),
     r.source && (r.reponses.some((x) => x.lignes.length > 0) || r.statut === 'marche_seul') && texteSource(r.source),
     boutonRecommencer(T.autre_question, microPrix));
+  return issuePrix(r.statut);
 }
 
 brancherMicro(microPrix, {

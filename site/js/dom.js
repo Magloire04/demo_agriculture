@@ -73,6 +73,13 @@ export function emettre(type, detail = {}) {
   document.dispatchEvent(new CustomEvent(`agrifon:${type}`, { detail }));
 }
 
+// Issue d'une demande de prix pour le tour : une réponse rendue (HTTP 200) peut quand
+// même n'avoir rien compris (« non_compris ») ; le serveur compte les mêmes réussites.
+const PRIX_COMPRIS = new Set(['ok', 'sans_prix', 'marche_seul']);
+export function issuePrix(statut) {
+  return PRIX_COMPRIS.has(statut) ? { ok: true } : { ok: false, code: statut || 'non_compris' };
+}
+
 export function lireMemoire(cle) {
   try {
     return localStorage.getItem(cle);

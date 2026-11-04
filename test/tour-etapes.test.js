@@ -51,6 +51,8 @@ test('ordre et parties : 1 à 5, sans recul ; l’aide commence à 2a', () => {
   assert.equal(PREMIERE_ETAPE_AIDE, '2a');
   assert.ok(ETAPES.some((e) => e.id === PREMIERE_ETAPE_AIDE));
   for (const e of ETAPES.filter((x) => x.attente === 'reponse')) assert.equal(e.retour, e.id);
+  // Un échec sans issue (micro refusé…) fait passer à la partie suivante.
+  assert.deepEqual(ETAPES.filter((x) => x.attente === 'reponse').map((e) => [e.id, e.sinon]), [['3b', '4a'], ['4c', '5']]);
   assert.equal(ETAPES[0].ecran, 'demarrage');
   for (const e of ETAPES.filter((x) => x.attente === 'lecture')) assert.equal(e.voile, false);
 });

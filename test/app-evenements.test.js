@@ -23,3 +23,12 @@ test('app.js émet chaque événement du tour', () => {
     assert.ok(app.includes(`'${code}'`), code);
   }
 });
+
+// Relecture finale (I1) : « produit non reconnu » est une demande ratée, pas une réussite.
+test('issuePrix : seules les réponses comprises comptent comme réussies', async () => {
+  const { issuePrix } = await import('../site/js/dom.js');
+  for (const statut of ['ok', 'sans_prix', 'marche_seul']) assert.deepEqual(issuePrix(statut), { ok: true }, statut);
+  assert.deepEqual(issuePrix('non_compris'), { ok: false, code: 'non_compris' });
+  const app = readFileSync(new URL('../site/js/app.js', import.meta.url), 'utf8');
+  assert.ok(app.includes('issuePrix(r.statut)'), 'afficherPrix rend l’issue de la demande');
+});

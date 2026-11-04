@@ -13,18 +13,22 @@ async function jusqua(condition, essais = 200) {
 }
 
 // Effets factices : notent ce que le moteur demande ; les attentes se résolvent à la main.
-function faux({ cibles = null, permission = true, lieu = false, voix = true } = {}) {
+function faux({ cibles = null, permission = 'granted', lieu = false, voix = true, pendantDire = () => {} } = {}) {
   const journal = [];
   const attentes = [];
   let numero = 0;
   let surEnregistrement = null;
+  const etat = { enregistrement: false, cache: false, retour: null };
   const effets = {
     aller: async (vue) => { journal.push(['aller', vue]); },
     cibleExiste: (c) => (cibles ? cibles.includes(c) : true),
-    eclairer: ({ cible, voile, ecran }) => { journal.push(['eclairer', cible, voile, ecran ?? null]); },
-    dire: async (cle) => { journal.push(['dire', cle]); numero++; return voix; },
+    eclairer: ({ cible, voile, ecran, geste }) => { journal.push(['eclairer', cible, voile, ecran ?? null, geste]); },
+    dire: async (cle) => { journal.push(['dire', cle]); numero++; pendantDire(cle, etat); return voix; },
     taire: () => { journal.push(['taire']); },
-    permissionAccordee: async () => permission,
+    etatPermission: async () => permission,
+    enregistrementEnCours: () => etat.enregistrement,
+    estVisible: () => !etat.cache,
+    visible: () => (etat.cache ? new Promise((ok) => { etat.retour = ok; }) : Promise.resolve()),
     attendre: (type, { depuis, signal }) => new Promise((resoudre) => {
       attentes.push({ type, depuis, resoudre });
       signal?.addEventListener('abort', () => resoudre({ ok: false, code: 'arrete' }));
@@ -36,8 +40,9 @@ function faux({ cibles = null, permission = true, lieu = false, voix = true } = 
     fermer: () => { journal.push(['fermer']); },
   };
   return {
-    effets, journal, attentes,
-    enregistrement: () => surEnregistrement?.(),
+    effets, journal, attentes, etat,
+    enregistrement: () => { etat.enregistrement = true; surEnregistrement?.(); },
+    revenir: () => { etat.cache = false; etat.retour?.(); },
     evenement: () => { numero++; },
     dits: () => journal.filter(([quoi]) => quoi === 'dire').map(([, cle]) => cle),
   };
@@ -67,8 +72,8 @@ test('déroule les étapes dans l’ordre : vue, projecteur, phrase, attente', a
   const fin = creerMoteur({ etapes: etapesSimples, effets: f.effets, delai: h.delai }).demarrer();
   await jusqua(() => f.attentes.length === 1);
   assert.deepEqual(f.journal, [
-    ['aller', 'accueil'], ['eclairer', '#x', true, null], ['dire', 'p_a'],
-    ['aller', 'prix'], ['eclairer', '#micro', true, null], ['dire', 'p_b'],
+    ['aller', 'accueil'], ['eclairer', '#x', true, null, false], ['dire', 'p_a'],
+    ['aller', 'prix'], ['eclairer', '#micro', true, null, true], ['dire', 'p_b'],
   ]);
   assert.equal(f.attentes[0].type, 'appui');
   f.attentes[0].resoudre({ ok: true });
@@ -125,7 +130,7 @@ test('un événement arrivé avant l’attente compte : la lecture se compte dep
   await jusqua(() => f.attentes.length === 2);
   assert.equal(f.attentes[1].type, 'lecture');
   assert.equal(f.attentes[1].depuis, debutDemande);
-  assert.deepEqual(f.journal.find(([quoi, cible]) => quoi === 'eclairer' && cible === null), ['eclairer', null, false, null]);
+  assert.deepEqual(f.journal.find(([quoi, cible]) => quoi === 'eclairer' && cible === null), ['eclairer', null, false, null, false]);
   f.attentes[1].resoudre({ ok: true });
   assert.equal(await fin, 'fini');
 });
@@ -205,10 +210,10 @@ test('lieu déjà donné : l’étape passe après sa phrase', async () => {
 
 test('permission déjà accordée : la phrase d’avertissement n’est pas dite', async () => {
   const etapes = [{ id: 'm', partie: 3, vue: 'prix', cible: '#micro', phrase: 'p_micro', attente: null, permission: 'microphone', avant: 'p_permission' }];
-  const accordee = faux({ permission: true });
+  const accordee = faux({ permission: 'granted' });
   await creerMoteur({ etapes, effets: accordee.effets, delai: horloge().delai }).demarrer();
   assert.deepEqual(accordee.dits(), ['p_micro']);
-  const demandee = faux({ permission: false });
+  const demandee = faux({ permission: 'prompt' });
   await creerMoteur({ etapes, effets: demandee.effets, delai: horloge().delai }).demarrer();
   assert.deepEqual(demandee.dits(), ['p_permission', 'p_micro']);
 });
@@ -236,4 +241,108 @@ test('relancé par l’aide : commence à 2a, sans l’écran de démarrage', as
   assert.ok(!f.journal.some(([quoi, , , ecran]) => quoi === 'eclairer' && ecran === 'demarrage'));
   moteur.arreter();
   assert.equal(await fin, 'arrete');
+});
+
+// Relecture finale (C1) : la voix du tour ne couvre jamais l'enregistrement, même quand
+// l'agriculteur appuie sur le micro avant la fin de la consigne.
+const etapeMicro = {
+  id: 'm', partie: 3, vue: 'prix', cible: '#micro', phrase: 'p_micro', attente: 'reponse',
+  permission: 'microphone', avant: 'p_permission', retour: 'm', sinon: 'n',
+};
+const etapeSuivante = { id: 'n', partie: 4, vue: 'signalement', cible: null, phrase: 'p_n', attente: null };
+
+test('appui sur le micro pendant l’avertissement : la consigne n’est pas dite, aucune relance', async () => {
+  const f = faux({ permission: 'prompt', pendantDire: (cle, etat) => { if (cle === 'p_permission') etat.enregistrement = true; } });
+  const h = horloge();
+  const fin = creerMoteur({ etapes: [etapeMicro], effets: f.effets, delai: h.delai }).demarrer();
+  await jusqua(() => f.attentes.length === 1);
+  h.avancer();
+  await tic();
+  await tic();
+  assert.deepEqual(f.dits(), ['p_permission']);
+  f.attentes[0].resoudre({ ok: true });
+  assert.equal(await fin, 'fini');
+});
+
+test('enregistrement commencé avant l’attente : aucune relance ensuite', async () => {
+  const f = faux({ pendantDire: (cle, etat) => { if (cle === 'p_micro') etat.enregistrement = true; } });
+  const h = horloge();
+  const fin = creerMoteur({ etapes: [etapeMicro], effets: f.effets, delai: h.delai }).demarrer();
+  await jusqua(() => f.attentes.length === 1);
+  for (let i = 0; i < 3; i++) {
+    h.avancer();
+    await tic();
+  }
+  assert.deepEqual(f.dits(), ['p_micro']);
+  f.attentes[0].resoudre({ ok: true });
+  assert.equal(await fin, 'fini');
+});
+
+test('reprise pendant l’enregistrement : rien n’est dit', async () => {
+  const f = faux();
+  const moteur = creerMoteur({ etapes: [etapeMicro], effets: f.effets, delai: horloge().delai });
+  const fin = moteur.demarrer();
+  await jusqua(() => f.attentes.length === 1);
+  f.enregistrement();
+  moteur.reprendre();
+  await tic();
+  assert.deepEqual(f.dits(), ['p_micro']);
+  moteur.arreter();
+  await fin;
+});
+
+// I2 : un échec qu'un nouvel essai ne réparera pas fait passer à la partie suivante.
+test('micro refusé : pas de « recommençons », le tour passe à la partie suivante', async () => {
+  const f = faux();
+  const fin = creerMoteur({ etapes: [etapeMicro, etapeSuivante], effets: f.effets, delai: horloge().delai }).demarrer();
+  await jusqua(() => f.attentes.length === 1);
+  f.attentes[0].resoudre({ ok: false, code: 'micro_refuse' });
+  assert.equal(await fin, 'fini');
+  assert.deepEqual(f.dits(), ['p_micro', 'p_n']);
+});
+
+test('deux échecs de suite : le tour passe à la partie suivante', async () => {
+  const f = faux();
+  const fin = creerMoteur({ etapes: [etapeMicro, etapeSuivante], effets: f.effets, delai: horloge().delai }).demarrer();
+  await jusqua(() => f.attentes.length === 1);
+  f.attentes[0].resoudre({ ok: false, code: 'non_compris' });
+  await jusqua(() => f.attentes.length === 2);
+  f.attentes[1].resoudre({ ok: false, code: 'non_compris' });
+  assert.equal(await fin, 'fini');
+  assert.deepEqual(f.dits(), ['p_micro', 'tour_pas_compris', 'p_micro', 'p_n']);
+});
+
+test('permission refusée : l’avertissement n’est pas dit', async () => {
+  const etape = { ...etapeMicro, attente: null };
+  const f = faux({ permission: 'denied' });
+  await creerMoteur({ etapes: [etape], effets: f.effets, delai: horloge().delai }).demarrer();
+  assert.deepEqual(f.dits(), ['p_micro']);
+});
+
+// I3 : page cachée (écran éteint, autre application) : le tour attend son retour.
+test('page cachée pendant une phrase : le tour attend le retour, redit la phrase puis continue', async () => {
+  const f = faux({ pendantDire: (cle, etat) => { if (cle === 'p_a' && !etat.vu) { etat.vu = true; etat.cache = true; } } });
+  const etapes = [
+    { id: 'a', partie: 1, vue: 'accueil', cible: null, phrase: 'p_a', attente: null },
+    { id: 'b', partie: 2, vue: 'accueil', cible: null, phrase: 'p_b', attente: null },
+  ];
+  const fin = creerMoteur({ etapes, effets: f.effets, delai: horloge().delai }).demarrer();
+  await jusqua(() => f.etat.retour !== null);
+  await tic();
+  assert.deepEqual(f.dits(), ['p_a'], 'rien n’est dit tant que la page est cachée');
+  f.revenir();
+  assert.equal(await fin, 'fini');
+  assert.deepEqual(f.dits(), ['p_a', 'p_a', 'p_b']);
+});
+
+// M2 relevée : une étape sans geste n'ouvre pas sa cible aux appuis.
+test('seules les étapes qui attendent un geste ouvrent leur cible aux appuis', async () => {
+  const f = faux();
+  const h = horloge();
+  const fin = creerMoteur({ etapes: etapesSimples, effets: f.effets, delai: h.delai }).demarrer();
+  await jusqua(() => f.attentes.length === 1);
+  const gestes = f.journal.filter(([quoi]) => quoi === 'eclairer').map((e) => e[4]);
+  assert.deepEqual(gestes, [false, true]);
+  f.attentes[0].resoudre({ ok: true });
+  await fin;
 });
